@@ -34,6 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        android:background="@color/grey_1000w"
         app:headerLayout="@layout/sidenav_header"
         app:menu="@menu/menu_sidenav" />
 
