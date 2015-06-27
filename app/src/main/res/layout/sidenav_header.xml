@@ -3,6 +3,24 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="168dp"
-    android:background="@color/orange_A400">
+    android:paddingLeft="@dimen/activity_vertical_margin"
+    android:background="@color/orange_A400"
+    android:gravity="bottom">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/sidenav_image"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginBottom="8dp"
+        android:src="@drawable/pumpkin" />
+
+    <TextView
+        android:text="Pumpkin Reader"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:fontFamily="sans-serif-medium"
+        android:textSize="@dimen/abc_text_size_subhead_material"
+        android:textColor="@color/grey_1000w"
+        android:gravity="center_vertical" />
 
 </LinearLayout>
