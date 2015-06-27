@@ -12,23 +12,19 @@ import java.util.Arrays;
 import java.util.List;
 
 import io.pumpkinz.pumpkinreader.data.NewsAdapter;
+import io.pumpkinz.pumpkinreader.etc.DividerItemDecoration;
 
 
-/**
- * A placeholder fragment containing a simple view.
- */
-public class MainActivityFragment extends Fragment {
+public class NewsListFragment extends Fragment {
 
     RecyclerView newsList;
-    RecyclerView.Adapter newsListAdapter;
-    RecyclerView.LayoutManager newsListLayoutManager;
 
-    public MainActivityFragment() {
+    public NewsListFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_main, container, false);
+        return inflater.inflate(R.layout.fragment_news_list, container, false);
     }
 
     @Override
@@ -40,13 +36,14 @@ public class MainActivityFragment extends Fragment {
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        this.newsList.setLayoutManager(layoutManager);
 
-        this.newsListLayoutManager = layoutManager;
-        this.newsList.setLayoutManager(this.newsListLayoutManager);
+        List<String> dataset = Arrays.asList("Item One", "Item Two", "Item Three", "Item Four", "Item Five");
+        this.newsList.setAdapter(new NewsAdapter(dataset));
 
-        List<String> dataset = Arrays.asList("Asd", "Ass", "Ads");
-        this.newsListAdapter = new NewsAdapter(dataset);
-        this.newsList.setAdapter(this.newsListAdapter);
+        RecyclerView.ItemDecoration itemDecoration =
+                new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
+        this.newsList.addItemDecoration(itemDecoration);
     }
 
 }
