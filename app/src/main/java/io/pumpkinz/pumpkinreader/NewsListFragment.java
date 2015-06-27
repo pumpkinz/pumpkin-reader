@@ -38,7 +38,17 @@ public class NewsListFragment extends Fragment {
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         this.newsList.setLayoutManager(layoutManager);
 
-        List<String> dataset = Arrays.asList("Item One", "Item Two", "Item Three", "Item Four", "Item Five");
+        List<String> dataset = Arrays.asList(
+                "The Three Great Virtues of a Programmer: Laziness, Impatience, and Hubris",
+                "Philanthropy for Hackers",
+                "Ello mocks Facebook by being creepy",
+                "Show HN: Hyperlax.tv – a real-time feed of Instagram's latest Hyperlapse videos",
+                "As We May Think (1945)",
+                "Running Lisp in Production",
+                "How side projects saved our startup",
+                "Ask HN: How big does an open-source project need to be for a lifestyle business?",
+                "Fighting spam with Haskell"
+        );
         this.newsList.setAdapter(new NewsAdapter(dataset));
 
         RecyclerView.ItemDecoration itemDecoration =
