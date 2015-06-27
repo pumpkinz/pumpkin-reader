@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <style name="PumpkinTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/orange_800</item>
-        <item name="colorPrimaryDark">@color/orange_900</item>
-    </style>
-
-</resources>
