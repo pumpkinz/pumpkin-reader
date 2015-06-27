@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import java.util.List;
 
 import io.pumpkinz.pumpkinreader.model.HnApiMgr;
+import io.pumpkinz.pumpkinreader.model.Story;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -42,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setListener() {
-        HnApiMgr.getApi().listTopStories(new Callback<List<Integer>>() {
+        HnApiMgr.api().listTopStories(new Callback<List<Integer>>() {
             @Override
             public void success(List<Integer> integers, Response response) {
                 Log.d("topstories", integers.toString());
@@ -55,5 +56,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        HnApiMgr.api().getItem(8863, new Callback<Story>() {
+            @Override
+            public void success(Story story, Response response) {
+                Log.d("story", story.toString());
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e("story", error.toString());
+            }
+        });
     }
 }
