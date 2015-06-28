@@ -11,11 +11,11 @@ import android.view.MenuItem;
 
 import java.util.List;
 
-import io.pumpkinz.pumpkinreader.model.HnApiMgr;
-import io.pumpkinz.pumpkinreader.model.Story;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import io.pumpkinz.pumpkinreader.rest.RestClient;
+import io.pumpkinz.pumpkinreader.model.ItemPOJO;
+import rx.Observable;
+import rx.functions.Action1;
+import rx.functions.Func1;
 
 public class MainActivity extends AppCompatActivity {
     @Override
@@ -23,7 +23,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setUpToolbar();
-        setListener();
     }
 
     @Override
@@ -41,30 +40,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setListener() {
-        HnApiMgr.api().listTopStories(new Callback<List<Integer>>() {
-            @Override
-            public void success(List<Integer> integers, Response response) {
-                Log.d("topstories", integers.toString());
-                Log.d("topstories", response.toString());
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Log.e("top error", error.toString());
-            }
-        });
-
-        HnApiMgr.api().getItem(8863, new Callback<Story>() {
-            @Override
-            public void success(Story story, Response response) {
-                Log.d("story", story.toString());
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Log.e("story", error.toString());
-            }
-        });
+        RestClient.service().listTopStories()
+                .flatMap(new Func1<List<Integer>, Observable<Integer>>() {
+                    @Override
+                    public Observable<Integer> call(List<Integer> integers) {
+                        return Observable.from(integers);
+                    }
+                })
+                .take(10)
+                .flatMap(new Func1<Integer, Observable<ItemPOJO>>() {
+                    @Override
+                    public Observable<ItemPOJO> call(Integer integer) {
+                        return RestClient.service().getItem(integer);
+                    }
+                })
+                .subscribe(new Action1<ItemPOJO>() {
+                    @Override
+                    public void call(ItemPOJO item) {
+                        Log.d("topstory id", item.toString());
+                    }
+                });
     }
 
     private void setUpToolbar() {
