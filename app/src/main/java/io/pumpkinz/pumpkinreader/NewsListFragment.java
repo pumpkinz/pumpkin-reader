@@ -1,5 +1,6 @@
 package io.pumpkinz.pumpkinreader;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -49,11 +50,18 @@ public class NewsListFragment extends Fragment {
                 "Ask HN: How big does an open-source project need to be for a lifestyle business?",
                 "Fighting spam with Haskell"
         );
-        this.newsList.setAdapter(new NewsAdapter(dataset));
+        this.newsList.setAdapter(new NewsAdapter(this, dataset));
 
         RecyclerView.ItemDecoration itemDecoration =
                 new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
         this.newsList.addItemDecoration(itemDecoration);
+    }
+
+    public void goToNewsDetail(String data) {
+        Intent intent = new Intent(getActivity(), NewsDetailActivity.class);
+        intent.putExtra("title", data);
+
+        startActivity(intent);
     }
 
 }
