@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="PumpkinTheme.Material" parent="PumpkinTheme">
-        <item name="colorPrimary">@color/orange_800</item>
-        <item name="colorPrimaryDark">@color/orange_900</item>
+    <style name="PumpkinTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/pumpkin_primary</item>
+        <item name="colorPrimaryDark">@color/pumpkin_primaryDark</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
 </resources>

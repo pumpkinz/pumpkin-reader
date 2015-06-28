@@ -1,15 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="PumpkinTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/orange_800</item>
-        <item name="colorPrimaryDark">@color/orange_900</item>
-        <item name="actionBarStyle">@style/PumpkinTheme.AppBar</item>
-    </style>
-
-    <style name="PumpkinTheme.AppBar" parent="Widget.AppCompat.ActionBar">
-        <item name="elevation">4dp</item>
-        <item name="background">@color/orange_800</item>
+    <style name="PumpkinTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/pumpkin_primary</item>
+        <item name="colorPrimaryDark">@color/pumpkin_primaryDark</item>
     </style>
 
 </resources>
