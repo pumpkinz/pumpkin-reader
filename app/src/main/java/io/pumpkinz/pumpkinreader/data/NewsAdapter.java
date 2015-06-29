@@ -18,7 +18,7 @@ import io.pumpkinz.pumpkinreader.R;
 import io.pumpkinz.pumpkinreader.model.News;
 
 
-public class NewsAdapter extends RecyclerView.Adapter<NewsViewHolder> implements Serializable {
+public class NewsAdapter extends RecyclerView.Adapter<NewsViewHolder> {
 
     private Fragment fragment;
     private List<News> dataset;
@@ -57,10 +57,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsViewHolder> implements
         newsViewHolder.getDate().setText(sdf.format(news.getDate()));
         newsViewHolder.getScore().setText(Integer.toString(news.getScore()));
         newsViewHolder.getCommentCount().setText(Integer.toString(news.getComments().size()) + " comments");
-
-        if (newsViewHolder.getBody() != null) {
-            newsViewHolder.getBody().setText(news.getBody());
-        }
     }
 
     @Override

@@ -1,10 +1,11 @@
 package io.pumpkinz.pumpkinreader.model;
 
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public class News {
+public class News implements Serializable {
 
     private String title;
     private String body;

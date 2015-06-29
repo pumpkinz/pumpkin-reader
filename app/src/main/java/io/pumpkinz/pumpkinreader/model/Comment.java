@@ -1,9 +1,10 @@
 package io.pumpkinz.pumpkinreader.model;
 
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Comment {
+public class Comment implements Serializable {
 
     private String submitter;
     private Date date;

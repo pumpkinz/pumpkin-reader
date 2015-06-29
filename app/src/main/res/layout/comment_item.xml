@@ -6,8 +6,8 @@
     android:layout_height="wrap_content"
     android:paddingStart="16dp"
     android:paddingEnd="16dp"
-    android:paddingTop="8dp"
-    android:paddingBottom="8dp">
+    android:paddingTop="16dp"
+    android:paddingBottom="16dp">
 
     <LinearLayout
         android:orientation="horizontal"
@@ -36,8 +36,7 @@
         android:id="@+id/comment_body"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:textColor="@color/grey_1000b"
-        android:text="Oh, I was hoping for a DSL for prototyping the rules to play these kind of games on a computer (and perhaps train a neural network as an AI opponent). I've been working out how to do these things recently."/>
+        android:layout_marginTop="4dp"
+        android:textColor="@color/grey_1000b" />
 
 </LinearLayout>

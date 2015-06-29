@@ -6,17 +6,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.List;
+import java.text.SimpleDateFormat;
 
 import io.pumpkinz.pumpkinreader.R;
+import io.pumpkinz.pumpkinreader.model.Comment;
+import io.pumpkinz.pumpkinreader.model.News;
 
 
 public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Fragment fragment;
-    private List<String> dataset;
+    private News dataset;
 
-    public NewsDetailAdapter(final Fragment fragment, final List<String> dataset) {
+    public NewsDetailAdapter(final Fragment fragment, final News dataset) {
         this.fragment = fragment;
         this.dataset = dataset;
     }
@@ -44,19 +46,42 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int i) {
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM d");
+
         switch (viewHolder.getItemViewType()) {
             case 0:
+                News news = this.dataset;
                 NewsViewHolder newsViewHolder = (NewsViewHolder) viewHolder;
-//                newsViewHolder.text.setText(this.dataset.get(i));
+
+                newsViewHolder.getTitle().setText(news.getTitle());
+                newsViewHolder.getSubmitter().setText(news.getSubmitter());
+                newsViewHolder.getUrl().setText(news.getUrl());
+                newsViewHolder.getDate().setText(sdf.format(news.getDate()));
+                newsViewHolder.getScore().setText(Integer.toString(news.getScore()));
+                newsViewHolder.getCommentCount().setText(Integer.toString(news.getComments().size()) + " comments");
+
+                if (news.getBody() != null && !news.getBody().isEmpty()) {
+                    newsViewHolder.getBody().setText(news.getBody());
+                } else {
+                    newsViewHolder.getBody().setVisibility(View.GONE);
+                }
+
                 break;
             case 1:
+                Comment comment = this.dataset.getComments().get(i - 1);
+                CommentViewHolder commentViewHolder = (CommentViewHolder) viewHolder;
+
+                commentViewHolder.getSubmitter().setText(comment.getSubmitter());
+                commentViewHolder.getDate().setText(sdf.format(comment.getDate()));
+                commentViewHolder.getBody().setText(comment.getBody());
+
                 break;
         }
     }
 
     @Override
     public int getItemCount() {
-        return dataset.size();
+        return dataset.getComments().size() + 1;
     }
 
 }
