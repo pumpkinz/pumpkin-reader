@@ -104,10 +104,11 @@ public class ItemPOJO {
                 .append("\nType = " + getType())
                 .append("\nBy = " + getBy())
                 .append("\nTime = " + getTime())
+                .append("\nTitle = " + getTitle())
+                .append("\nScore = " + getScore())
                 .append("\nText = " + getText())
                 .append("\nURL = " + getUrl())
-                .append("\nDescendants = " + getDescendants())
-                .append("\nKids = " + getKids().toString());
+                .append("\nDescendants = " + getDescendants());
         return sb.toString();
     }
 }

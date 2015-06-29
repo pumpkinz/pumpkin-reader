@@ -10,92 +10,93 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import io.pumpkinz.pumpkinreader.data.NewsAdapter;
 import io.pumpkinz.pumpkinreader.etc.DividerItemDecoration;
 import io.pumpkinz.pumpkinreader.model.ItemPOJO;
 import io.pumpkinz.pumpkinreader.rest.RestClient;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 import rx.Observable;
-import rx.functions.Action1;
-import rx.functions.Func1;
+import rx.Subscriber;
+import rx.Subscription;
+import rx.android.app.AppObservable;
+import rx.subscriptions.Subscriptions;
 
-
+/**
+ * Using RetainedFragmentActivity sample on
+ * https://github.com/ReactiveX/RxAndroid/blob/0.x/sample-app/src/main/java/rx/android/samples/RetainedFragmentActivity.java
+ */
 public class NewsListFragment extends Fragment {
 
-    RecyclerView newsList;
-    List<String> dataset;
-    NewsAdapter newsAdapter;
+    private RecyclerView newsList;
+    private NewsAdapter newsAdapter;
+    private List<ItemPOJO> dataset;
+    private Observable<List<ItemPOJO>> stories;
+    private Subscription subscription = Subscriptions.empty();
 
     public NewsListFragment() {
+        setRetainInstance(true);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        //TODO: change magic number 20 to a constant
+        stories = AppObservable.bindFragment(this, RestClient.service().getTopItems(20).cache());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        //TODO: show loading bar
         return inflater.inflate(R.layout.fragment_news_list, container, false);
+    }
+
+    @Override
+    public void onDestroyView() {
+        subscription.unsubscribe();
+        super.onDestroyView();
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        this.newsList = (RecyclerView) view.findViewById(R.id.news_list);
-        this.newsList.setHasFixedSize(true);
+        newsList = (RecyclerView) view.findViewById(R.id.news_list);
+        newsList.setHasFixedSize(true);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        this.newsList.setLayoutManager(layoutManager);
+        newsList.setLayoutManager(layoutManager);
 
-        dataset = Arrays.asList(
-                "The Three Great Virtues of a Programmer: Laziness, Impatience, and Hubris",
-                "Philanthropy for Hackers",
-                "Ello mocks Facebook by being creepy",
-                "Show HN: Hyperlax.tv – a real-time feed of Instagram's latest Hyperlapse videos",
-                "As We May Think (1945)",
-                "Running Lisp in Production",
-                "How side projects saved our startup",
-                "Ask HN: How big does an open-source project need to be for a lifestyle business?",
-                "Fighting spam with Haskell"
-        );
+        dataset = new ArrayList<>(0);
         newsAdapter = new NewsAdapter(dataset);
-        this.newsList.setAdapter(newsAdapter);
+        newsList.setAdapter(newsAdapter);
 
         RecyclerView.ItemDecoration itemDecoration =
                 new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
         this.newsList.addItemDecoration(itemDecoration);
 
-        getStories();
-    }
+        subscription = stories.subscribe(new Subscriber<List<ItemPOJO>>() {
+            @Override
+            public void onCompleted() {
+                newsAdapter.notifyDataSetChanged();
+                //TODO: hide loading bar
+                Log.d("stories", "completed");
+            }
 
-    private void getStories() {
-        RestClient.service().listTopStories()
-                .flatMap(new Func1<List<Integer>, Observable<Integer>>() {
-                    @Override
-                    public Observable<Integer> call(List<Integer> integers) {
-                        Log.d("integer", integers.toString());
-                        return Observable.from(integers);
-                    }
-                })
-                .take(10)
-                .flatMap(new Func1<Integer, Observable<ItemPOJO>>() {
-                    @Override
-                    public Observable<ItemPOJO> call(Integer integer) {
-                        Log.d("integer", integer.toString());
-                        return RestClient.service().getItem(integer);
-                    }
-                })
-                .toList()
-                .subscribe(new Action1<List<ItemPOJO>>() {
-                    @Override
-                    public void call(List<ItemPOJO> itemPOJOs) {
-                        for (ItemPOJO item : itemPOJOs) {
-                            Log.d("topstories", item.toString());
-                        }
-                    }
-                });
+            @Override
+            public void onError(Throwable e) {
+                Log.d("stories err", e.toString());
+            }
+
+            @Override
+            public void onNext(List<ItemPOJO> itemPOJOs) {
+                Log.d("stories", String.valueOf(itemPOJOs.size()));
+                for (ItemPOJO item : itemPOJOs) {
+                    dataset.add(item);
+                }
+            }
+        });
     }
 }
