@@ -33,8 +33,6 @@ public class NewsDetailFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        String title = getActivity().getIntent().getStringExtra("title");
-
         this.newsDetail = (RecyclerView) view.findViewById(R.id.news_detail);
         this.newsDetail.setHasFixedSize(true);
 

@@ -7,20 +7,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import io.pumpkinz.pumpkinreader.NewsListFragment;
 import io.pumpkinz.pumpkinreader.R;
+import io.pumpkinz.pumpkinreader.model.News;
 
 
-public class NewsAdapter extends RecyclerView.Adapter<NewsViewHolder> {
+public class NewsAdapter extends RecyclerView.Adapter<NewsViewHolder> implements Serializable {
 
     private Fragment fragment;
-    private List<String> dataset;
+    private List<News> dataset;
     private OnClickListener onClickListener;
 
-    public NewsAdapter(final Fragment fragment, final List<String> dataset) {
+    public NewsAdapter(final Fragment fragment, final List<News> dataset) {
         this.fragment = fragment;
         this.dataset = dataset;
 
@@ -44,7 +48,19 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsViewHolder> {
 
     @Override
     public void onBindViewHolder(NewsViewHolder newsViewHolder, int i) {
-        newsViewHolder.text.setText(this.dataset.get(i));
+        News news = this.dataset.get(i);
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM d");
+
+        newsViewHolder.getTitle().setText(news.getTitle());
+        newsViewHolder.getSubmitter().setText(news.getSubmitter());
+        newsViewHolder.getUrl().setText(news.getUrl());
+        newsViewHolder.getDate().setText(sdf.format(news.getDate()));
+        newsViewHolder.getScore().setText(Integer.toString(news.getScore()));
+        newsViewHolder.getCommentCount().setText(Integer.toString(news.getComments().size()) + " comments");
+
+        if (newsViewHolder.getBody() != null) {
+            newsViewHolder.getBody().setText(news.getBody());
+        }
     }
 
     @Override

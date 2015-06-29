@@ -47,7 +47,7 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         switch (viewHolder.getItemViewType()) {
             case 0:
                 NewsViewHolder newsViewHolder = (NewsViewHolder) viewHolder;
-                newsViewHolder.text.setText(this.dataset.get(i));
+//                newsViewHolder.text.setText(this.dataset.get(i));
                 break;
             case 1:
                 break;
