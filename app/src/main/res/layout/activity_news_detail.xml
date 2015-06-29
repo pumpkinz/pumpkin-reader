@@ -11,7 +11,7 @@
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/fragment"
-        android:name="io.pumpkinz.pumpkinreader.NewsDetailActivityFragment"
+        android:name="io.pumpkinz.pumpkinreader.NewsDetailFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout="@layout/fragment_news_detail" />
