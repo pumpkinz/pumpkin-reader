@@ -1,21 +1,19 @@
 package io.pumpkinz.pumpkinreader.data;
 
-
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import java.util.List;
-
 import io.pumpkinz.pumpkinreader.R;
+import io.pumpkinz.pumpkinreader.model.ItemPOJO;
 
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsViewHolder> {
 
-    List<String> dataset;
+    private List<ItemPOJO> dataset;
 
-    public NewsAdapter(List<String> dataset) {
+    public NewsAdapter(List<ItemPOJO> dataset) {
         this.dataset = dataset;
     }
 
@@ -27,7 +25,13 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsViewHolder> {
 
     @Override
     public void onBindViewHolder(NewsViewHolder newsViewHolder, int i) {
-        newsViewHolder.text.setText(this.dataset.get(i));
+        ItemPOJO item = dataset.get(i);
+
+        newsViewHolder.title.setText(item.getTitle());
+        newsViewHolder.newsScore.setText(String.valueOf(item.getScore()));
+        newsViewHolder.newsSubmitter.setText(item.getBy());
+        newsViewHolder.newsCommentCount.setText(String.valueOf(item.getDescendants()));
+        newsViewHolder.newsUrl.setText(item.getUrl());
     }
 
     @Override
