@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/news_item" />
+
+    <TextView
+        android:id="@+id/news_body"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/abc_action_bar_content_inset_material"
+        android:paddingEnd="@dimen/abc_action_bar_content_inset_material"
+        android:paddingBottom="@dimen/abc_action_bar_content_inset_material"
+        android:textColor="@color/grey_1000b"
+        android:text="My startup of about two years has failed. We were hanging on for the last couple of months in the hopes of getting a big break. We're out of money now. My motivation levels are also pretty low after so many repeated failures.\n\nMy question is, for other people that have been in the same situation: What did you do after?\n\nDid you start looking for a job? Did you jump straight into your next startup. I'm also considering whether it's possible to pick up small programming jobs on Elance to pay the bills." />
+
+</LinearLayout>

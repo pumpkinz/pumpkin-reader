@@ -4,21 +4,21 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import java.util.Arrays;
 import java.util.List;
 
-import io.pumpkinz.pumpkinreader.data.NewsAdapter;
+import io.pumpkinz.pumpkinreader.data.NewsDetailAdapter;
 import io.pumpkinz.pumpkinreader.etc.DividerItemDecoration;
 
 
 public class NewsDetailFragment extends Fragment {
 
-    private RecyclerView newsList;
+    private RecyclerView newsDetail;
 
     public NewsDetailFragment() {
     }
@@ -35,15 +35,12 @@ public class NewsDetailFragment extends Fragment {
 
         String title = getActivity().getIntent().getStringExtra("title");
 
-        TextView text = (TextView) view.findViewById(R.id.news_title);
-        text.setText(title);
-
-        this.newsList = (RecyclerView) view.findViewById(R.id.comment_list);
-        this.newsList.setHasFixedSize(true);
+        this.newsDetail = (RecyclerView) view.findViewById(R.id.news_detail);
+        this.newsDetail.setHasFixedSize(true);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        this.newsList.setLayoutManager(layoutManager);
+        this.newsDetail.setLayoutManager(layoutManager);
 
         List<String> dataset = Arrays.asList(
                 "The Three Great Virtues of a Programmer: Laziness, Impatience, and Hubris",
@@ -56,11 +53,11 @@ public class NewsDetailFragment extends Fragment {
                 "Ask HN: How big does an open-source project need to be for a lifestyle business?",
                 "Fighting spam with Haskell"
         );
-        this.newsList.setAdapter(new NewsAdapter(this, dataset));
+        this.newsDetail.setAdapter(new NewsDetailAdapter(this, dataset));
 
         RecyclerView.ItemDecoration itemDecoration =
                 new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
-        this.newsList.addItemDecoration(itemDecoration);
+        this.newsDetail.addItemDecoration(itemDecoration);
     }
 
 }
