@@ -15,12 +15,13 @@ import java.util.List;
 import io.pumpkinz.pumpkinreader.data.NewsAdapter;
 import io.pumpkinz.pumpkinreader.etc.DividerItemDecoration;
 import io.pumpkinz.pumpkinreader.model.ItemPOJO;
-import io.pumpkinz.pumpkinreader.rest.RestClient;
+import io.pumpkinz.pumpkinreader.service.RestClient;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.app.AppObservable;
 import rx.subscriptions.Subscriptions;
+
 
 /**
  * Using RetainedFragmentActivity sample on
@@ -63,13 +64,12 @@ public class NewsListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         newsList = (RecyclerView) view.findViewById(R.id.news_list);
-        newsList.setHasFixedSize(true);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         newsList.setLayoutManager(layoutManager);
 
-        dataset = new ArrayList<>(0);
+        dataset = new ArrayList<>();
         newsAdapter = new NewsAdapter(dataset);
         newsList.setAdapter(newsAdapter);
 
@@ -93,10 +93,9 @@ public class NewsListFragment extends Fragment {
             @Override
             public void onNext(List<ItemPOJO> itemPOJOs) {
                 Log.d("stories", String.valueOf(itemPOJOs.size()));
-                for (ItemPOJO item : itemPOJOs) {
-                    dataset.add(item);
-                }
+                dataset.addAll(itemPOJOs);
             }
         });
     }
+
 }

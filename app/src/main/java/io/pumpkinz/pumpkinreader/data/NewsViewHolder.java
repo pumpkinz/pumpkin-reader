@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.TextView;
 import io.pumpkinz.pumpkinreader.R;
 
+
 public class NewsViewHolder extends RecyclerView.ViewHolder {
 
     public TextView title, newsScore, newsSubmitter, newsCommentCount, newsUrl;

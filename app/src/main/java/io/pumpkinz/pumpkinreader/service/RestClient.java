@@ -1,4 +1,4 @@
-package io.pumpkinz.pumpkinreader.rest;
+package io.pumpkinz.pumpkinreader.service;
 
 import java.util.List;
 import io.pumpkinz.pumpkinreader.model.ItemPOJO;
@@ -7,10 +7,9 @@ import retrofit.http.Path;
 import rx.Observable;
 import rx.functions.Func1;
 
-/**
- * Created by timotiusnc on 6/28/15.
- */
+
 public class RestClient implements ApiService {
+
     private static final String HN_API_ENDPOINT = "https://hacker-news.firebaseio.com/v0";
     private static RestClient instance;
     private static RestAdapter restAdapter;
@@ -72,4 +71,5 @@ public class RestClient implements ApiService {
             })
             .toList();
     }
+
 }

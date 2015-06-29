@@ -2,6 +2,7 @@ package io.pumpkinz.pumpkinreader.model;
 
 import java.util.List;
 
+
 /**
  * @author timotiusnc
  * @since 6/27/15.
@@ -15,8 +16,8 @@ import java.util.List;
  * 4. Poll
  * 5. Pollopt
  */
-
 public class ItemPOJO {
+
     // Common fields
     private int id;
     private boolean deleted;
@@ -111,6 +112,7 @@ public class ItemPOJO {
                 .append("\nDescendants = " + getDescendants());
         return sb.toString();
     }
+
 }
 
 

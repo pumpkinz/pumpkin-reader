@@ -1,7 +1,6 @@
 package io.pumpkinz.pumpkinreader.data;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +8,9 @@ import java.util.List;
 import io.pumpkinz.pumpkinreader.R;
 import io.pumpkinz.pumpkinreader.model.ItemPOJO;
 
+
 public class NewsAdapter extends RecyclerView.Adapter<NewsViewHolder> {
+
     private List<ItemPOJO> dataset;
 
     public NewsAdapter(List<ItemPOJO> dataset) {
@@ -37,4 +38,5 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsViewHolder> {
     public int getItemCount() {
         return this.dataset.size();
     }
+
 }
