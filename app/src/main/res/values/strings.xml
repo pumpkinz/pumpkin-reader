@@ -1,5 +1,47 @@
 <resources>
+
     <string name="app_name">Pumpkin Reader</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_news_detail">News</string>
+
+    <plurals name="comments">
+        <item quantity="zero">%d comment</item>
+        <item quantity="one">%d comment</item>
+        <item quantity="other">%d comments</item>
+    </plurals>
+
+    <!--Begin Time Ago Strings-->
+    <string name="time_ago_prefix"></string>
+    <string name="time_ago_suffix"></string>
+
+    <string name="time_ago_seconds">just now</string>
+    <string name="time_ago_minute">1 minute</string>
+    <string name="time_ago_hour">1 hour</string>
+    <string name="time_ago_day">1 day</string>
+    <string name="time_ago_month">1 month</string>
+    <string name="time_ago_year">1 year</string>
+
+    <plurals name="time_ago_minutes">
+        <item quantity="one">%d minute</item>
+        <item quantity="other">%d minutes</item>
+    </plurals>
+    <plurals name="time_ago_hours">
+        <item quantity="one">%d hour</item>
+        <item quantity="other">%d hours</item>
+    </plurals>
+    <plurals name="time_ago_days">
+        <item quantity="one">%d day</item>
+        <item quantity="other">%d days</item>
+    </plurals>
+    <plurals name="time_ago_months">
+        <item quantity="one">%d month</item>
+        <item quantity="other">%d months</item>
+    </plurals>
+    <plurals name="time_ago_years">
+        <item quantity="one">%d year</item>
+        <item quantity="other">%d years</item>
+    </plurals>
+    <!--End Time Ago Strings-->
+
 </resources>
