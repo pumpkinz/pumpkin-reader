@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import io.pumpkinz.pumpkinreader.data.NewsDetailAdapter;
+import io.pumpkinz.pumpkinreader.etc.Constants;
 import io.pumpkinz.pumpkinreader.etc.DividerItemDecoration;
 import io.pumpkinz.pumpkinreader.model.News;
 
@@ -34,7 +35,7 @@ public class NewsDetailFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        News news = (News) getActivity().getIntent().getSerializableExtra("news");
+        News news = (News) getActivity().getIntent().getSerializableExtra(Constants.NEWS);
 
         this.newsDetail = (RecyclerView) view.findViewById(R.id.news_detail);
         this.newsDetail.setHasFixedSize(true);

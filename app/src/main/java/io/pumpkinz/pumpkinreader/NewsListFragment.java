@@ -16,6 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 import io.pumpkinz.pumpkinreader.data.NewsAdapter;
+import io.pumpkinz.pumpkinreader.etc.Constants;
 import io.pumpkinz.pumpkinreader.etc.DividerItemDecoration;
 import io.pumpkinz.pumpkinreader.model.Comment;
 import io.pumpkinz.pumpkinreader.model.ItemPOJO;
@@ -104,7 +105,7 @@ public class NewsListFragment extends Fragment {
 
     public void goToNewsDetail(News news) {
         Intent intent = new Intent(getActivity(), NewsDetailActivity.class);
-        intent.putExtra("news", (Serializable) news);
+        intent.putExtra(Constants.NEWS, (Serializable) news);
 
         startActivity(intent);
     }
