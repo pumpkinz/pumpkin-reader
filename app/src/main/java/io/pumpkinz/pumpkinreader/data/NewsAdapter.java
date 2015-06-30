@@ -15,6 +15,7 @@ import java.util.List;
 import io.pumpkinz.pumpkinreader.NewsListFragment;
 import io.pumpkinz.pumpkinreader.R;
 import io.pumpkinz.pumpkinreader.model.News;
+import io.pumpkinz.pumpkinreader.util.Util;
 
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsViewHolder> {
@@ -53,7 +54,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsViewHolder> {
 
         newsViewHolder.getTitle().setText(news.getTitle());
         newsViewHolder.getSubmitter().setText(news.getSubmitter());
-        newsViewHolder.getUrl().setText(news.getUrl());
+        newsViewHolder.getUrl().setText(Util.getDomainName(news.getUrl()));
         newsViewHolder.getDate().setText(this.dateFormatter.timeAgo(news.getDate()));
         newsViewHolder.getScore().setText(Integer.toString(news.getScore()));
 

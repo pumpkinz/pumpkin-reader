@@ -127,31 +127,31 @@ public class NewsListFragment extends Fragment {
         News[] newses = new News[]{
                 new News(
                         "Squib: A Ruby DSL for prototyping card and board games", "",
-                        "selvan", "andymeneely.github.io", new Date(1435575296000l), 91, commentList),
+                        "selvan", "https://www.andymeneely.github.io", new Date(1435575296000l), 91, commentList),
 
                 new News(
                         "With 61 Seconds in a Minute, Markets Brace for Trouble", "",
-                        "rsgoheen", "bloomberg.com", new Date(1435475296000l), 32, commentList),
+                        "rsgoheen", "http://bloomberg.com/some/news?a=1", new Date(1435475296000l), 32, commentList),
 
                 new News(
                         "The Man Who Saved Southwest Airlines with a '10-Minute' Idea", "",
-                        "ghosh", "npr.org", new Date(1435375296000l), 33, commentList),
+                        "ghosh", "http://www.npr.org/123/23/42", new Date(1435375296000l), 33, commentList),
 
                 new News(
                         "High-Profile Study Turns Up the Antitrust Heat on Google", "",
-                        "IBM", "bloomberg.com", new Date(1435574296000l), 29, commentList),
+                        "IBM", "http://bloomberg.com/some/news?a=1", new Date(1435574296000l), 29, commentList),
 
                 new News(
                         "R at Microsoft", "",
-                        "vladiim", "revolutionanalytics.com", new Date(1435565296000l), 75, commentList),
+                        "vladiim", "http://revolutionanalytics.com?stories=1", new Date(1435565296000l), 75, commentList),
 
                 new News(
                         "Perth engineer invents robotic bricklayer", "Test satu dua tigaaaaaa",
-                        "gregcrv", "perthnow.com.au", new Date(1435565396000l), 51, commentList),
+                        "gregcrv", "https://www.perthnow.com.au/1", new Date(1435565396000l), 51, commentList),
 
                 new News(
                         "Alleged $7.5B fraud in online advertising", "",
-                        "inthewoods", "moz.com", new Date(1435545296000l), 134, commentList)
+                        "inthewoods", "http://moz.com/123", new Date(1435545296000l), 134, commentList)
         };
 
         return Arrays.asList(newses);

@@ -12,6 +12,7 @@ import net.koofr.android.timeago.TimeAgo;
 import io.pumpkinz.pumpkinreader.R;
 import io.pumpkinz.pumpkinreader.model.Comment;
 import io.pumpkinz.pumpkinreader.model.News;
+import io.pumpkinz.pumpkinreader.util.Util;
 
 
 public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -56,7 +57,7 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 newsViewHolder.getTitle().setText(news.getTitle());
                 newsViewHolder.getSubmitter().setText(news.getSubmitter());
-                newsViewHolder.getUrl().setText(news.getUrl());
+                newsViewHolder.getUrl().setText(Util.getDomainName(news.getUrl()));
                 newsViewHolder.getDate().setText(this.dateFormatter.timeAgo(news.getDate()));
                 newsViewHolder.getScore().setText(Integer.toString(news.getScore()));
 
