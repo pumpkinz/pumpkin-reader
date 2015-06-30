@@ -1,14 +1,20 @@
 package io.pumpkinz.pumpkinreader.model;
 
+import org.parceler.Parcel;
 
 import java.io.Serializable;
 import java.util.Date;
 
+
+@Parcel
 public class Comment implements Serializable {
 
-    private String submitter;
-    private Date date;
-    private String body;
+    String submitter;
+    Date date;
+    String body;
+
+    public Comment() {
+    }
 
     public Comment(String submitter, Date date, String body) {
         this.submitter = submitter;

@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.parceler.Parcels;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -35,7 +37,7 @@ public class NewsDetailFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        News news = (News) getActivity().getIntent().getSerializableExtra(Constants.NEWS);
+        News news = Parcels.unwrap(getActivity().getIntent().getParcelableExtra(Constants.NEWS));
 
         this.newsDetail = (RecyclerView) view.findViewById(R.id.news_detail);
         this.newsDetail.setHasFixedSize(true);

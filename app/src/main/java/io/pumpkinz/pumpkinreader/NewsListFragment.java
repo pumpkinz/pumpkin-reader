@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.parceler.Parcels;
+
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Date;
@@ -105,7 +107,7 @@ public class NewsListFragment extends Fragment {
 
     public void goToNewsDetail(News news) {
         Intent intent = new Intent(getActivity(), NewsDetailActivity.class);
-        intent.putExtra(Constants.NEWS, (Serializable) news);
+        intent.putExtra(Constants.NEWS, Parcels.wrap(news));
 
         startActivity(intent);
     }

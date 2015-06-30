@@ -1,19 +1,25 @@
 package io.pumpkinz.pumpkinreader.model;
 
+import org.parceler.Parcel;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+
+@Parcel
 public class News implements Serializable {
 
-    private String title;
-    private String body;
-    private String submitter;
-    private String url;
-    private Date date;
-    private int score;
-    private List<Comment> comments;
+    String title;
+    String body;
+    String submitter;
+    String url;
+    Date date;
+    int score;
+    List<Comment> comments;
+
+    public News() {
+    }
 
     public News(String title, String body, String submitter, String url, Date date, int score, List<Comment> comments) {
         this.title = title;
