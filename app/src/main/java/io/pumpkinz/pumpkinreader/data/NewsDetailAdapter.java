@@ -1,5 +1,6 @@
 package io.pumpkinz.pumpkinreader.data;
 
+import android.content.res.Resources;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,8 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import net.koofr.android.timeago.TimeAgo;
-
-import java.text.SimpleDateFormat;
 
 import io.pumpkinz.pumpkinreader.R;
 import io.pumpkinz.pumpkinreader.model.Comment;
@@ -50,8 +49,6 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int i) {
-        SimpleDateFormat sdf = new SimpleDateFormat("MMM d");
-
         switch (viewHolder.getItemViewType()) {
             case 0:
                 News news = this.dataset;
@@ -62,7 +59,11 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 newsViewHolder.getUrl().setText(news.getUrl());
                 newsViewHolder.getDate().setText(this.dateFormatter.timeAgo(news.getDate()));
                 newsViewHolder.getScore().setText(Integer.toString(news.getScore()));
-                newsViewHolder.getCommentCount().setText(Integer.toString(news.getComments().size()) + " comments");
+
+                Resources r = this.fragment.getActivity().getResources();
+                int nComment = news.getComments().size();
+                String commentCountFormat = r.getQuantityString(R.plurals.comments, nComment, nComment);
+                newsViewHolder.getCommentCount().setText(commentCountFormat);
 
                 if (news.getBody() != null && !news.getBody().isEmpty()) {
                     newsViewHolder.getBody().setText(news.getBody());

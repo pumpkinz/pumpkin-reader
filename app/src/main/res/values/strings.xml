@@ -5,6 +5,12 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_news_detail">News</string>
 
+    <plurals name="comments">
+        <item quantity="zero">%d comment</item>
+        <item quantity="one">%d comment</item>
+        <item quantity="other">%d comments</item>
+    </plurals>
+
     <!--Begin Time Ago Strings-->
     <string name="time_ago_prefix"></string>
     <string name="time_ago_suffix"></string>

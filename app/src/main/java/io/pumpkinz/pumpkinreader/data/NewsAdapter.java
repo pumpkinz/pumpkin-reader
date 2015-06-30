@@ -1,5 +1,6 @@
 package io.pumpkinz.pumpkinreader.data;
 
+import android.content.res.Resources;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,7 +10,6 @@ import android.view.ViewGroup;
 
 import net.koofr.android.timeago.TimeAgo;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 import io.pumpkinz.pumpkinreader.NewsListFragment;
@@ -56,7 +56,11 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsViewHolder> {
         newsViewHolder.getUrl().setText(news.getUrl());
         newsViewHolder.getDate().setText(this.dateFormatter.timeAgo(news.getDate()));
         newsViewHolder.getScore().setText(Integer.toString(news.getScore()));
-        newsViewHolder.getCommentCount().setText(Integer.toString(news.getComments().size()) + " comments");
+
+        Resources r = this.fragment.getActivity().getResources();
+        int nComment = news.getComments().size();
+        String commentCountFormat = r.getQuantityString(R.plurals.comments, nComment, nComment);
+        newsViewHolder.getCommentCount().setText(commentCountFormat);
     }
 
     @Override
