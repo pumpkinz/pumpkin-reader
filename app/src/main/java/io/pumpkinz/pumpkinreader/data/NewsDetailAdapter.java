@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import net.koofr.android.timeago.TimeAgo;
+
 import java.text.SimpleDateFormat;
 
 import io.pumpkinz.pumpkinreader.R;
@@ -17,10 +19,12 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private Fragment fragment;
     private News dataset;
+    private TimeAgo dateFormatter;
 
     public NewsDetailAdapter(final Fragment fragment, final News dataset) {
         this.fragment = fragment;
         this.dataset = dataset;
+        this.dateFormatter = new TimeAgo(fragment.getActivity());
     }
 
     @Override
@@ -56,7 +60,7 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 newsViewHolder.getTitle().setText(news.getTitle());
                 newsViewHolder.getSubmitter().setText(news.getSubmitter());
                 newsViewHolder.getUrl().setText(news.getUrl());
-                newsViewHolder.getDate().setText(sdf.format(news.getDate()));
+                newsViewHolder.getDate().setText(this.dateFormatter.timeAgo(news.getDate()));
                 newsViewHolder.getScore().setText(Integer.toString(news.getScore()));
                 newsViewHolder.getCommentCount().setText(Integer.toString(news.getComments().size()) + " comments");
 
@@ -72,7 +76,7 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 CommentViewHolder commentViewHolder = (CommentViewHolder) viewHolder;
 
                 commentViewHolder.getSubmitter().setText(comment.getSubmitter());
-                commentViewHolder.getDate().setText(sdf.format(comment.getDate()));
+                commentViewHolder.getDate().setText(this.dateFormatter.timeAgo(comment.getDate()));
                 commentViewHolder.getBody().setText(comment.getBody());
 
                 break;

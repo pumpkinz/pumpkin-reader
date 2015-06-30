@@ -32,5 +32,5 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp:2.0.0'
     compile 'io.reactivex:rxjava:1.0.10'
     compile 'io.reactivex:rxandroid:0.24.0'
-
+    compile 'net.koofr:android-timeago:1.0.1'
 }

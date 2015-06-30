@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
+import net.koofr.android.timeago.TimeAgo;
+
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -20,10 +22,12 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsViewHolder> {
     private Fragment fragment;
     private List<News> dataset;
     private OnClickListener onClickListener;
+    private TimeAgo dateFormatter;
 
     public NewsAdapter(final Fragment fragment, final List<News> dataset) {
         this.fragment = fragment;
         this.dataset = dataset;
+        this.dateFormatter = new TimeAgo(fragment.getActivity());
 
         this.onClickListener = new OnClickListener() {
             @Override
@@ -46,12 +50,11 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsViewHolder> {
     @Override
     public void onBindViewHolder(NewsViewHolder newsViewHolder, int i) {
         News news = this.dataset.get(i);
-        SimpleDateFormat sdf = new SimpleDateFormat("MMM d");
 
         newsViewHolder.getTitle().setText(news.getTitle());
         newsViewHolder.getSubmitter().setText(news.getSubmitter());
         newsViewHolder.getUrl().setText(news.getUrl());
-        newsViewHolder.getDate().setText(sdf.format(news.getDate()));
+        newsViewHolder.getDate().setText(this.dateFormatter.timeAgo(news.getDate()));
         newsViewHolder.getScore().setText(Integer.toString(news.getScore()));
         newsViewHolder.getCommentCount().setText(Integer.toString(news.getComments().size()) + " comments");
     }
