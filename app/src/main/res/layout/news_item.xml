@@ -16,7 +16,6 @@
 
         <TextView
             android:id="@+id/news_score"
-            android:text="1323"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/abc_text_size_subhead_material"
@@ -25,7 +24,6 @@
 
         <TextView
             android:id="@+id/news_submitter"
-            android:text="wiseodd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/abc_text_size_caption_material"
@@ -33,7 +31,6 @@
 
         <TextView
             android:id="@+id/news_age"
-            android:text="2 hour"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="end"
@@ -57,7 +54,6 @@
 
         <TextView
             android:id="@+id/news_url"
-            android:text="thirdworldnomad.com"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/abc_button_padding_horizontal_material"
@@ -65,7 +61,6 @@
 
         <TextView
             android:id="@+id/news_comment_count"
-            android:text="121 comments"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/abc_text_size_caption_material" />
