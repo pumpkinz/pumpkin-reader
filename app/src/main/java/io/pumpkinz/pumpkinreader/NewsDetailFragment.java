@@ -41,13 +41,7 @@ public class NewsDetailFragment extends Fragment {
 
         final News news = Parcels.unwrap(getActivity().getIntent().getParcelableExtra(Constants.NEWS));
 
-        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.news_detail_fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                goToWebView(news.getUrl());
-            }
-        });
+        setUpFAB(view, news);
 
         this.newsDetail = (RecyclerView) view.findViewById(R.id.news_detail);
         this.newsDetail.setHasFixedSize(true);
@@ -68,6 +62,21 @@ public class NewsDetailFragment extends Fragment {
         intent.putExtra(Constants.LINK, url);
 
         startActivity(intent);
+    }
+
+    private void setUpFAB(View view, final News news) {
+        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.news_detail_fab);
+
+        if (news.getUrl() != null && !news.getUrl().isEmpty()) {
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    goToWebView(news.getUrl());
+                }
+            });
+        } else {
+            fab.setEnabled(false);
+        }
     }
 
 }

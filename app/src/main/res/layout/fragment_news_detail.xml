@@ -24,8 +24,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
-        android:src="@drawable/abc_btn_rating_star_on_mtrl_alpha"
+        android:src="@drawable/ic_public_white_18dp"
         app:borderWidth="0dp"
-        app:fabSize="normal" />
+        app:fabSize="normal"
+        app:rippleColor="@color/grey_1000w"/>
 
 </android.support.design.widget.CoordinatorLayout>

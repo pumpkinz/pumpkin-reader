@@ -1,9 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <style name="PumpkinTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/pumpkin_primary</item>
-        <item name="colorPrimaryDark">@color/pumpkin_primaryDark</item>
-    </style>
-
-</resources>
+<resources></resources>
