@@ -53,9 +53,9 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsViewHolder> {
         News news = this.dataset.get(i);
 
         newsViewHolder.getTitle().setText(news.getTitle());
-        newsViewHolder.getSubmitter().setText(news.getSubmitter());
+        newsViewHolder.getSubmitter().setText(news.getBy());
         newsViewHolder.getUrl().setText(Util.getDomainName(news.getUrl()));
-        newsViewHolder.getDate().setText(this.dateFormatter.timeAgo(news.getDate()));
+        newsViewHolder.getDate().setText(this.dateFormatter.timeAgo(news.getTime()));
         newsViewHolder.getScore().setText(Integer.toString(news.getScore()));
 
         Resources r = this.fragment.getActivity().getResources();

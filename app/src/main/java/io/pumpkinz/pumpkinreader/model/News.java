@@ -1,62 +1,58 @@
 package io.pumpkinz.pumpkinreader.model;
 
 import org.parceler.Parcel;
-
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 
 @Parcel
-public class News implements Serializable {
+public class News extends Item implements Serializable {
 
-    String title;
-    String body;
-    String submitter;
+    List<Integer> kids;
     String url;
-    Date date;
     int score;
+    String title;
+    int descendants;
     List<Comment> comments;
 
-    public News() {
-    }
+    public News() {}
 
-    public News(String title, String body, String submitter, String url, Date date, int score, List<Comment> comments) {
-        this.title = title;
-        this.body = body;
-        this.submitter = submitter;
+    public News(int id, boolean deleted, String type, String by, long time, String text,
+                boolean dead, List<Integer> kids, String url, int score, String title,
+                int descendants, List<Comment> comments) {
+        super(id, deleted, type, by, time, text, dead);
+        this.kids = kids;
         this.url = url;
-        this.date = date;
         this.score = score;
+        this.title = title;
+        this.descendants = descendants;
         this.comments = comments;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public String getBody() {
-        return body;
-    }
-
-    public String getSubmitter() {
-        return submitter;
+    public List<Integer> getKids() {
+        return kids;
     }
 
     public String getUrl() {
         return url;
     }
 
-    public Date getDate() {
-        return date;
-    }
-
     public int getScore() {
         return score;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public int getDescendants() {
+        return descendants;
     }
 
     public List<Comment> getComments() {
         return comments;
     }
+    public void setComments(List<Comment> comments) { this.comments = comments; }
 
 }
