@@ -129,7 +129,7 @@ public class NewsListFragment extends Fragment {
         News[] newses = new News[]{
                 new News(
                         "Squib: A Ruby DSL for prototyping card and board games", "",
-                        "selvan", "https://www.andymeneely.github.io", new Date(1435575296000l), 91, commentList),
+                        "selvan", "http://kaskus.co.id", new Date(1435575296000l), 91, commentList),
 
                 new News(
                         "With 61 Seconds in a Minute, Markets Brace for Trouble", "",

@@ -1,6 +1,8 @@
 package io.pumpkinz.pumpkinreader;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -37,7 +39,15 @@ public class NewsDetailFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        News news = Parcels.unwrap(getActivity().getIntent().getParcelableExtra(Constants.NEWS));
+        final News news = Parcels.unwrap(getActivity().getIntent().getParcelableExtra(Constants.NEWS));
+
+        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.news_detail_fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goToWebView(news.getUrl());
+            }
+        });
 
         this.newsDetail = (RecyclerView) view.findViewById(R.id.news_detail);
         this.newsDetail.setHasFixedSize(true);
@@ -51,6 +61,13 @@ public class NewsDetailFragment extends Fragment {
         RecyclerView.ItemDecoration itemDecoration =
                 new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
         this.newsDetail.addItemDecoration(itemDecoration);
+    }
+
+    public void goToWebView(String url) {
+        Intent intent = new Intent(getActivity(), WebViewActivity.class);
+        intent.putExtra(Constants.LINK, url);
+
+        startActivity(intent);
     }
 
 }
