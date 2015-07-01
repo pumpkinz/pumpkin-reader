@@ -4,8 +4,6 @@ import java.util.List;
 
 
 /**
- * @author timotiusnc
- * @since 6/27/15.
  * This is a POJO (Plain Old Java Object) to contain the JSON returned by HnApiService getItem
  * (The JSON returned will be automatically converted into this POJO)
  *

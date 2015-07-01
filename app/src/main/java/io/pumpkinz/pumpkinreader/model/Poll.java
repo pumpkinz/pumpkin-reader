@@ -2,42 +2,41 @@ package io.pumpkinz.pumpkinreader.model;
 
 import org.parceler.Parcel;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 
 @Parcel
-public class News extends Item implements Serializable {
+public class Poll extends Item implements Serializable {
 
     List<Integer> kids;
     String url;
     int score;
     String title;
+    List<Integer> parts;
     int descendants;
-    List<Comment> comments;
 
-    public News() {}
+    public Poll() {}
 
-    public News(int id, boolean deleted, String type, String by, long time, String text,
-                boolean dead, List<Integer> kids, String url, int score, String title,
-                int descendants) {
+    public Poll(int id, boolean deleted, String type, String by, long time, String text,
+                boolean dead, List<Integer> kids, int score, String url, String title,
+                List<Integer> parts, int descendants) {
         super(id, deleted, type, by, time, text, dead);
         this.kids = kids;
         this.url = url;
         this.score = score;
         this.title = title;
+        this.parts = parts;
         this.descendants = descendants;
-        this.comments = new ArrayList<>();
     }
 
-    public News(ItemPOJO itemPOJO) {
+    public Poll(ItemPOJO itemPOJO) {
         super(itemPOJO);
         this.kids = itemPOJO.getKids();
         this.url = itemPOJO.getUrl();
         this.score = itemPOJO.getScore();
         this.title = itemPOJO.getTitle();
+        this.parts = itemPOJO.getParts();
         this.descendants = itemPOJO.getDescendants();
-        this.comments = new ArrayList<>();
     }
 
     public List<Integer> getKids() {
@@ -56,12 +55,12 @@ public class News extends Item implements Serializable {
         return title;
     }
 
-    public int getDescendants() {
-        return descendants;
+    public List<Integer> getParts() {
+        return parts;
     }
 
-    public List<Comment> getComments() {
-        return comments;
+    public int getDescendants() {
+        return descendants;
     }
 
     @Override

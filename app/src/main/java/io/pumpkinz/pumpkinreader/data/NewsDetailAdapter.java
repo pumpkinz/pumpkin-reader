@@ -77,9 +77,9 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 Comment comment = this.dataset.getComments().get(i - 1);
                 CommentViewHolder commentViewHolder = (CommentViewHolder) viewHolder;
 
-                commentViewHolder.getSubmitter().setText(comment.getSubmitter());
-                commentViewHolder.getDate().setText(this.dateFormatter.timeAgo(comment.getDate()));
-                commentViewHolder.getBody().setText(comment.getBody());
+                commentViewHolder.getSubmitter().setText(comment.getBy());
+                commentViewHolder.getDate().setText(this.dateFormatter.timeAgo(comment.getTime()));
+                commentViewHolder.getBody().setText(comment.getText());
 
                 break;
         }

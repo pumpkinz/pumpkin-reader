@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import org.parceler.Parcels;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -21,6 +22,7 @@ import io.pumpkinz.pumpkinreader.data.NewsAdapter;
 import io.pumpkinz.pumpkinreader.etc.Constants;
 import io.pumpkinz.pumpkinreader.etc.DividerItemDecoration;
 import io.pumpkinz.pumpkinreader.model.Comment;
+import io.pumpkinz.pumpkinreader.model.Item;
 import io.pumpkinz.pumpkinreader.model.ItemPOJO;
 import io.pumpkinz.pumpkinreader.model.News;
 import io.pumpkinz.pumpkinreader.service.RestClient;
@@ -39,8 +41,8 @@ public class NewsListFragment extends Fragment {
 
     private RecyclerView newsList;
     private NewsAdapter newsAdapter;
-    private List<ItemPOJO> dataset;
-    private Observable<List<ItemPOJO>> stories;
+    private List<News> dataset;
+    private Observable<List<Item>> stories;
     private Subscription subscription = Subscriptions.empty();
 
     public NewsListFragment() {
@@ -77,14 +79,16 @@ public class NewsListFragment extends Fragment {
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         newsList.setLayoutManager(layoutManager);
 
-        List<News> dataset = getMockData();
-        newsList.setAdapter(new NewsAdapter(this, dataset));
+        //dataset = new ArrayList<>();
+        dataset = getMockData();
+        newsAdapter = new NewsAdapter(this, dataset);
+        newsList.setAdapter(newsAdapter);
 
         RecyclerView.ItemDecoration itemDecoration =
                 new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
         newsList.addItemDecoration(itemDecoration);
 
-        subscription = stories.subscribe(new Subscriber<List<ItemPOJO>>() {
+        subscription = stories.subscribe(new Subscriber<List<Item>>() {
             @Override
             public void onCompleted() {
                 newsAdapter.notifyDataSetChanged();
@@ -98,9 +102,10 @@ public class NewsListFragment extends Fragment {
             }
 
             @Override
-            public void onNext(List<ItemPOJO> itemPOJOs) {
-                Log.d("stories", String.valueOf(itemPOJOs.size()));
-//                dataset.addAll(itemPOJOs);
+            public void onNext(List<Item> items) {
+                Log.d("stories", String.valueOf(items.size()));
+                Log.d("stories content", items.toString());
+                //dataset.addAll(items);
             }
         });
     }
@@ -113,7 +118,7 @@ public class NewsListFragment extends Fragment {
     }
 
     private List<News> getMockData() {
-        Comment[] comments1 = new Comment[]{
+        /*Comment[] comments1 = new Comment[]{
                 new Comment("eru", new Date(1435475296l), "Oh, I was hoping for a DSL for prototyping the rules to play these kind of games on a computer (and perhaps train a neural network as an AI opponent). I've been working out how to do these things recently."),
                 new Comment("kriro", new Date(1435495296l), "I wonder if it'd be possible to recreate Magic: the Gathering cards using this. It'd be nice to have an alternative to Magic Set Editor for high-quality cards."),
                 new Comment("troels", new Date(1435575296), "Very cool. I have a bunch of html templates and imagemagick scripts for this, but always thought I would turn it into a more coherent suite at some point. Glad someone did it for me!"),
@@ -124,20 +129,20 @@ public class NewsListFragment extends Fragment {
                 new Comment("GaiusCoffee", new Date(1435575296), "Looks cool. I don't know ruby though.. :(")
         };
 
-        List<Comment> commentList = Arrays.asList(comments1);
+        List<Comment> commentList = Arrays.asList(comments1);*/
 
         News[] newses = new News[]{
                 new News(42, false, "story", "selvan", 1435575296000l, "", false,
                         Arrays.asList(new Integer[]{1,2,3}), "https://www.andymeneely.github.io", 42,
-                        "Squib: A Ruby DSL for prototyping card and board games", 91, commentList),
+                        "Squib: A Ruby DSL for prototyping card and board games", 91),
 
                 new News(43, false, "story", "rsgoheen", 1435575296000l, "", false,
                         Arrays.asList(new Integer[]{1,2,3}), "http://bloomberg.com/some/news?a=1", 42,
-                        "With 61 Seconds in a Minute, Markets Brace for Trouble", 32, commentList),
+                        "With 61 Seconds in a Minute, Markets Brace for Trouble", 32),
 
                 new News(42, false, "story", "ghosh", 1435575296000l, "", false,
                         Arrays.asList(new Integer[]{1,2,3}), "http://www.npr.org/123/23/42", 42,
-                        "The Man Who Saved Southwest Airlines with a '10-Minute' Idea", 33, commentList),
+                        "The Man Who Saved Southwest Airlines with a '10-Minute' Idea", 33),
         };
 
         return Arrays.asList(newses);
