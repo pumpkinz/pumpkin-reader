@@ -2,80 +2,50 @@ package io.pumpkinz.pumpkinreader.model;
 
 import org.parceler.Parcel;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 
 @Parcel
-public class Poll extends Item implements Serializable {
+public class Poll extends News implements Serializable {
 
-    List<Integer> kids;
-    String url;
-    int score;
-    String title;
     List<Integer> parts;
-    int descendants;
+    List<PollOpt> pollOpts;
 
     public Poll() {}
 
     public Poll(int id, boolean deleted, String type, String by, long time, String text,
                 boolean dead, List<Integer> kids, int score, String url, String title,
                 List<Integer> parts, int descendants) {
-        super(id, deleted, type, by, time, text, dead);
-        this.kids = kids;
-        this.url = url;
-        this.score = score;
-        this.title = title;
+        super(id, deleted, type, by, time, text, dead, kids, url, score, title, descendants);
         this.parts = parts;
-        this.descendants = descendants;
+        this.comments = new ArrayList<>();
     }
 
     public Poll(ItemPOJO itemPOJO) {
         super(itemPOJO);
         this.kids = itemPOJO.getKids();
-        this.url = itemPOJO.getUrl();
-        this.score = itemPOJO.getScore();
-        this.title = itemPOJO.getTitle();
         this.parts = itemPOJO.getParts();
         this.descendants = itemPOJO.getDescendants();
-    }
-
-    public List<Integer> getKids() {
-        return kids;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public int getScore() {
-        return score;
-    }
-
-    public String getTitle() {
-        return title;
+        this.comments = new ArrayList<>();
     }
 
     public List<Integer> getParts() {
         return parts;
     }
 
-    public int getDescendants() {
-        return descendants;
+    public List<PollOpt> getPollOpts() {
+        return pollOpts;
+    }
+
+    public void setPollOpts(List<PollOpt> pollOpts) {
+        this.pollOpts = pollOpts;
     }
 
     @Override
     public String toString() {
         String parent = super.toString();
-
-        StringBuilder sb = new StringBuilder();
-        sb.append(parent)
-                .append("URL=" + getUrl())
-                .append("; Score=" + getScore())
-                .append("; Title=" + getTitle())
-                .append("; Descendants=" + getDescendants())
-                .append("\n");
-
-        return sb.toString();
+        return parent.toString();
     }
 
 }

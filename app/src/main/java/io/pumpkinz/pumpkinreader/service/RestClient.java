@@ -1,8 +1,6 @@
 package io.pumpkinz.pumpkinreader.service;
 
 import java.util.List;
-
-import io.pumpkinz.pumpkinreader.model.Item;
 import io.pumpkinz.pumpkinreader.model.ItemPOJO;
 import io.pumpkinz.pumpkinreader.model.News;
 import retrofit.RestAdapter;
@@ -55,7 +53,7 @@ public class RestClient implements ApiService {
         return getService().getItem(itemId);
     }
 
-    public Observable<List<Item>> getTopItems(int N) {
+    public Observable<List<News>> getTopNews(int N) {
         //TODO: save top stories into local storage
         //TODO: add offset variable for pagination/infinite scroll feature
         return listTopStories()
@@ -72,10 +70,10 @@ public class RestClient implements ApiService {
                     return getItem(integer);
                 }
             })
-            .map(new Func1<ItemPOJO, Item>() {
+            .map(new Func1<ItemPOJO, News>() {
                 @Override
-                public Item call(ItemPOJO itemPOJO) {
-                    return new News(itemPOJO);
+                public News call(ItemPOJO itemPOJO) {
+                    return News.valueOf(itemPOJO);
                 }
             })
             .toList();

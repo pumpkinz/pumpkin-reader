@@ -1,13 +1,9 @@
 package io.pumpkinz.pumpkinreader.model;
 
-import org.parceler.Parcel;
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 
-@Parcel
-public class News extends Item implements Serializable {
+public abstract class News extends Item {
 
     List<Integer> kids;
     String url;
@@ -27,7 +23,6 @@ public class News extends Item implements Serializable {
         this.score = score;
         this.title = title;
         this.descendants = descendants;
-        this.comments = new ArrayList<>();
     }
 
     public News(ItemPOJO itemPOJO) {
@@ -37,7 +32,16 @@ public class News extends Item implements Serializable {
         this.score = itemPOJO.getScore();
         this.title = itemPOJO.getTitle();
         this.descendants = itemPOJO.getDescendants();
-        this.comments = new ArrayList<>();
+    }
+
+    public static News valueOf(ItemPOJO itemPOJO) {
+        Item.Type type = Item.Type.fromString(itemPOJO.getType());
+        switch(type) {
+            case Story: return new Story(itemPOJO);
+            case Job: return new Job(itemPOJO);
+            case Poll: return new Poll(itemPOJO);
+            default: throw new AssertionError("Unknown News type: " + type);
+        }
     }
 
     public List<Integer> getKids() {
@@ -62,6 +66,10 @@ public class News extends Item implements Serializable {
 
     public List<Comment> getComments() {
         return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 
     @Override

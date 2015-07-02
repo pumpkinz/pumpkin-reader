@@ -39,12 +39,12 @@ public abstract class Item {
     public static Item valueOf(ItemPOJO itemPOJO) {
         Item.Type type = Item.Type.fromString(itemPOJO.getType());
         switch(type) {
-            case News: return new News(itemPOJO);
+            case Story: return new Story(itemPOJO);
             case Comment: return new Comment(itemPOJO);
             case Job: return new Job(itemPOJO);
             case Poll: return new Poll(itemPOJO);
             case PollOpt: return new PollOpt(itemPOJO);
-            default: throw new AssertionError("Unknown type: " + type);
+            default: throw new AssertionError("Unknown Item type: " + type);
         }
     }
 
@@ -96,7 +96,7 @@ public abstract class Item {
     }
 
     public enum Type {
-        News("story"),
+        Story("story"),
         Comment("comment"),
         Job("job"),
         Poll("poll"),
