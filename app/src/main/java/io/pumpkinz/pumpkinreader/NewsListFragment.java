@@ -38,7 +38,6 @@ public class NewsListFragment extends Fragment {
 
     private RecyclerView newsList;
     private NewsAdapter newsAdapter;
-    private List<News> dataset;
     private Observable<List<News>> stories;
     private Subscription subscription = Subscriptions.empty();
 
@@ -76,9 +75,7 @@ public class NewsListFragment extends Fragment {
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         newsList.setLayoutManager(layoutManager);
 
-        dataset = new ArrayList<>();
-        //dataset = getMockData();
-        newsAdapter = new NewsAdapter(this, dataset);
+        newsAdapter = new NewsAdapter(this);
         newsList.setAdapter(newsAdapter);
 
         RecyclerView.ItemDecoration itemDecoration =
@@ -102,7 +99,7 @@ public class NewsListFragment extends Fragment {
             public void onNext(List<News> items) {
                 Log.d("stories", String.valueOf(items.size()));
                 Log.d("stories content", items.toString());
-                dataset.addAll(items);
+                newsAdapter.addDataset(items);
             }
         });
     }
