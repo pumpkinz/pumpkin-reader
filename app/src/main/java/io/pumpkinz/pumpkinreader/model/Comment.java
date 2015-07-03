@@ -11,7 +11,7 @@ public class Comment extends Item implements Serializable {
     int parent;
     List<Integer> kids;
     Comment parentComment;
-    List<Comment> comments;
+    List<Comment> childComments;
 
     public Comment() {}
 
@@ -38,12 +38,12 @@ public class Comment extends Item implements Serializable {
         this.parentComment = parentComment;
     }
 
-    public List<Comment> getComments() {
-        return comments;
+    public List<Comment> getChildComments() {
+        return childComments;
     }
 
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
+    public void setChildComments(List<Comment> childComments) {
+        this.childComments = childComments;
     }
 
 }

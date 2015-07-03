@@ -18,8 +18,8 @@ public class Poll extends News implements Serializable {
 
     public Poll(int id, boolean deleted, String type, String by, long time, String text,
                 boolean dead, List<Integer> kids, int score, String url, String title,
-                List<Integer> parts, int descendants) {
-        super(id, deleted, type, by, time, text, dead, kids, url, score, title, descendants);
+                List<Integer> parts) {
+        super(id, deleted, type, by, time, text, dead, kids, url, score, title);
         this.parts = parts;
         this.comments = new ArrayList<>();
     }

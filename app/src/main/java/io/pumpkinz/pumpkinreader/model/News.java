@@ -9,20 +9,17 @@ public abstract class News extends Item {
     String url;
     int score;
     String title;
-    int descendants;
     List<Comment> comments;
 
     public News() {}
 
     public News(int id, boolean deleted, String type, String by, long time, String text,
-                boolean dead, List<Integer> kids, String url, int score, String title,
-                int descendants) {
+                boolean dead, List<Integer> kids, String url, int score, String title) {
         super(id, deleted, type, by, time, text, dead);
         this.kids = kids;
         this.url = url;
         this.score = score;
         this.title = title;
-        this.descendants = descendants;
     }
 
     public List<Integer> getKids() {
@@ -39,10 +36,6 @@ public abstract class News extends Item {
 
     public String getTitle() {
         return title;
-    }
-
-    public int getDescendants() {
-        return descendants;
     }
 
     public List<Comment> getComments() {
@@ -62,7 +55,6 @@ public abstract class News extends Item {
                 .append("URL=" + getUrl())
                 .append("; Score=" + getScore())
                 .append("; Title=" + getTitle())
-                .append("; Descendants=" + getDescendants())
                 .append("\n");
 
         return sb.toString();

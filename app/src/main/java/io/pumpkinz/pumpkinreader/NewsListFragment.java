@@ -128,31 +128,31 @@ public class NewsListFragment extends Fragment {
         News[] newses = new News[]{
                 new Story(42, false, "story", "selvan", 1435575296000l, "", false,
                         Arrays.asList(new Integer[]{1,2,3}), "https://www.andymeneely.github.io", 42,
-                        "Squib: A Ruby DSL for prototyping card and board games", 91, commentList),
+                        "Squib: A Ruby DSL for prototyping card and board games", commentList),
 
                 new Story(43, false, "story", "rsgoheen", 1435575296000l, "", false,
                         Arrays.asList(new Integer[]{1,2,3}), "http://bloomberg.com/some/news?a=1", 42,
-                        "With 61 Seconds in a Minute, Markets Brace for Trouble", 32, commentList),
+                        "With 61 Seconds in a Minute, Markets Brace for Trouble", commentList),
 
                 new Story(42, false, "story", "ghosh", 1435575296000l, "", false,
                         Arrays.asList(new Integer[]{1,2,3}), "http://www.npr.org/123/23/42", 42,
-                        "The Man Who Saved Southwest Airlines with a '10-Minute' Idea", 33, commentList),
+                        "The Man Who Saved Southwest Airlines with a '10-Minute' Idea", commentList),
 
                 new Story(42, false, "story", "IBM", 1435575296000l, "", false,
                         Arrays.asList(new Integer[]{1,2,3}), "http://bloomberg.com/some/news?a=1", 42,
-                        "High-Profile Study Turns Up the Antitrust Heat on Google", 29, commentList),
+                        "High-Profile Study Turns Up the Antitrust Heat on Google", commentList),
 
                 new Story(42, false, "story", "vladiim", 1435575296000l, "", false,
                         Arrays.asList(new Integer[]{1,2,3}), "http://revolutionanalytics.com?stories=1", 42,
-                        "R at Microsoft", 75, commentList),
+                        "R at Microsoft", commentList),
 
                 new Story(42, false, "story", "gregcry", 1435575296000l, "Test satu dua tigaaaaaa", false,
                         Arrays.asList(new Integer[]{1,2,3}),"https://www.perthnow.com.au/1", 42,
-                        "Perth engineer invents robotic bricklayer", 51, commentList),
+                        "Perth engineer invents robotic bricklayer", commentList),
 
                 new Story(42, false, "story", "inthewoods", 1435575296000l, "", false,
                         Arrays.asList(new Integer[]{1,2,3}), "http://moz.com/123", 42,
-                        "Alleged $7.5B fraud in online advertising", 134, commentList)
+                        "Alleged $7.5B fraud in online advertising", commentList)
         };
 
         return Arrays.asList(newses);
