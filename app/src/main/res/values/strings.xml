@@ -4,6 +4,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_news_detail">News</string>
+    <string name="title_activity_web_view">News Article</string>
 
     <plurals name="comments">
         <item quantity="zero">%d comment</item>

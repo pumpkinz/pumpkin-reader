@@ -1,6 +1,8 @@
 package io.pumpkinz.pumpkinreader;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -33,6 +35,8 @@ public class NewsDetailFragment extends Fragment {
 
         News news = Parcels.unwrap(getActivity().getIntent().getParcelableExtra(Constants.NEWS));
 
+        setUpFAB(view, news);
+
         this.newsDetail = (RecyclerView) view.findViewById(R.id.news_detail);
         this.newsDetail.setHasFixedSize(true);
 
@@ -45,6 +49,28 @@ public class NewsDetailFragment extends Fragment {
         RecyclerView.ItemDecoration itemDecoration =
                 new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
         this.newsDetail.addItemDecoration(itemDecoration);
+    }
+
+    public void goToWebView(String url) {
+        Intent intent = new Intent(getActivity(), WebViewActivity.class);
+        intent.putExtra(Constants.LINK, url);
+
+        startActivity(intent);
+    }
+
+    private void setUpFAB(View view, final News news) {
+        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.news_detail_fab);
+
+        if (news.getUrl() != null && !news.getUrl().isEmpty()) {
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    goToWebView(news.getUrl());
+                }
+            });
+        } else {
+            fab.setEnabled(false);
+        }
     }
 
 }

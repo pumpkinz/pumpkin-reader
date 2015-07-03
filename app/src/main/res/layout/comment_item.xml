@@ -16,7 +16,6 @@
 
         <TextView
             android:id="@+id/comment_submitter"
-            android:text="wiseodd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/abc_text_size_caption_material"
@@ -24,7 +23,6 @@
 
         <TextView
             android:id="@+id/comment_age"
-            android:text="2 hour"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="end"
