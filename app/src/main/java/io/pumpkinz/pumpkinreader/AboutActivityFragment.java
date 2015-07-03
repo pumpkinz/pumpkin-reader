@@ -17,4 +17,5 @@ public class AboutActivityFragment extends Fragment {
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_about, container, false);
     }
+
 }
