@@ -74,13 +74,7 @@ public class RestClient implements ApiService {
 
     @Override
     public Observable<News> getNews(@Path("news") int newsId) {
-        return getService().getNews(newsId)
-                .onErrorReturn(new Func1<Throwable, News>() {
-                    @Override //If the API returning error, just return null
-                    public News call(Throwable throwable) {
-                        return null;
-                    }
-                });
+        return getService().getNews(newsId);
     }
 
     /**
@@ -104,7 +98,12 @@ public class RestClient implements ApiService {
             .flatMap(new Func1<Integer, Observable<News>>() {
                 @Override
                 public Observable<News> call(Integer integer) {
-                    return getNews(integer);
+                    return getNews(integer).onErrorReturn(new Func1<Throwable, News>() {
+                        @Override //If the API returning error, just return null
+                        public News call(Throwable throwable) {
+                            return null;
+                        }
+                    });
                 }
             })
             .filter(new Func1<News, Boolean>() { //Filter out the NULL news from any parse error
