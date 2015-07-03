@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import net.koofr.android.timeago.TimeAgo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.pumpkinz.pumpkinreader.NewsListFragment;
@@ -25,9 +26,9 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsViewHolder> {
     private OnClickListener onClickListener;
     private TimeAgo dateFormatter;
 
-    public NewsAdapter(final Fragment fragment, final List<News> dataset) {
+    public NewsAdapter(final Fragment fragment) {
         this.fragment = fragment;
-        this.dataset = dataset;
+        this.dataset = new ArrayList<>();
         this.dateFormatter = new TimeAgo(fragment.getActivity());
 
         this.onClickListener = new OnClickListener() {
@@ -53,9 +54,9 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsViewHolder> {
         News news = this.dataset.get(i);
 
         newsViewHolder.getTitle().setText(news.getTitle());
-        newsViewHolder.getSubmitter().setText(news.getSubmitter());
+        newsViewHolder.getSubmitter().setText(news.getBy());
         newsViewHolder.getUrl().setText(Util.getDomainName(news.getUrl()));
-        newsViewHolder.getDate().setText(this.dateFormatter.timeAgo(news.getDate()));
+        newsViewHolder.getDate().setText(this.dateFormatter.timeAgo(news.getTime()));
         newsViewHolder.getScore().setText(Integer.toString(news.getScore()));
 
         Resources r = this.fragment.getActivity().getResources();
@@ -69,4 +70,8 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsViewHolder> {
         return this.dataset.size();
     }
 
+    public void addDataset(List<News> dataset) {
+        this.dataset.addAll(dataset);
+        notifyDataSetChanged();
+    }
 }

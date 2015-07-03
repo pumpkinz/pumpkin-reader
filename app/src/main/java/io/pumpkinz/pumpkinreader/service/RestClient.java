@@ -1,8 +1,12 @@
 package io.pumpkinz.pumpkinreader.service;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.util.List;
-import io.pumpkinz.pumpkinreader.model.ItemPOJO;
+import io.pumpkinz.pumpkinreader.model.Item;
+import io.pumpkinz.pumpkinreader.model.News;
 import retrofit.RestAdapter;
+import retrofit.converter.GsonConverter;
 import retrofit.http.Path;
 import rx.Observable;
 import rx.functions.Func1;
@@ -27,8 +31,14 @@ public class RestClient implements ApiService {
 
     private static RestAdapter getAdapter() {
         if (restAdapter == null) {
+            Gson gson = new GsonBuilder()
+                    .registerTypeAdapter(Item.class, new ItemTypeAdapter())
+                    .registerTypeAdapter(News.class, new ItemTypeAdapter())
+                    .create();
+
             restAdapter = new RestAdapter.Builder()
                     .setEndpoint(HN_API_ENDPOINT)
+                    .setConverter(new GsonConverter(gson))
                     .build();
         }
 
@@ -48,11 +58,23 @@ public class RestClient implements ApiService {
     }
 
     @Override
-    public Observable<ItemPOJO> getItem(@Path("item") int itemId) {
+    public Observable<Item> getItem(@Path("item") int itemId) {
         return getService().getItem(itemId);
     }
 
-    public Observable<List<ItemPOJO>> getTopItems(int N) {
+    @Override
+    public Observable<News> getNews(@Path("news") int newsId) {
+        return getService().getNews(newsId);
+    }
+
+    /**
+     * Get a maximum of N number of News. Maximum because the JSON retrieved
+     * might not be able to be instantiated into News object due to incomplete JSON.
+     *
+     * @param N maximum number of News to be retrieved
+     * @return an Observable of List of News
+     */
+    public Observable<List<News>> getTopNews(int N) {
         //TODO: save top stories into local storage
         //TODO: add offset variable for pagination/infinite scroll feature
         return listTopStories()
@@ -63,13 +85,18 @@ public class RestClient implements ApiService {
                 }
             })
             .take(N)
-            .flatMap(new Func1<Integer, Observable<ItemPOJO>>() {
+            .flatMap(new Func1<Integer, Observable<News>>() {
                 @Override
-                public Observable<ItemPOJO> call(Integer integer) {
-                    return getItem(integer);
+                public Observable<News> call(Integer integer) {
+                    return getNews(integer);
+                }
+            })
+            .filter(new Func1<News, Boolean>() { //Filter out the NULL news from any parse error
+                @Override
+                public Boolean call(News news) {
+                    return (news != null);
                 }
             })
             .toList();
     }
-
 }
