@@ -56,9 +56,9 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 NewsViewHolder newsViewHolder = (NewsViewHolder) viewHolder;
 
                 newsViewHolder.getTitle().setText(news.getTitle());
-                newsViewHolder.getSubmitter().setText(news.getSubmitter());
+                newsViewHolder.getSubmitter().setText(news.getBy());
                 newsViewHolder.getUrl().setText(Util.getDomainName(news.getUrl()));
-                newsViewHolder.getDate().setText(this.dateFormatter.timeAgo(news.getDate()));
+                newsViewHolder.getDate().setText(this.dateFormatter.timeAgo(news.getTime()));
                 newsViewHolder.getScore().setText(Integer.toString(news.getScore()));
 
                 Resources r = this.fragment.getActivity().getResources();
@@ -66,8 +66,8 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 String commentCountFormat = r.getQuantityString(R.plurals.comments, nComment, nComment);
                 newsViewHolder.getCommentCount().setText(commentCountFormat);
 
-                if (news.getBody() != null && !news.getBody().isEmpty()) {
-                    newsViewHolder.getBody().setText(news.getBody());
+                if (news.getText() != null && !news.getText().isEmpty()) {
+                    newsViewHolder.getBody().setText(news.getText());
                 } else {
                     newsViewHolder.getBody().setVisibility(View.GONE);
                 }
@@ -77,9 +77,9 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 Comment comment = this.dataset.getComments().get(i - 1);
                 CommentViewHolder commentViewHolder = (CommentViewHolder) viewHolder;
 
-                commentViewHolder.getSubmitter().setText(comment.getSubmitter());
-                commentViewHolder.getDate().setText(this.dateFormatter.timeAgo(comment.getDate()));
-                commentViewHolder.getBody().setText(comment.getBody());
+                commentViewHolder.getSubmitter().setText(comment.getBy());
+                commentViewHolder.getDate().setText(this.dateFormatter.timeAgo(comment.getTime()));
+                commentViewHolder.getBody().setText(comment.getText());
 
                 break;
         }

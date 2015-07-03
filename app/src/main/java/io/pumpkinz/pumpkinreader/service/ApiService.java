@@ -1,7 +1,9 @@
 package io.pumpkinz.pumpkinreader.service;
 
 import java.util.List;
-import io.pumpkinz.pumpkinreader.model.ItemPOJO;
+
+import io.pumpkinz.pumpkinreader.model.Item;
+import io.pumpkinz.pumpkinreader.model.News;
 import retrofit.http.GET;
 import retrofit.http.Path;
 import rx.Observable;
@@ -13,6 +15,9 @@ public interface ApiService {
     Observable<List<Integer>> listTopStories();
 
     @GET("/item/{item}.json")
-    Observable<ItemPOJO> getItem(@Path("item") int itemId);
+    Observable<Item> getItem(@Path("item") int itemId);
+
+    @GET("/item/{news}.json")
+    Observable<News> getNews(@Path("news") int newsId);
 
 }
