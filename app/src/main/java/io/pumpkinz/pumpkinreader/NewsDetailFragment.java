@@ -39,7 +39,7 @@ public class NewsDetailFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        final News news = Parcels.unwrap(getActivity().getIntent().getParcelableExtra(Constants.NEWS));
+        News news = Parcels.unwrap(getActivity().getIntent().getParcelableExtra(Constants.NEWS));
 
         setUpFAB(view, news);
 
