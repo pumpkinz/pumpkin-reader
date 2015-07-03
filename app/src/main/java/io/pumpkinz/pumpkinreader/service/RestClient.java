@@ -67,6 +67,13 @@ public class RestClient implements ApiService {
         return getService().getNews(newsId);
     }
 
+    /**
+     * Get a maximum of N number of News. Maximum because the JSON retrieved
+     * might not be able to be instantiated into News object due to incomplete JSON.
+     *
+     * @param N maximum number of News to be retrieved
+     * @return an Observable of List of News
+     */
     public Observable<List<News>> getTopNews(int N) {
         //TODO: save top stories into local storage
         //TODO: add offset variable for pagination/infinite scroll feature
@@ -82,6 +89,12 @@ public class RestClient implements ApiService {
                 @Override
                 public Observable<News> call(Integer integer) {
                     return getNews(integer);
+                }
+            })
+            .filter(new Func1<News, Boolean>() { //Filter out the NULL news from any parse error
+                @Override
+                public Boolean call(News news) {
+                    return (news != null);
                 }
             })
             .toList();
