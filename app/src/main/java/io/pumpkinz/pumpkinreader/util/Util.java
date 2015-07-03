@@ -8,7 +8,7 @@ public class Util {
 
     public static String getDomainName(String url) {
         try {
-            if (url.equals("")) {
+            if (url.isEmpty()) {
                 throw new URISyntaxException(url, "Empty URL");
             }
 
