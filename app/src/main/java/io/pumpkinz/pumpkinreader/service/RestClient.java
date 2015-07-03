@@ -1,14 +1,23 @@
 package io.pumpkinz.pumpkinreader.service;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import io.pumpkinz.pumpkinreader.model.Comment;
 import io.pumpkinz.pumpkinreader.model.Item;
 import io.pumpkinz.pumpkinreader.model.News;
+import io.pumpkinz.pumpkinreader.model.Story;
 import retrofit.RestAdapter;
 import retrofit.converter.GsonConverter;
 import retrofit.http.Path;
 import rx.Observable;
+import rx.functions.Action1;
 import rx.functions.Func1;
 
 
@@ -39,6 +48,7 @@ public class RestClient implements ApiService {
             restAdapter = new RestAdapter.Builder()
                     .setEndpoint(HN_API_ENDPOINT)
                     .setConverter(new GsonConverter(gson))
+                    .setLogLevel(RestAdapter.LogLevel.BASIC)
                     .build();
         }
 
@@ -64,7 +74,13 @@ public class RestClient implements ApiService {
 
     @Override
     public Observable<News> getNews(@Path("news") int newsId) {
-        return getService().getNews(newsId);
+        return getService().getNews(newsId)
+                .onErrorReturn(new Func1<Throwable, News>() {
+                    @Override //If the API returning error, just return null
+                    public News call(Throwable throwable) {
+                        return null;
+                    }
+                });
     }
 
     /**
