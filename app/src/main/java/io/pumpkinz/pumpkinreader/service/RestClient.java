@@ -1,23 +1,16 @@
 package io.pumpkinz.pumpkinreader.service;
 
-import android.util.Log;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import io.pumpkinz.pumpkinreader.model.Comment;
 import io.pumpkinz.pumpkinreader.model.Item;
 import io.pumpkinz.pumpkinreader.model.News;
-import io.pumpkinz.pumpkinreader.model.Story;
 import retrofit.RestAdapter;
 import retrofit.converter.GsonConverter;
 import retrofit.http.Path;
 import rx.Observable;
-import rx.functions.Action1;
 import rx.functions.Func1;
 
 
