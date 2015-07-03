@@ -7,9 +7,9 @@ public abstract class Item {
 
     int id;
     boolean deleted;
-    Item.Type type;
+    String type;
     String by;
-    Date time;
+    long time;
     String text;
     boolean dead;
 
@@ -19,33 +19,11 @@ public abstract class Item {
                 boolean dead) {
         this.id = id;
         this.deleted = deleted;
-        this.type = Item.Type.fromString(type);
+        this.type = type;
         this.by = by;
-        this.time = new Date(time * 1000);
+        this.time = time * 1000;
         this.text = text;
         this.dead = dead;
-    }
-
-    public Item(ItemPOJO itemPOJO) {
-        this.id = itemPOJO.getId();
-        this.deleted = itemPOJO.getDeleted();
-        this.type = Item.Type.fromString(itemPOJO.getType());
-        this.by = itemPOJO.getBy();
-        this.time = new Date(itemPOJO.getTime() * 1000);
-        this.text = itemPOJO.getText();
-        this.dead = itemPOJO.getDead();
-    }
-
-    public static Item valueOf(ItemPOJO itemPOJO) {
-        Item.Type type = Item.Type.fromString(itemPOJO.getType());
-        switch(type) {
-            case Story: return new Story(itemPOJO);
-            case Comment: return new Comment(itemPOJO);
-            case Job: return new Job(itemPOJO);
-            case Poll: return new Poll(itemPOJO);
-            case PollOpt: return new PollOpt(itemPOJO);
-            default: throw new AssertionError("Unknown Item type: " + type);
-        }
     }
 
     /** The item's unique ID */
@@ -60,7 +38,7 @@ public abstract class Item {
 
     /** The type of item */
     public Item.Type getType() {
-        return type;
+        return Item.Type.fromString(type);
     }
 
     /** The username of the item's author */
@@ -70,7 +48,7 @@ public abstract class Item {
 
     /** Creation date of the item, in java.util.Date */
     public Date getTime() {
-        return time;
+        return new Date(time * 1000);
     }
 
     /** The comment, story or poll text. HTML. */

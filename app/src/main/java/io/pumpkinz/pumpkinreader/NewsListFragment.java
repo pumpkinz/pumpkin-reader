@@ -12,18 +12,14 @@ import android.view.ViewGroup;
 
 import org.parceler.Parcels;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import io.pumpkinz.pumpkinreader.data.NewsAdapter;
 import io.pumpkinz.pumpkinreader.etc.Constants;
 import io.pumpkinz.pumpkinreader.etc.DividerItemDecoration;
 import io.pumpkinz.pumpkinreader.model.Comment;
-import io.pumpkinz.pumpkinreader.model.Item;
-import io.pumpkinz.pumpkinreader.model.ItemPOJO;
 import io.pumpkinz.pumpkinreader.model.News;
 import io.pumpkinz.pumpkinreader.model.Story;
 import io.pumpkinz.pumpkinreader.service.RestClient;

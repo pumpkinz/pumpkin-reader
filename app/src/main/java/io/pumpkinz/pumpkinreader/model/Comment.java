@@ -22,12 +22,6 @@ public class Comment extends Item implements Serializable {
         this.kids = kids;
     }
 
-    public Comment(ItemPOJO itemPOJO) {
-        super(itemPOJO);
-        this.parent = itemPOJO.getParent();
-        this.kids = itemPOJO.getKids();
-    }
-
     public int getParent() {
         return parent;
     }

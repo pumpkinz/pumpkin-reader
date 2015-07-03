@@ -25,25 +25,6 @@ public abstract class News extends Item {
         this.descendants = descendants;
     }
 
-    public News(ItemPOJO itemPOJO) {
-        super(itemPOJO);
-        this.kids = itemPOJO.getKids();
-        this.url = itemPOJO.getUrl();
-        this.score = itemPOJO.getScore();
-        this.title = itemPOJO.getTitle();
-        this.descendants = itemPOJO.getDescendants();
-    }
-
-    public static News valueOf(ItemPOJO itemPOJO) {
-        Item.Type type = Item.Type.fromString(itemPOJO.getType());
-        switch(type) {
-            case Story: return new Story(itemPOJO);
-            case Job: return new Job(itemPOJO);
-            case Poll: return new Poll(itemPOJO);
-            default: throw new AssertionError("Unknown News type: " + type);
-        }
-    }
-
     public List<Integer> getKids() {
         return kids;
     }

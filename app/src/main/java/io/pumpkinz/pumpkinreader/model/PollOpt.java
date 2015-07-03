@@ -19,12 +19,6 @@ public class PollOpt extends Item implements Serializable {
         this.score = score;
     }
 
-    public PollOpt(ItemPOJO itemPOJO) {
-        super(itemPOJO);
-        this.parent = itemPOJO.getParent();
-        this.score = itemPOJO.getScore();
-    }
-
     public int getParent() {
         return parent;
     }
