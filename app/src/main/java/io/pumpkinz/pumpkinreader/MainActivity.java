@@ -10,7 +10,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
@@ -77,16 +76,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void onSideNavMenuSelected(int menuId) {
+        Intent intent = null;
+
         switch (menuId) {
+            case R.id.sidenav_menu_setting:
+                intent = new Intent(this, SettingsActivity.class);
+                break;
             case R.id.sidenav_menu_about:
-                goToAbout();
+                intent = new Intent(this, AboutActivity.class);
                 break;
         }
-    }
 
-    private void goToAbout() {
-        Intent intent = new Intent(this, AboutActivity.class);
-        startActivity(intent);
+        if (intent != null) {
+            startActivity(intent);
+        }
     }
 
 }

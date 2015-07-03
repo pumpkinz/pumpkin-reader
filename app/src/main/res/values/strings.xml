@@ -51,6 +51,7 @@
         <item quantity="one">%d year</item>
         <item quantity="other">%d years</item>
     </plurals>
+    <string name="title_activity_settings">Settings</string>
     <!--End Time Ago Strings-->
 
 </resources>
