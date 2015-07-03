@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
 import io.pumpkinz.pumpkinreader.etc.Constants;
@@ -31,12 +32,12 @@ public class WebViewActivityFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         String link = getActivity().getIntent().getStringExtra(Constants.LINK);
-
         WebView webView = (WebView) view.findViewById(R.id.news_web_view);
-        webView.getSettings().setJavaScriptEnabled(true);
 
         final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.web_view_progress);
+        progressBar.setVisibility(View.VISIBLE);
 
+        webView.setWebViewClient(new WebViewClient());
         webView.setWebChromeClient(new WebChromeClient() {
             @Override
             public void onProgressChanged(WebView view, int progress) {
@@ -49,7 +50,7 @@ public class WebViewActivityFragment extends Fragment {
             }
         });
 
-        progressBar.setVisibility(View.VISIBLE);
+        webView.getSettings().setJavaScriptEnabled(true);
         webView.loadUrl(link);
     }
 
