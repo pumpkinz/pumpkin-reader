@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import org.parceler.Parcels;
 
@@ -40,6 +41,7 @@ public class NewsListFragment extends Fragment {
     private NewsAdapter newsAdapter;
     private Observable<List<News>> stories;
     private Subscription subscription = Subscriptions.empty();
+    private LinearLayout progressBar;
 
     public NewsListFragment() {
         setRetainInstance(true);
@@ -55,8 +57,12 @@ public class NewsListFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        //TODO: show loading bar
-        return inflater.inflate(R.layout.fragment_news_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_news_list, container, false);
+
+        this.progressBar = (LinearLayout) view.findViewById(R.id.news_list_progress);
+        this.progressBar.setVisibility(View.VISIBLE);
+
+        return view;
     }
 
     @Override
@@ -86,7 +92,7 @@ public class NewsListFragment extends Fragment {
             @Override
             public void onCompleted() {
                 newsAdapter.notifyDataSetChanged();
-                //TODO: hide loading bar
+                progressBar.setVisibility(View.GONE);
                 Log.d("stories", "completed");
             }
 
