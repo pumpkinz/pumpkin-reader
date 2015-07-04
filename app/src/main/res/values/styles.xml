@@ -4,7 +4,7 @@
     <style name="PumpkinTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/pumpkin_primary</item>
         <item name="colorPrimaryDark">@color/pumpkin_primaryDark</item>
-        <item name="colorAccent">@color/light_blue_A700</item>
+        <item name="colorAccent">@color/pumpkin_accent</item>
     </style>
 
     <style name="Divider">

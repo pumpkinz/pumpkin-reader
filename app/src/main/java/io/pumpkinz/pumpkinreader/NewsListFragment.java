@@ -2,6 +2,7 @@ package io.pumpkinz.pumpkinreader;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -50,9 +51,6 @@ public class NewsListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        //TODO: change magic number 20 to a constant
-        stories = AppObservable.bindFragment(this, RestClient.service().getTopNews(20).cache());
     }
 
     @Override
@@ -88,6 +86,32 @@ public class NewsListFragment extends Fragment {
                 new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
         newsList.addItemDecoration(itemDecoration);
 
+        loadNews();
+
+        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.news_list_fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loadNews();
+            }
+        });
+    }
+
+    public void goToNewsDetail(News news) {
+        Intent intent = new Intent(getActivity(), NewsDetailActivity.class);
+        intent.putExtra(Constants.NEWS, Parcels.wrap(news));
+
+        startActivity(intent);
+    }
+
+    private void loadNews() {
+        newsAdapter.clearDataset();
+        newsAdapter.notifyDataSetChanged();
+
+        progressBar.setVisibility(View.VISIBLE);
+
+        stories = AppObservable.bindFragment(this, RestClient.service().getTopNews(20).cache());
+
         subscription = stories.subscribe(new Subscriber<List<News>>() {
             @Override
             public void onCompleted() {
@@ -108,13 +132,6 @@ public class NewsListFragment extends Fragment {
                 newsAdapter.addDataset(items);
             }
         });
-    }
-
-    public void goToNewsDetail(News news) {
-        Intent intent = new Intent(getActivity(), NewsDetailActivity.class);
-        intent.putExtra(Constants.NEWS, Parcels.wrap(news));
-
-        startActivity(intent);
     }
 
     private List<News> getMockData() {
