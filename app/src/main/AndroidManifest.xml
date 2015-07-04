@@ -26,10 +26,6 @@
             android:name=".AboutActivity"
             android:label="@string/title_activity_about" >
         </activity>
-        <activity
-            android:name=".WebViewActivity"
-            android:label="@string/title_activity_web_view" >
-        </activity>
     </application>
 
 </manifest>

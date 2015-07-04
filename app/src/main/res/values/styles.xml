@@ -13,4 +13,8 @@
         <item name="android:background">?android:attr/listDivider</item>
     </style>
 
+    <style name="TabIndicator" parent="Widget.Design.TabLayout">
+        <item name="tabIndicatorColor">@color/grey_1000w</item>
+    </style>
+
 </resources>
