@@ -8,4 +8,6 @@ public class Constants {
     public static final String COMMENT = "io.pumpkinz.pumpkinreader.model.Comment";
     public static final String LINK = "io.pumpkinz.pumpkinreader-Link";
 
+    public static final String CONFIG_SMALLER_TEXT = "config_smaller_text";
+
 }

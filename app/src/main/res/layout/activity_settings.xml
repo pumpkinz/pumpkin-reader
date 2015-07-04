@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -12,7 +11,6 @@
         android:id="@+id/fragment_settings"
         android:name="io.pumpkinz.pumpkinreader.SettingsActivityFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout="@layout/fragment_settings" />
+        android:layout_height="match_parent" />
 
 </LinearLayout>
