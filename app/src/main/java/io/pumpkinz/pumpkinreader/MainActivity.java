@@ -10,7 +10,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
@@ -62,12 +61,13 @@ public class MainActivity extends AppCompatActivity {
         sidenav.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(final MenuItem menuItem) {
+                menuItem.setChecked(true);
                 drawerLayout.closeDrawer(GravityCompat.START);
 
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        onSideNavMenuSelected(menuItem.getItemId());
+                        onSideNavMenuSelected(menuItem);
                     }
                 }, 250);
 
@@ -76,8 +76,28 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void onSideNavMenuSelected(int menuId) {
-        switch (menuId) {
+    private void onSideNavMenuSelected(MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case R.id.sidenav_menu_top:
+                // TODO: Display top news
+                getSupportActionBar().setTitle(menuItem.getTitle());
+                break;
+            case R.id.sidenav_menu_new:
+                // TODO: Display recent news
+                getSupportActionBar().setTitle(menuItem.getTitle());
+                break;
+            case R.id.sidenav_menu_ask:
+                // TODO: Display ask HN
+                getSupportActionBar().setTitle(menuItem.getTitle());
+                break;
+            case R.id.sidenav_menu_show:
+                // TODO: Display show HN
+                getSupportActionBar().setTitle(menuItem.getTitle());
+                break;
+            case R.id.sidenav_menu_job:
+                // TODO: Display HN jobs
+                getSupportActionBar().setTitle(menuItem.getTitle());
+                break;
             case R.id.sidenav_menu_about:
                 goToAbout();
                 break;
