@@ -2,7 +2,9 @@ package io.pumpkinz.pumpkinreader.service;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
 import java.util.List;
+
 import io.pumpkinz.pumpkinreader.model.Item;
 import io.pumpkinz.pumpkinreader.model.News;
 import retrofit.RestAdapter;
@@ -39,6 +41,7 @@ public class RestClient implements ApiService {
             restAdapter = new RestAdapter.Builder()
                     .setEndpoint(HN_API_ENDPOINT)
                     .setConverter(new GsonConverter(gson))
+                    .setLogLevel(RestAdapter.LogLevel.BASIC)
                     .build();
         }
 
@@ -88,7 +91,12 @@ public class RestClient implements ApiService {
             .flatMap(new Func1<Integer, Observable<News>>() {
                 @Override
                 public Observable<News> call(Integer integer) {
-                    return getNews(integer);
+                    return getNews(integer).onErrorReturn(new Func1<Throwable, News>() {
+                        @Override //If the API returning error, just return null
+                        public News call(Throwable throwable) {
+                            return null;
+                        }
+                    });
                 }
             })
             .filter(new Func1<News, Boolean>() { //Filter out the NULL news from any parse error
