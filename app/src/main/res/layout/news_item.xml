@@ -55,14 +55,14 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/news_url"
+            android:id="@+id/news_comment_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/abc_button_padding_horizontal_material"
             android:textSize="@dimen/abc_text_size_caption_material" />
 
         <TextView
-            android:id="@+id/news_comment_count"
+            android:id="@+id/news_url"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/abc_text_size_caption_material" />
