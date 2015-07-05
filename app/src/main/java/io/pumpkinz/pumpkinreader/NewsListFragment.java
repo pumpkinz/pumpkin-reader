@@ -14,16 +14,12 @@ import android.widget.LinearLayout;
 
 import org.parceler.Parcels;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import io.pumpkinz.pumpkinreader.data.NewsAdapter;
 import io.pumpkinz.pumpkinreader.etc.Constants;
 import io.pumpkinz.pumpkinreader.etc.DividerItemDecoration;
-import io.pumpkinz.pumpkinreader.model.Comment;
 import io.pumpkinz.pumpkinreader.model.News;
-import io.pumpkinz.pumpkinreader.model.Story;
 import io.pumpkinz.pumpkinreader.service.DataSource;
 import rx.Observable;
 import rx.Subscriber;

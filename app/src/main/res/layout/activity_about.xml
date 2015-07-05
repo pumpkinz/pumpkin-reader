@@ -7,7 +7,7 @@
     <include layout="@layout/appbar" />
 
     <fragment
-        android:id="@+id/fragment"
+        android:id="@+id/fragment_about"
         android:name="io.pumpkinz.pumpkinreader.AboutActivityFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

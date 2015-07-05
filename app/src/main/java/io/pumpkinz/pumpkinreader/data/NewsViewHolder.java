@@ -1,12 +1,17 @@
 package io.pumpkinz.pumpkinreader.data;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
+
 import io.pumpkinz.pumpkinreader.R;
+import io.pumpkinz.pumpkinreader.etc.Constants;
 
 
-public class NewsViewHolder extends RecyclerView.ViewHolder {
+public class NewsViewHolder extends RecyclerView.ViewHolder implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private TextView title;
     private TextView body;
@@ -16,8 +21,11 @@ public class NewsViewHolder extends RecyclerView.ViewHolder {
     private TextView score;
     private TextView commentCount;
 
+    private SharedPreferences preferences;
+
     public NewsViewHolder(View view) {
         super(view);
+
         this.title = (TextView) view.findViewById(R.id.news_title);
         this.body = (TextView) view.findViewById(R.id.news_body);
         this.submitter = (TextView) view.findViewById(R.id.news_submitter);
@@ -25,8 +33,21 @@ public class NewsViewHolder extends RecyclerView.ViewHolder {
         this.date = (TextView) view.findViewById(R.id.news_age);
         this.score = (TextView) view.findViewById(R.id.news_score);
         this.commentCount = (TextView) view.findViewById(R.id.news_comment_count);
+
+        this.preferences = PreferenceManager.getDefaultSharedPreferences(view.getContext());
+        this.preferences.registerOnSharedPreferenceChangeListener(this);
+
+        setTitleTextSize();
     }
 
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+        switch (s) {
+            case Constants.CONFIG_SMALLER_TEXT:
+                setTitleTextSize();
+                break;
+        }
+    }
 
     public TextView getTitle() {
         return title;
@@ -54,6 +75,14 @@ public class NewsViewHolder extends RecyclerView.ViewHolder {
 
     public TextView getCommentCount() {
         return commentCount;
+    }
+
+    private void setTitleTextSize() {
+        if (this.preferences.getBoolean(Constants.CONFIG_SMALLER_TEXT, false)) {
+            this.title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+        } else {
+            this.title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+        }
     }
 
 }

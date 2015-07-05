@@ -77,6 +77,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void onSideNavMenuSelected(MenuItem menuItem) {
+        Intent intent = null;
+
         switch (menuItem.getItemId()) {
             case R.id.sidenav_menu_top:
                 // TODO: Display top news
@@ -98,15 +100,17 @@ public class MainActivity extends AppCompatActivity {
                 // TODO: Display HN jobs
                 getSupportActionBar().setTitle(menuItem.getTitle());
                 break;
+            case R.id.sidenav_menu_setting:
+                intent = new Intent(this, SettingsActivity.class);
+                break;
             case R.id.sidenav_menu_about:
-                goToAbout();
+                intent = new Intent(this, AboutActivity.class);
                 break;
         }
-    }
 
-    private void goToAbout() {
-        Intent intent = new Intent(this, AboutActivity.class);
-        startActivity(intent);
+        if (intent != null) {
+            startActivity(intent);
+        }
     }
 
 }
