@@ -74,4 +74,9 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsViewHolder> {
         this.dataset.addAll(dataset);
         notifyDataSetChanged();
     }
+
+    public void clearDataset() {
+        this.dataset.clear();
+        notifyDataSetChanged();
+    }
 }

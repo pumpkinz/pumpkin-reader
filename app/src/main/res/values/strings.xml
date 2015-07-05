@@ -14,6 +14,12 @@
     <string name="rate">Rate</string>
     <string name="share">Share</string>
 
+    <string name="top">Top News</string>
+    <string name="recent">Recent News</string>
+    <string name="ask_hn">Ask HN</string>
+    <string name="show_hn">Show HN</string>
+    <string name="job">HN Jobs</string>
+
     <plurals name="comments">
         <item quantity="zero">%d comment</item>
         <item quantity="one">%d comment</item>

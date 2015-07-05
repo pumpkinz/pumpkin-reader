@@ -61,12 +61,13 @@ public class MainActivity extends AppCompatActivity {
         sidenav.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(final MenuItem menuItem) {
+                menuItem.setChecked(true);
                 drawerLayout.closeDrawer(GravityCompat.START);
 
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        onSideNavMenuSelected(menuItem.getItemId());
+                        onSideNavMenuSelected(menuItem);
                     }
                 }, 250);
 
@@ -75,10 +76,30 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void onSideNavMenuSelected(int menuId) {
+    private void onSideNavMenuSelected(MenuItem menuItem) {
         Intent intent = null;
 
-        switch (menuId) {
+        switch (menuItem.getItemId()) {
+            case R.id.sidenav_menu_top:
+                // TODO: Display top news
+                getSupportActionBar().setTitle(menuItem.getTitle());
+                break;
+            case R.id.sidenav_menu_new:
+                // TODO: Display recent news
+                getSupportActionBar().setTitle(menuItem.getTitle());
+                break;
+            case R.id.sidenav_menu_ask:
+                // TODO: Display ask HN
+                getSupportActionBar().setTitle(menuItem.getTitle());
+                break;
+            case R.id.sidenav_menu_show:
+                // TODO: Display show HN
+                getSupportActionBar().setTitle(menuItem.getTitle());
+                break;
+            case R.id.sidenav_menu_job:
+                // TODO: Display HN jobs
+                getSupportActionBar().setTitle(menuItem.getTitle());
+                break;
             case R.id.sidenav_menu_setting:
                 intent = new Intent(this, SettingsActivity.class);
                 break;
