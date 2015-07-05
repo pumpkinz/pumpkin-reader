@@ -5,3 +5,13 @@ android:
     - android-22
 
     - extra-android-m2repository
+
+script:
+   - ./gradlew build
+
+notifications:
+  email:
+    - kristiadi7@gmail.com
+    - timotiusnc@gmail.com
+    on_success: always
+    on_failure: always
