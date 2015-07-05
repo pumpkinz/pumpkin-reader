@@ -23,9 +23,9 @@ public class ItemTypeAdapter implements JsonDeserializer<Item> {
 
     @Override
     public Item deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-        JsonObject ja = json.getAsJsonObject();
+        JsonObject jo = json.getAsJsonObject();
         try {
-            Item.Type type = Item.Type.fromString(ja.get("type").getAsString());
+            Item.Type type = Item.Type.fromString(jo.get("type").getAsString());
 
             switch (type) {
                 case Story:
@@ -47,4 +47,5 @@ public class ItemTypeAdapter implements JsonDeserializer<Item> {
 
         return null;
     }
+
 }

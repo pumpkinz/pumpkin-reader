@@ -13,7 +13,8 @@ public abstract class Item {
     String text;
     boolean dead;
 
-    public Item() {}
+    public Item() {
+    }
 
     public Item(int id, boolean deleted, String type, String by, long time, String text,
                 boolean dead) {
@@ -26,37 +27,30 @@ public abstract class Item {
         this.dead = dead;
     }
 
-    /** The item's unique ID */
     public int getId() {
         return id;
     }
 
-    /** true if the item is deleted */
     public boolean isDeleted() {
         return deleted;
     }
 
-    /** The type of item */
     public Item.Type getType() {
         return Item.Type.fromString(type);
     }
 
-    /** The username of the item's author */
     public String getBy() {
         return by;
     }
 
-    /** Creation date of the item, in java.util.Date */
     public Date getTime() {
         return new Date(time * 1000);
     }
 
-    /** The comment, story or poll text. HTML. */
     public String getText() {
         return text;
     }
 
-    /** true if the item is dead */
     public boolean isDead() {
         return dead;
     }
