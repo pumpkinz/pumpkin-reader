@@ -1,7 +1,12 @@
 package io.pumpkinz.pumpkinreader.util;
 
+import android.util.Log;
+
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
 
 
 public class Util {
@@ -18,6 +23,27 @@ public class Util {
         } catch (URISyntaxException ex) {
             return url;
         }
+    }
+
+    public static String join(List<Integer> list, Character separator) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0, n = list.size(); i < n; ++i) {
+            sb.append(list.get(i).toString());
+            if (i < n) { sb.append(separator); }
+        }
+
+        return sb.toString();
+    }
+
+    public static List<Integer> split(String value, String separator) {
+        String[] parsedValues = value.split(Pattern.quote(separator));
+        List<Integer> retval = new ArrayList<>();
+
+        for (String parsedValue : parsedValues) {
+            retval.add(Integer.valueOf(parsedValue));
+        }
+
+        return retval;
     }
 
 }

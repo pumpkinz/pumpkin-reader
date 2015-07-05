@@ -11,8 +11,20 @@ import rx.Observable;
 
 public interface ApiService {
 
+    @GET("/newstories.json")
+    Observable<List<Integer>> listNew();
+
     @GET("/topstories.json")
-    Observable<List<Integer>> listTopStories();
+    Observable<List<Integer>> listTop();
+
+    @GET("/askstories.json")
+    Observable<List<Integer>> listAsk();
+
+    @GET("/showstories.json")
+    Observable<List<Integer>> listShow();
+
+    @GET("/jobstories.json")
+    Observable<List<Integer>> listJob();
 
     @GET("/item/{item}.json")
     Observable<Item> getItem(@Path("item") int itemId);

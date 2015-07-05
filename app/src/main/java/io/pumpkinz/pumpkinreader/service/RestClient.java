@@ -9,9 +9,7 @@ import io.pumpkinz.pumpkinreader.model.Item;
 import io.pumpkinz.pumpkinreader.model.News;
 import retrofit.RestAdapter;
 import retrofit.converter.GsonConverter;
-import retrofit.http.Path;
 import rx.Observable;
-import rx.functions.Func1;
 
 
 public class RestClient implements ApiService {
@@ -21,7 +19,8 @@ public class RestClient implements ApiService {
     private static RestAdapter restAdapter;
     private static ApiService apiService;
 
-    private RestClient() {}
+    private RestClient() {
+    }
 
     public static RestClient service() {
         if (instance == null) {
@@ -41,7 +40,6 @@ public class RestClient implements ApiService {
             restAdapter = new RestAdapter.Builder()
                     .setEndpoint(HN_API_ENDPOINT)
                     .setConverter(new GsonConverter(gson))
-                    .setLogLevel(RestAdapter.LogLevel.BASIC)
                     .build();
         }
 
@@ -56,55 +54,38 @@ public class RestClient implements ApiService {
     }
 
     @Override
-    public Observable<List<Integer>> listTopStories() {
-        return getService().listTopStories();
+    public Observable<List<Integer>> listNew() {
+        return getService().listNew();
     }
 
     @Override
-    public Observable<Item> getItem(@Path("item") int itemId) {
+    public Observable<List<Integer>> listTop() {
+        return getService().listTop();
+    }
+
+    @Override
+    public Observable<List<Integer>> listAsk() {
+        return getService().listAsk();
+    }
+
+    @Override
+    public Observable<List<Integer>> listShow() {
+        return getService().listShow();
+    }
+
+    @Override
+    public Observable<List<Integer>> listJob() {
+        return getService().listJob();
+    }
+
+    @Override
+    public Observable<Item> getItem(int itemId) {
         return getService().getItem(itemId);
     }
 
     @Override
-    public Observable<News> getNews(@Path("news") int newsId) {
+    public Observable<News> getNews(int newsId) {
         return getService().getNews(newsId);
     }
 
-    /**
-     * Get a maximum of N number of News. Maximum because the JSON retrieved
-     * might not be able to be instantiated into News object due to incomplete JSON.
-     *
-     * @param N maximum number of News to be retrieved
-     * @return an Observable of List of News
-     */
-    public Observable<List<News>> getTopNews(int N) {
-        //TODO: save top stories into local storage
-        //TODO: add offset variable for pagination/infinite scroll feature
-        return listTopStories()
-            .flatMap(new Func1<List<Integer>, Observable<Integer>>() {
-                @Override
-                public Observable<Integer> call(List<Integer> integers) {
-                    return Observable.from(integers);
-                }
-            })
-            .take(N)
-            .flatMap(new Func1<Integer, Observable<News>>() {
-                @Override
-                public Observable<News> call(Integer integer) {
-                    return getNews(integer).onErrorReturn(new Func1<Throwable, News>() {
-                        @Override //If the API returning error, just return null
-                        public News call(Throwable throwable) {
-                            return null;
-                        }
-                    });
-                }
-            })
-            .filter(new Func1<News, Boolean>() { //Filter out the NULL news from any parse error
-                @Override
-                public Boolean call(News news) {
-                    return (news != null);
-                }
-            })
-            .toList();
-    }
 }
