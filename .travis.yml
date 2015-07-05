@@ -11,7 +11,8 @@ script:
 
 notifications:
   email:
-    - kristiadi7@gmail.com
-    - timotiusnc@gmail.com
+    recipients:
+      - kristiadi7@gmail.com
+      - timotiusnc@gmail.com
     on_success: always
     on_failure: always
