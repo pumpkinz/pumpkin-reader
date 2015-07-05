@@ -26,8 +26,6 @@ public class MainActivity extends AppCompatActivity {
         setUpSideNav();
     }
 
-    Log.v("asd", "asd");
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
