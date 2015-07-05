@@ -24,50 +24,87 @@ public class DataSource {
         this.ctx = ctx;
     }
 
-    /**
-     * Get Top News from. Maximum because the JSON retrieved
-     * might not be able to be instantiated into News object due to incomplete JSON.
-     *
-     * @param from      first index to be returned
-     * @param count     maximum number of News to be retrieved
-     * @param isRefresh whether we should request Top News from API or look up the SharedPreferences first
-     * @return an Observable of List of News
-     */
-    public Observable<List<News>> getTop(final int from, final int count, boolean isRefresh) {
-        return listTop(isRefresh)
+    public Observable<List<News>> getHNNew(final int from, final int count, boolean isRefresh) {
+        return getHNNewIds(isRefresh)
                 .compose(new NewsTransformer(from, count));
     }
 
-    public Observable<List<News>> getNew(final int from, final int count, boolean isRefresh) {
-        return listNew(isRefresh)
+    public Observable<List<News>> getHNTop(final int from, final int count, boolean isRefresh) {
+        return getHNTopIds(isRefresh)
                 .compose(new NewsTransformer(from, count));
     }
 
-    private Observable<List<Integer>> listTop(boolean isRefresh) {
-        List<Integer> retval = getNewsFromSp(Constants.TOP_FILE_SP, Constants.TOP_VAL_SP, ctx);
-
-        if (retval.isEmpty() || isRefresh) {
-            return RestClient.service().listTop()
-                    .doOnNext(new putToSpAction(ctx, Constants.TOP_FILE_SP, Constants.TOP_VAL_SP));
-        } else {
-            return Observable.just(retval);
-        }
+    public Observable<List<News>> getHNAsk(final int from, final int count, boolean isRefresh) {
+        return getHNAskIds(isRefresh)
+                .compose(new NewsTransformer(from, count));
     }
 
-    private Observable<List<Integer>> listNew(boolean isRefresh) {
-        List<Integer> retval = getNewsFromSp(Constants.NEW_FILE_SP, Constants.NEW_VAL_SP, ctx);
+    public Observable<List<News>> getHNShow(final int from, final int count, boolean isRefresh) {
+        return getHNShowIds(isRefresh)
+                .compose(new NewsTransformer(from, count));
+    }
+
+    public Observable<List<News>> getHNJob(final int from, final int count, boolean isRefresh) {
+        return getHNJobIds(isRefresh)
+                .compose(new NewsTransformer(from, count));
+    }
+
+    private Observable<List<Integer>> getHNNewIds(boolean isRefresh) {
+        List<Integer> retval = getNewsIdsFromSp(Constants.NEW_FILE_SP, Constants.NEW_VAL_SP, ctx);
 
         if (retval.isEmpty() || isRefresh) {
-            return RestClient.service().listNew()
+            return RestClient.service().getHNNewIds()
                     .doOnNext(new putToSpAction(ctx, Constants.NEW_FILE_SP, Constants.NEW_VAL_SP));
         } else {
             return Observable.just(retval);
         }
     }
 
-    //TODO: add listAsk, listJob, and listShow
+    private Observable<List<Integer>> getHNTopIds(boolean isRefresh) {
+        List<Integer> retval = getNewsIdsFromSp(Constants.TOP_FILE_SP, Constants.TOP_VAL_SP, ctx);
 
-    private List<Integer> getNewsFromSp(String newsFileKey, String newsValKey, Context context) {
+        if (retval.isEmpty() || isRefresh) {
+            return RestClient.service().getHNTopIds()
+                    .doOnNext(new putToSpAction(ctx, Constants.TOP_FILE_SP, Constants.TOP_VAL_SP));
+        } else {
+            return Observable.just(retval);
+        }
+    }
+
+    private Observable<List<Integer>> getHNAskIds(boolean isRefresh) {
+        List<Integer> retval = getNewsIdsFromSp(Constants.ASK_FILE_SP, Constants.ASK_VAL_SP, ctx);
+
+        if (retval.isEmpty() || isRefresh) {
+            return RestClient.service().getHNAskIds()
+                    .doOnNext(new putToSpAction(ctx, Constants.ASK_FILE_SP, Constants.ASK_VAL_SP));
+        } else {
+            return Observable.just(retval);
+        }
+    }
+
+    private Observable<List<Integer>> getHNShowIds(boolean isRefresh) {
+        List<Integer> retval = getNewsIdsFromSp(Constants.SHOW_FILE_SP, Constants.SHOW_VAL_SP, ctx);
+
+        if (retval.isEmpty() || isRefresh) {
+            return RestClient.service().getHNShowIds()
+                    .doOnNext(new putToSpAction(ctx, Constants.SHOW_FILE_SP, Constants.SHOW_VAL_SP));
+        } else {
+            return Observable.just(retval);
+        }
+    }
+
+    private Observable<List<Integer>> getHNJobIds(boolean isRefresh) {
+        List<Integer> retval = getNewsIdsFromSp(Constants.JOB_FILE_SP, Constants.JOB_VAL_SP, ctx);
+
+        if (retval.isEmpty() || isRefresh) {
+            return RestClient.service().getHNJobIds()
+                    .doOnNext(new putToSpAction(ctx, Constants.JOB_FILE_SP, Constants.JOB_VAL_SP));
+        } else {
+            return Observable.just(retval);
+        }
+    }
+
+    private List<Integer> getNewsIdsFromSp(String newsFileKey, String newsValKey, Context context) {
         List<Integer> retval = new ArrayList<>();
 
         SharedPreferences topStoriesSp = context.getSharedPreferences(
@@ -108,7 +145,7 @@ public class DataSource {
 
     private class NewsTransformer implements Observable.Transformer<List<Integer>, List<News>> {
 
-        final List<Integer> topNewsIds = new ArrayList<>();
+        final List<Integer> subNewsIds = new ArrayList<>();
         final Dictionary<Integer, News> dict = new Hashtable<>();
         private int from;
         private int count;
@@ -119,13 +156,13 @@ public class DataSource {
         }
 
         @Override
-        public Observable<List<News>> call(Observable<List<Integer>> integers) {
-            return integers
+        public Observable<List<News>> call(Observable<List<Integer>> newsIds) {
+            return newsIds
                     .map(new Func1<List<Integer>, List<Integer>>() {
                         @Override // Get a subset from Top News IDs and save it for later lookup
-                        public List<Integer> call(List<Integer> integers) {
-                            topNewsIds.addAll(integers.subList(from, from + count));
-                            return topNewsIds;
+                        public List<Integer> call(List<Integer> ids) {
+                            subNewsIds.addAll(ids.subList(from, from + count));
+                            return subNewsIds;
                         }
                     })
                     .flatMap(new Func1<List<Integer>, Observable<Integer>>() {
@@ -164,9 +201,11 @@ public class DataSource {
                         // Discard the formed List<News> (what?!) and use the ones on dictionary instead
                         public List<News> call(List<News> newses) {
                             List<News> retval = new ArrayList<>();
-                            for (Integer topStory : topNewsIds) {
+
+                            for (Integer topStory : subNewsIds) {
                                 retval.add(dict.get(topStory));
                             }
+
                             return retval;
                         }
                     });

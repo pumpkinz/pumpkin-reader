@@ -54,28 +54,28 @@ public class RestClient implements ApiService {
     }
 
     @Override
-    public Observable<List<Integer>> listNew() {
-        return getService().listNew();
+    public Observable<List<Integer>> getHNNewIds() {
+        return getService().getHNNewIds();
     }
 
     @Override
-    public Observable<List<Integer>> listTop() {
-        return getService().listTop();
+    public Observable<List<Integer>> getHNTopIds() {
+        return getService().getHNTopIds();
     }
 
     @Override
-    public Observable<List<Integer>> listAsk() {
-        return getService().listAsk();
+    public Observable<List<Integer>> getHNAskIds() {
+        return getService().getHNAskIds();
     }
 
     @Override
-    public Observable<List<Integer>> listShow() {
-        return getService().listShow();
+    public Observable<List<Integer>> getHNShowIds() {
+        return getService().getHNShowIds();
     }
 
     @Override
-    public Observable<List<Integer>> listJob() {
-        return getService().listJob();
+    public Observable<List<Integer>> getHNJobIds() {
+        return getService().getHNJobIds();
     }
 
     @Override

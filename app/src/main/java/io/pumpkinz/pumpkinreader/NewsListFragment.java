@@ -112,7 +112,7 @@ public class NewsListFragment extends Fragment {
 
         progressBar.setVisibility(View.VISIBLE);
 
-        stories = AppObservable.bindFragment(this, dataSource.getTop(0, 20, false).cache());
+        stories = AppObservable.bindFragment(this, dataSource.getHNTop(0, 20, false).cache());
 
         subscription = stories.subscribe(new Subscriber<List<News>>() {
             @Override
@@ -130,7 +130,6 @@ public class NewsListFragment extends Fragment {
             @Override
             public void onNext(List<News> items) {
                 Log.d("stories", String.valueOf(items.size()));
-                //Log.d("stories content", items.toString());
                 newsAdapter.addDataset(items);
             }
         });
