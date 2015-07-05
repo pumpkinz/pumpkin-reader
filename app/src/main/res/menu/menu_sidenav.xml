@@ -8,39 +8,39 @@
         <item
             android:id="@+id/sidenav_menu_top"
             android:checked="true"
-            android:title="Top"
-            android:icon="@drawable/ic_thumb_up_black_18dp" />
+            android:icon="@drawable/ic_thumb_up_black_18dp"
+            android:title="@string/top" />
         <item
             android:id="@+id/sidenav_menu_new"
-            android:title="New"
-            android:icon="@drawable/ic_access_time_black_18dp" />
+            android:icon="@drawable/ic_access_time_black_18dp"
+            android:title="@string/recent" />
         <item
             android:id="@+id/sidenav_menu_ask"
-            android:title="Ask HN"
-            android:icon="@drawable/ic_help_black_18dp" />
+            android:icon="@drawable/ic_help_black_18dp"
+            android:title="@string/ask_hn" />
         <item
             android:id="@+id/sidenav_menu_show"
-            android:title="Show HN"
-            android:icon="@drawable/ic_collections_bookmark_black_18dp" />
+            android:icon="@drawable/ic_collections_bookmark_black_18dp"
+            android:title="@string/show_hn" />
         <item
             android:id="@+id/sidenav_menu_job"
-            android:title="Job"
-            android:icon="@drawable/ic_business_black_18dp" />
+            android:icon="@drawable/ic_business_black_18dp"
+            android:title="@string/job" />
 
     </group>
 
     <group
         android:id="@+id/sidenav_subheader_pumpkin"
-        android:checkableBehavior="single">
+        android:checkableBehavior="none">
 
         <item
             android:id="@+id/sidenav_menu_setting"
-            android:title="Settings"
-            android:icon="@drawable/ic_settings_black_18dp" />
+            android:icon="@drawable/ic_settings_black_18dp"
+            android:title="@string/action_settings" />
         <item
             android:id="@+id/sidenav_menu_about"
-            android:title="About"
-            android:icon="@drawable/ic_info_black_18dp" />
+            android:icon="@drawable/ic_info_black_18dp"
+            android:title="@string/title_activity_about" />
 
     </group>
 
