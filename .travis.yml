@@ -1,0 +1,18 @@
+language: android
+android:
+  components:
+    - build-tools-22.0.1
+    - android-22
+
+    - extra-android-m2repository
+
+script:
+   - ./gradlew build
+
+notifications:
+  email:
+    recipients:
+      - kristiadi7@gmail.com
+      - timotiusnc@gmail.com
+    on_success: always
+    on_failure: always

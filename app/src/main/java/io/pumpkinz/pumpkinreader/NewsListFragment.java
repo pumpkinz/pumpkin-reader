@@ -20,7 +20,7 @@ import io.pumpkinz.pumpkinreader.data.NewsAdapter;
 import io.pumpkinz.pumpkinreader.etc.Constants;
 import io.pumpkinz.pumpkinreader.etc.DividerItemDecoration;
 import io.pumpkinz.pumpkinreader.model.News;
-import io.pumpkinz.pumpkinreader.service.RestClient;
+import io.pumpkinz.pumpkinreader.service.DataSource;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
@@ -30,12 +30,13 @@ import rx.subscriptions.Subscriptions;
 
 /**
  * Using RetainedFragmentActivity sample on
- * https://github.com/ReactiveX/RxAndroid/blob/0.x/sample-app/src/main/java/rx/android/samples/RetainedFragmentActivity.java
+ * https://github.com/ReactiveX/RxAndroid/blob/60741117c936b198ebc89dcc058ccaaa2b09ebfb/sample-app/src/main/java/rx/android/samples/RetainedFragmentActivity.java
  */
 public class NewsListFragment extends Fragment {
 
     private RecyclerView newsList;
     private NewsAdapter newsAdapter;
+    private DataSource dataSource;
     private Observable<List<News>> stories;
     private Subscription subscription = Subscriptions.empty();
     private LinearLayout progressBar;
@@ -47,6 +48,7 @@ public class NewsListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        dataSource = new DataSource(getActivity());
     }
 
     @Override
@@ -106,7 +108,7 @@ public class NewsListFragment extends Fragment {
 
         progressBar.setVisibility(View.VISIBLE);
 
-        stories = AppObservable.bindFragment(this, RestClient.service().getTopNews(20).cache());
+        stories = AppObservable.bindFragment(this, dataSource.getHNTop(0, 20, false).cache());
 
         subscription = stories.subscribe(new Subscriber<List<News>>() {
             @Override
@@ -124,7 +126,6 @@ public class NewsListFragment extends Fragment {
             @Override
             public void onNext(List<News> items) {
                 Log.d("stories", String.valueOf(items.size()));
-                Log.d("stories content", items.toString());
                 newsAdapter.addDataset(items);
             }
         });
