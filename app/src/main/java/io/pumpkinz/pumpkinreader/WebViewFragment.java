@@ -1,25 +1,22 @@
 package io.pumpkinz.pumpkinreader;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
+import org.parceler.Parcels;
+
 import io.pumpkinz.pumpkinreader.etc.Constants;
+import io.pumpkinz.pumpkinreader.model.News;
 
 
-public class WebViewActivityFragment extends Fragment {
-
-    public WebViewActivityFragment() {
-    }
+public class WebViewFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -31,7 +28,7 @@ public class WebViewActivityFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        String link = getActivity().getIntent().getStringExtra(Constants.LINK);
+        News news = Parcels.unwrap(getActivity().getIntent().getParcelableExtra(Constants.NEWS));
         WebView webView = (WebView) view.findViewById(R.id.news_web_view);
 
         final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.web_view_progress);
@@ -51,7 +48,7 @@ public class WebViewActivityFragment extends Fragment {
         });
 
         webView.getSettings().setJavaScriptEnabled(true);
-        webView.loadUrl(link);
+        webView.loadUrl(news.getUrl());
     }
 
 }
