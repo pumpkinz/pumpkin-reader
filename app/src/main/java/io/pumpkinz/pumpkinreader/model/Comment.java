@@ -1,6 +1,7 @@
 package io.pumpkinz.pumpkinreader.model;
 
 import org.parceler.Parcel;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,8 +56,8 @@ public class Comment extends Item implements Serializable {
 
         StringBuilder sb = new StringBuilder();
         sb.append(parent)
-                .append("Text=" + getText().substring(0,20))
                 .append(";Kids=" + getKids().toString())
+                .append("Text=" + getText().substring(0, Math.min(getText().length(), 20)))
                 .append("\n");
 
         return sb.toString();

@@ -144,7 +144,6 @@ public class NewsListFragment extends Fragment {
                             @Override
                             public void onNext(List<Comment> comments) {
                                 Log.d("comment next", String.valueOf(comments.size()));
-                                Log.d("comment all", comments.toString());
                             }
                         });
             }
