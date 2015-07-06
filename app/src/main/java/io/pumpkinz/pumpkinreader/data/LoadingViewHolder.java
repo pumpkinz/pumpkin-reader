@@ -17,4 +17,8 @@ public class LoadingViewHolder extends RecyclerView.ViewHolder {
         this.progressBar = (ProgressBar) view.findViewById(R.id.list_item_loading);
     }
 
+    public ProgressBar getProgressBar() {
+        return this.progressBar;
+    }
+
 }
