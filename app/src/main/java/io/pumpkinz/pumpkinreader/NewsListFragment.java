@@ -108,7 +108,7 @@ public class NewsListFragment extends Fragment {
 
         progressBar.setVisibility(View.VISIBLE);
 
-        stories = AppObservable.bindFragment(this, dataSource.getHNTop(0, 20, false).cache());
+        stories = AppObservable.bindFragment(this, dataSource.getHNTop(0, 20, true).cache());
 
         subscription = stories.subscribe(new Subscriber<List<News>>() {
             @Override
