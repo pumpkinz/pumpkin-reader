@@ -1,5 +1,6 @@
 package io.pumpkinz.pumpkinreader.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -11,7 +12,9 @@ public abstract class News extends Item {
     String title;
     List<Comment> comments;
 
-    public News() {}
+    public News() {
+        this.comments = new ArrayList<>();
+    }
 
     public News(int id, boolean deleted, String type, String by, long time, String text,
                 boolean dead, List<Integer> kids, String url, int score, String title) {

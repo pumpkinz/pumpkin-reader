@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 
 import java.util.List;
 
+import io.pumpkinz.pumpkinreader.model.Comment;
 import io.pumpkinz.pumpkinreader.model.Item;
 import io.pumpkinz.pumpkinreader.model.News;
 import retrofit.RestAdapter;
@@ -33,7 +34,6 @@ public class RestClient implements ApiService {
     private static RestAdapter getAdapter() {
         if (restAdapter == null) {
             Gson gson = new GsonBuilder()
-                    .registerTypeAdapter(Item.class, new ItemTypeAdapter())
                     .registerTypeAdapter(News.class, new ItemTypeAdapter())
                     .create();
 
@@ -79,13 +79,13 @@ public class RestClient implements ApiService {
     }
 
     @Override
-    public Observable<Item> getItem(int itemId) {
-        return getService().getItem(itemId);
+    public Observable<News> getNews(int newsId) {
+        return getService().getNews(newsId);
     }
 
     @Override
-    public Observable<News> getNews(int newsId) {
-        return getService().getNews(newsId);
+    public Observable<Comment> getComment(int commentId) {
+        return getService().getComment(commentId);
     }
 
 }

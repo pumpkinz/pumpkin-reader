@@ -1,6 +1,7 @@
 package io.pumpkinz.pumpkinreader.model;
 
 import org.parceler.Parcel;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +14,6 @@ public class Poll extends News implements Serializable {
     List<PollOpt> pollOpts;
 
     public Poll() {
-        this.comments = new ArrayList<>();
     }
 
     public Poll(int id, boolean deleted, String type, String by, long time, String text,
@@ -34,12 +34,6 @@ public class Poll extends News implements Serializable {
 
     public void setPollOpts(List<PollOpt> pollOpts) {
         this.pollOpts = pollOpts;
-    }
-
-    @Override
-    public String toString() {
-        String parent = super.toString();
-        return parent.toString();
     }
 
 }

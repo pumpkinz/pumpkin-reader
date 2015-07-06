@@ -9,6 +9,7 @@ import java.util.Hashtable;
 import java.util.List;
 
 import io.pumpkinz.pumpkinreader.etc.Constants;
+import io.pumpkinz.pumpkinreader.model.Comment;
 import io.pumpkinz.pumpkinreader.model.News;
 import io.pumpkinz.pumpkinreader.util.Util;
 import rx.Observable;
@@ -47,6 +48,52 @@ public class DataSource {
     public Observable<List<News>> getHNJob(final int from, final int count, boolean isRefresh) {
         return getHNJobIds(isRefresh)
                 .compose(new NewsTransformer(from, count));
+    }
+
+    public Observable<List<Comment>> getComments(News news) {
+        return Observable.from(news.getKids())
+                .flatMap(new Func1<Integer, Observable<Comment>>() {
+                    @Override
+                    public Observable<Comment> call(Integer commentId) {
+                        return RestClient.service().getComment(commentId);
+                    }
+                })
+                .flatMap(new Func1<Comment, Observable<Comment>>() {
+                    @Override
+                    public Observable<Comment> call(Comment comment) {
+                        return getInnerComments(comment);
+                    }
+                })
+                .filter(new Func1<Comment, Boolean>() {
+                    @Override
+                    public Boolean call(Comment comment) {
+                        return !comment.isDeleted() && !comment.isDead();
+                    }
+                })
+                .toList();
+    }
+
+    private Observable<Comment> getInnerComments(Comment comment) {
+        if (comment.getKids().size() > 0) {
+            return Observable.merge(
+                    Observable.just(comment),
+                    Observable.from(comment.getKids())
+                            .flatMap(new Func1<Integer, Observable<Comment>>() {
+                                @Override
+                                public Observable<Comment> call(Integer commentId) {
+                                    return RestClient.service().getComment(commentId);
+                                }
+                            })
+                            .flatMap(new Func1<Comment, Observable<Comment>>() {
+                                @Override
+                                public Observable<Comment> call(Comment comment) {
+                                    return getInnerComments(comment);
+                                }
+                            })
+            );
+        }
+
+        return Observable.just(comment);
     }
 
     private Observable<List<Integer>> getHNNewIds(boolean isRefresh) {
@@ -211,5 +258,5 @@ public class DataSource {
                     });
         }
     }
-    
+
 }

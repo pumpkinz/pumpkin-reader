@@ -2,6 +2,7 @@ package io.pumpkinz.pumpkinreader.model;
 
 import org.parceler.Parcel;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -13,7 +14,9 @@ public class Comment extends Item implements Serializable {
     Comment parentComment;
     List<Comment> childComments;
 
-    public Comment() {}
+    public Comment() {
+        this.kids = new ArrayList<>();
+    }
 
     public Comment(int id, boolean deleted, String type, String by, long time, String text,
                    boolean dead, int parent, List<Integer> kids) {
@@ -46,4 +49,16 @@ public class Comment extends Item implements Serializable {
         this.childComments = childComments;
     }
 
+    @Override
+    public String toString() {
+        String parent = super.toString();
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(parent)
+                .append("Text=" + getText().substring(0,20))
+                .append(";Kids=" + getKids().toString())
+                .append("\n");
+
+        return sb.toString();
+    }
 }
