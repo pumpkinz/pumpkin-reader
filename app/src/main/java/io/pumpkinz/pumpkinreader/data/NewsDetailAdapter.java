@@ -3,6 +3,7 @@ package io.pumpkinz.pumpkinreader.data;
 import android.content.res.Resources;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,7 +68,7 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 newsViewHolder.getCommentCount().setText(commentCountFormat);
 
                 if (news.getText() != null && !news.getText().isEmpty()) {
-                    newsViewHolder.getBody().setText(news.getText());
+                    newsViewHolder.getBody().setText(Html.fromHtml(news.getText()));
                 } else {
                     newsViewHolder.getBody().setVisibility(View.GONE);
                 }
