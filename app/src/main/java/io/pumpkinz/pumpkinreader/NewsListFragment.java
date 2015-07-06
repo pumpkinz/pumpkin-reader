@@ -39,6 +39,7 @@ public class NewsListFragment extends Fragment {
     private Subscription subscription = Subscriptions.empty();
     private LinearLayout progressBar;
     private boolean isLoading = false;
+    private int newsType = R.string.top;
 
     public NewsListFragment() {
         setRetainInstance(true);
@@ -89,6 +90,14 @@ public class NewsListFragment extends Fragment {
         startActivity(intent);
     }
 
+    public void setNewsType(int newsTypeId) {
+        this.newsType = newsTypeId;
+    }
+
+    public void forceRefresh() {
+        loadNews(0, N_NEWS_PER_LOAD, true);
+    }
+
     private void loadNews(int from, int count, boolean refresh) {
         if (refresh) {
             newsAdapter.clearDataset();
@@ -98,7 +107,7 @@ public class NewsListFragment extends Fragment {
 
         isLoading = true;
         Observable<List<News>> stories =
-                AppObservable.bindFragment(this, dataSource.getHNTop(from, count, refresh).cache());
+                AppObservable.bindFragment(this, loadNewsData(from, count, refresh));
 
         subscription = stories.subscribe(new Subscriber<List<News>>() {
             @Override
@@ -127,6 +136,32 @@ public class NewsListFragment extends Fragment {
                 newsAdapter.addDataset(items);
             }
         });
+    }
+
+    private Observable<List<News>> loadNewsData(int from, int count, boolean refresh) {
+        Observable<List<News>> ret;
+
+        switch (this.newsType) {
+            case R.string.top:
+                ret = dataSource.getHNTop(from, count, refresh);
+                break;
+            case R.string.recent:
+                ret = dataSource.getHNNew(from, count, refresh);
+                break;
+            case R.string.ask_hn:
+                ret = dataSource.getHNAsk(from, count, refresh);
+                break;
+            case R.string.show_hn:
+                ret = dataSource.getHNShow(from, count, refresh);
+                break;
+            case R.string.job:
+                ret = dataSource.getHNJob(from, count, refresh);
+                break;
+            default:
+                ret = dataSource.getHNTop(from, count, refresh);
+        }
+
+        return ret.cache();
     }
 
     private void setUpNewsList(View view) {
