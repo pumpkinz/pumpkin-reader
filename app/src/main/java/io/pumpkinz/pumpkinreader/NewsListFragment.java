@@ -19,7 +19,6 @@ import java.util.List;
 import io.pumpkinz.pumpkinreader.data.NewsAdapter;
 import io.pumpkinz.pumpkinreader.etc.Constants;
 import io.pumpkinz.pumpkinreader.etc.DividerItemDecoration;
-import io.pumpkinz.pumpkinreader.model.Comment;
 import io.pumpkinz.pumpkinreader.model.News;
 import io.pumpkinz.pumpkinreader.service.DataSource;
 import rx.Observable;
@@ -128,24 +127,6 @@ public class NewsListFragment extends Fragment {
             public void onNext(List<News> items) {
                 Log.d("stories", String.valueOf(items.size()));
                 newsAdapter.addDataset(items);
-
-                dataSource.getComments(items.get(0))
-                        .subscribe(new Subscriber<List<Comment>>() {
-                            @Override
-                            public void onCompleted() {
-                                Log.d("comment list", "complete");
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-                                Log.d("comment list error", e.toString());
-                            }
-
-                            @Override
-                            public void onNext(List<Comment> comments) {
-                                Log.d("comment next", String.valueOf(comments.size()));
-                            }
-                        });
             }
         });
     }

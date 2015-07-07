@@ -14,6 +14,7 @@ public abstract class News extends Item {
 
     public News() {
         this.comments = new ArrayList<>();
+        this.kids = new ArrayList<>();
     }
 
     public News(int id, boolean deleted, String type, String by, long time, String text,
@@ -58,6 +59,7 @@ public abstract class News extends Item {
                 .append("URL=" + getUrl())
                 .append("; Score=" + getScore())
                 .append("; Title=" + getTitle())
+                .append("; Kids=" + getKids().toString())
                 .append("\n");
 
         return sb.toString();

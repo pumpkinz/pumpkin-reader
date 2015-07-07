@@ -2,6 +2,7 @@ package io.pumpkinz.pumpkinreader.service;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Dictionary;
@@ -50,7 +51,7 @@ public class DataSource {
                 .compose(new NewsTransformer(from, count));
     }
 
-    public Observable<List<Comment>> getComments(News news) {
+    public Observable<List<Comment>> getComments(final News news) {
         return Observable.from(news.getKids())
                 .flatMap(new Func1<Integer, Observable<Comment>>() {
                     @Override
@@ -70,7 +71,24 @@ public class DataSource {
                         return !comment.isDeleted() && !comment.isDead();
                     }
                 })
-                .toList();
+                .toList()
+                .map(new Func1<List<Comment>, List<Comment>>() {
+                    @Override
+                    public List<Comment> call(List<Comment> comments) {
+                        Dictionary<Integer, Comment> commentDict = new Hashtable<>();
+                        List<Comment> retval = new ArrayList<>();
+
+                        for (Comment comment : comments) {
+                            commentDict.put(comment.getId(), comment);
+                        }
+
+                        for (Integer commentId : news.getKids()) {
+                            retval.add(getCommentWithChild(commentDict.get(commentId), commentDict));
+                        }
+
+                        return retval;
+                    }
+                });
     }
 
     private Observable<Comment> getInnerComments(Comment comment) {
@@ -94,6 +112,20 @@ public class DataSource {
         }
 
         return Observable.just(comment);
+    }
+
+    private Comment getCommentWithChild(Comment comment, Dictionary<Integer, Comment> commentDict) {
+        if (comment.getKids().size() == 0) {
+            return comment;
+        }
+
+        for (Integer commentId : comment.getKids()) {
+            Comment childComment = commentDict.get(commentId);
+            if (childComment != null) {
+                comment.addChildComment(getCommentWithChild(childComment, commentDict));
+            }
+        }
+        return comment;
     }
 
     private Observable<List<Integer>> getHNNewIds(boolean isRefresh) {

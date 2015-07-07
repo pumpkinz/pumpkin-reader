@@ -17,6 +17,7 @@ public class Comment extends Item implements Serializable {
 
     public Comment() {
         this.kids = new ArrayList<>();
+        this.childComments = new ArrayList<>();
     }
 
     public Comment(int id, boolean deleted, String type, String by, long time, String text,
@@ -50,14 +51,24 @@ public class Comment extends Item implements Serializable {
         this.childComments = childComments;
     }
 
+    public void addChildComment(Comment childComment) {
+        this.childComments.add(childComment);
+    }
+
     @Override
     public String toString() {
         String parent = super.toString();
 
+        StringBuilder childCommentsSb = new StringBuilder();
+        for (Comment comment : getChildComments()) {
+            childCommentsSb.append("\t" + comment.toString());
+        }
+
         StringBuilder sb = new StringBuilder();
         sb.append(parent)
-                .append(";Kids=" + getKids().toString())
-                .append("Text=" + getText().substring(0, Math.min(getText().length(), 20)))
+                .append(";\tKids=" + getKids().toString())
+                .append("\tText=" + getText().substring(0, Math.min(getText().length(), 20)))
+                .append("\t" + childCommentsSb)
                 .append("\n");
 
         return sb.toString();
