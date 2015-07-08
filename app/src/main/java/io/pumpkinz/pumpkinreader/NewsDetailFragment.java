@@ -64,6 +64,7 @@ public class NewsDetailFragment extends Fragment {
                     @Override
                     public void onNext(List<Comment> comments) {
                         Log.d("comment list", String.valueOf(comments.size()));
+                        Log.d("comment list", comments.toString());
                     }
                 });
     }
