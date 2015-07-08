@@ -16,7 +16,6 @@ public class Job extends News implements Serializable {
                boolean dead, String url, int score, String title) {
         super(id, deleted, type, by, time, text, dead, new ArrayList<Integer>(), url, score,
                 title);
-        this.comments = new ArrayList<>();
     }
 
 }

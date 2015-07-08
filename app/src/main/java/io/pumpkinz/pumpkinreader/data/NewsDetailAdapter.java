@@ -63,7 +63,7 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 newsViewHolder.getScore().setText(Integer.toString(news.getScore()));
 
                 Resources r = this.fragment.getActivity().getResources();
-                int nComment = news.getComments().size();
+                int nComment = news.getTotalComments();
                 String commentCountFormat = r.getQuantityString(R.plurals.comments, nComment, nComment);
                 newsViewHolder.getCommentCount().setText(commentCountFormat);
 
@@ -75,12 +75,12 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 break;
             case 1:
-                Comment comment = this.dataset.getComments().get(i - 1);
+                /*Comment comment = this.dataset.getTopLevelComments().get(i - 1);
                 CommentViewHolder commentViewHolder = (CommentViewHolder) viewHolder;
 
                 commentViewHolder.getSubmitter().setText(comment.getBy());
                 commentViewHolder.getDate().setText(this.dateFormatter.timeAgo(comment.getTime()));
-                commentViewHolder.getBody().setText(comment.getText());
+                commentViewHolder.getBody().setText(comment.getText());*/
 
                 break;
         }
@@ -88,7 +88,7 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemCount() {
-        return dataset.getComments().size() + 1;
+        return dataset.getTotalComments() + 1;
     }
 
 }

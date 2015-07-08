@@ -81,7 +81,7 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 newsViewHolder.getScore().setText(Integer.toString(news.getScore()));
 
                 Resources r = this.fragment.getActivity().getResources();
-                int nComment = news.getComments().size();
+                int nComment = news.getTotalComments();
                 String commentCountFormat = r.getQuantityString(R.plurals.comments, nComment, nComment);
                 newsViewHolder.getCommentCount().setText(commentCountFormat);
                 break;

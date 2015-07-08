@@ -24,12 +24,9 @@ import rx.Subscriber;
 
 public class NewsDetailFragment extends Fragment {
 
-    private DataSource dataSource;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        dataSource = new DataSource(getActivity());
         return inflater.inflate(R.layout.fragment_news_detail, container, false);
     }
 
@@ -52,7 +49,7 @@ public class NewsDetailFragment extends Fragment {
                 new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
         newsDetail.addItemDecoration(itemDecoration);
 
-        dataSource.getComments(news)
+        news.getTopLevelComments()
                 .subscribe(new Subscriber<List<Comment>>() {
                     @Override
                     public void onCompleted() {
@@ -61,12 +58,12 @@ public class NewsDetailFragment extends Fragment {
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.d("comment list error", e.toString());
+                        Log.d("comment list", e.toString());
                     }
 
                     @Override
                     public void onNext(List<Comment> comments) {
-                        Log.d("comment next", String.valueOf(comments.size()));
+                        Log.d("comment list", String.valueOf(comments.size()));
                     }
                 });
     }

@@ -25,6 +25,7 @@ public class Comment extends Item implements Serializable {
         super(id, deleted, type, by, time, text, dead);
         this.parent = parent;
         this.kids = kids;
+        this.childComments = new ArrayList<>();
     }
 
     public int getParent() {
@@ -45,10 +46,6 @@ public class Comment extends Item implements Serializable {
 
     public List<Comment> getChildComments() {
         return childComments;
-    }
-
-    public void setChildComments(List<Comment> childComments) {
-        this.childComments = childComments;
     }
 
     public void addChildComment(Comment childComment) {

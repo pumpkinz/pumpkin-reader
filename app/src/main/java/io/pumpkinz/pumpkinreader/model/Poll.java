@@ -21,7 +21,6 @@ public class Poll extends News implements Serializable {
                 List<Integer> parts) {
         super(id, deleted, type, by, time, text, dead, kids, url, score, title);
         this.parts = parts;
-        this.comments = new ArrayList<>();
     }
 
     public List<Integer> getParts() {

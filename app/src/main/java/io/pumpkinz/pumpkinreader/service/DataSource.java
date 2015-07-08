@@ -2,7 +2,6 @@ package io.pumpkinz.pumpkinreader.service;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Dictionary;
@@ -10,7 +9,6 @@ import java.util.Hashtable;
 import java.util.List;
 
 import io.pumpkinz.pumpkinreader.etc.Constants;
-import io.pumpkinz.pumpkinreader.model.Comment;
 import io.pumpkinz.pumpkinreader.model.News;
 import io.pumpkinz.pumpkinreader.util.Util;
 import rx.Observable;
@@ -49,83 +47,6 @@ public class DataSource {
     public Observable<List<News>> getHNJob(final int from, final int count, boolean isRefresh) {
         return getHNJobIds(isRefresh)
                 .compose(new NewsTransformer(from, count));
-    }
-
-    public Observable<List<Comment>> getComments(final News news) {
-        return Observable.from(news.getKids())
-                .flatMap(new Func1<Integer, Observable<Comment>>() {
-                    @Override
-                    public Observable<Comment> call(Integer commentId) {
-                        return RestClient.service().getComment(commentId);
-                    }
-                })
-                .flatMap(new Func1<Comment, Observable<Comment>>() {
-                    @Override
-                    public Observable<Comment> call(Comment comment) {
-                        return getInnerComments(comment);
-                    }
-                })
-                .filter(new Func1<Comment, Boolean>() {
-                    @Override
-                    public Boolean call(Comment comment) {
-                        return !comment.isDeleted() && !comment.isDead();
-                    }
-                })
-                .toList()
-                .map(new Func1<List<Comment>, List<Comment>>() {
-                    @Override
-                    public List<Comment> call(List<Comment> comments) {
-                        Dictionary<Integer, Comment> commentDict = new Hashtable<>();
-                        List<Comment> retval = new ArrayList<>();
-
-                        for (Comment comment : comments) {
-                            commentDict.put(comment.getId(), comment);
-                        }
-
-                        for (Integer commentId : news.getKids()) {
-                            retval.add(getCommentWithChild(commentDict.get(commentId), commentDict));
-                        }
-
-                        return retval;
-                    }
-                });
-    }
-
-    private Observable<Comment> getInnerComments(Comment comment) {
-        if (comment.getKids().size() > 0) {
-            return Observable.merge(
-                    Observable.just(comment),
-                    Observable.from(comment.getKids())
-                            .flatMap(new Func1<Integer, Observable<Comment>>() {
-                                @Override
-                                public Observable<Comment> call(Integer commentId) {
-                                    return RestClient.service().getComment(commentId);
-                                }
-                            })
-                            .flatMap(new Func1<Comment, Observable<Comment>>() {
-                                @Override
-                                public Observable<Comment> call(Comment comment) {
-                                    return getInnerComments(comment);
-                                }
-                            })
-            );
-        }
-
-        return Observable.just(comment);
-    }
-
-    private Comment getCommentWithChild(Comment comment, Dictionary<Integer, Comment> commentDict) {
-        if (comment.getKids().size() == 0) {
-            return comment;
-        }
-
-        for (Integer commentId : comment.getKids()) {
-            Comment childComment = commentDict.get(commentId);
-            if (childComment != null) {
-                comment.addChildComment(getCommentWithChild(childComment, commentDict));
-            }
-        }
-        return comment;
     }
 
     private Observable<List<Integer>> getHNNewIds(boolean isRefresh) {
