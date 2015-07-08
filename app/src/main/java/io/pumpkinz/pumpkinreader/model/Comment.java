@@ -12,7 +12,6 @@ public class Comment extends Item implements Serializable {
 
     int parent;
     List<Integer> kids;
-    Comment parentComment;
     List<Comment> childComments;
 
     public Comment() {
@@ -28,20 +27,12 @@ public class Comment extends Item implements Serializable {
         this.childComments = new ArrayList<>();
     }
 
-    public int getParent() {
+    public int getParentId() {
         return parent;
     }
 
-    public List<Integer> getKids() {
+    public List<Integer> getCommentIds() {
         return kids;
-    }
-
-    public Comment getParentComment() {
-        return parentComment;
-    }
-
-    public void setParentComment(Comment parentComment) {
-        this.parentComment = parentComment;
     }
 
     public List<Comment> getChildComments() {
@@ -63,11 +54,12 @@ public class Comment extends Item implements Serializable {
 
         StringBuilder sb = new StringBuilder();
         sb.append(parent)
-                .append(";\tKids=" + getKids().toString())
+                .append(";\tKids=" + getCommentIds().toString())
                 .append("\tText=" + getText().substring(0, Math.min(getText().length(), 20)))
                 .append("\t" + childCommentsSb)
                 .append("\n");
 
         return sb.toString();
     }
+
 }

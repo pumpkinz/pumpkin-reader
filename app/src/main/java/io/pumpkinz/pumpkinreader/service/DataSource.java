@@ -9,6 +9,7 @@ import java.util.Hashtable;
 import java.util.List;
 
 import io.pumpkinz.pumpkinreader.etc.Constants;
+import io.pumpkinz.pumpkinreader.model.Comment;
 import io.pumpkinz.pumpkinreader.model.News;
 import io.pumpkinz.pumpkinreader.util.Util;
 import rx.Observable;
@@ -47,6 +48,55 @@ public class DataSource {
     public Observable<List<News>> getHNJob(final int from, final int count, boolean isRefresh) {
         return getHNJobIds(isRefresh)
                 .compose(new NewsTransformer(from, count));
+    }
+
+    public Observable<List<Comment>> getComments(final News news) {
+        return Observable.from(news.getCommentIds())
+                .flatMap(new Func1<Integer, Observable<Comment>>() {
+                    @Override
+                    public Observable<Comment> call(Integer commentId) {
+                        return RestClient.service().getComment(commentId)
+                                .onErrorReturn(new Func1<Throwable, Comment>() {
+                                    @Override
+                                    public Comment call(Throwable throwable) {
+                                        return null;
+                                    }
+                                });
+                    }
+                })
+                .flatMap(new Func1<Comment, Observable<Comment>>() {
+                    @Override
+                    public Observable<Comment> call(Comment comment) {
+                        return getInnerComments(comment);
+                    }
+                })
+                .filter(new Func1<Comment, Boolean>() {
+                    @Override
+                    public Boolean call(Comment comment) {
+                        return (comment != null) && !comment.isDeleted() && !comment.isDead();
+                    }
+                })
+                .toList()
+                .map(new Func1<List<Comment>, List<Comment>>() {
+                    @Override
+                    public List<Comment> call(List<Comment> comments) {
+                        Dictionary<Integer, Comment> commentDict = new Hashtable<>();
+                        List<Comment> retval = new ArrayList<>();
+
+                        for (Comment comment : comments) {
+                            commentDict.put(comment.getId(), comment);
+                        }
+
+                        for (Integer commentId : news.getCommentIds()) {
+                            Comment comment = commentDict.get(commentId);
+                            if (comment != null) {
+                                retval.add(getCommentWithChild(comment, commentDict));
+                            }
+                        }
+
+                        return retval;
+                    }
+                });
     }
 
     private Observable<List<Integer>> getHNNewIds(boolean isRefresh) {
@@ -116,6 +166,49 @@ public class DataSource {
         }
 
         return retval;
+    }
+
+    private Observable<Comment> getInnerComments(Comment comment) {
+        if (comment.getCommentIds().size() > 0) {
+            return Observable.merge(
+                    Observable.just(comment),
+                    Observable.from(comment.getCommentIds())
+                            .flatMap(new Func1<Integer, Observable<Comment>>() {
+                                @Override
+                                public Observable<Comment> call(Integer commentId) {
+                                    return RestClient.service().getComment(commentId)
+                                            .onErrorReturn(new Func1<Throwable, Comment>() {
+                                                @Override
+                                                public Comment call(Throwable throwable) {
+                                                    return null;
+                                                }
+                                            });
+                                }
+                            })
+                            .flatMap(new Func1<Comment, Observable<Comment>>() {
+                                @Override
+                                public Observable<Comment> call(Comment comment) {
+                                    return getInnerComments(comment);
+                                }
+                            })
+            );
+        }
+
+        return Observable.just(comment);
+    }
+
+    private Comment getCommentWithChild(Comment comment, Dictionary<Integer, Comment> commentDict) {
+        if (comment.getCommentIds().size() == 0) {
+            return comment;
+        }
+
+        for (Integer commentId : comment.getCommentIds()) {
+            Comment childComment = commentDict.get(commentId);
+            if (childComment != null) {
+                comment.addChildComment(getCommentWithChild(childComment, commentDict));
+            }
+        }
+        return comment;
     }
 
     private class putToSpAction implements Action1<List<Integer>> {

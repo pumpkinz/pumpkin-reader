@@ -3,9 +3,6 @@ package io.pumpkinz.pumpkinreader.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.pumpkinz.pumpkinreader.service.CommentSource;
-import rx.Observable;
-
 
 public abstract class News extends Item {
 
@@ -31,7 +28,7 @@ public abstract class News extends Item {
         this.descendants = 0;
     }
 
-    public List<Integer> getKids() {
+    public List<Integer> getCommentIds() {
         return kids;
     }
 
@@ -45,10 +42,6 @@ public abstract class News extends Item {
 
     public String getTitle() {
         return title;
-    }
-
-    public Observable<List<Comment>> getTopLevelComments() {
-        return CommentSource.service().getComments(this);
     }
 
     public int getTotalComments() {
@@ -65,7 +58,7 @@ public abstract class News extends Item {
                 .append("; Score=" + getScore())
                 .append("; Title=" + getTitle())
                 .append("; Descendants=" + getTotalComments())
-                .append("; Kids=" + getKids().toString())
+                .append("; Kids=" + getCommentIds().toString())
                 .append("\n");
 
         return sb.toString();

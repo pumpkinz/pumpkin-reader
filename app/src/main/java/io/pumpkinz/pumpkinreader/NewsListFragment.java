@@ -119,7 +119,7 @@ public class NewsListFragment extends Fragment {
 
             @Override
             public void onError(Throwable e) {
-                Log.d("stories err", e.toString());
+                Log.d("stories", e.toString());
             }
 
             @Override

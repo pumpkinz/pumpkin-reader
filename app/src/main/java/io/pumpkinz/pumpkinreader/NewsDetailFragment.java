@@ -20,9 +20,27 @@ import io.pumpkinz.pumpkinreader.model.Comment;
 import io.pumpkinz.pumpkinreader.model.News;
 import io.pumpkinz.pumpkinreader.service.DataSource;
 import rx.Subscriber;
+import rx.Subscription;
+import rx.android.app.AppObservable;
+import rx.subscriptions.Subscriptions;
 
 
 public class NewsDetailFragment extends Fragment {
+
+    private Subscription subscription = Subscriptions.empty();
+    private DataSource dataSource;
+    private NewsDetailAdapter newsDetailAdapter;
+
+    public NewsDetailFragment() {
+        setRetainInstance(true);
+        this.dataSource = new DataSource(getActivity());
+    }
+
+    @Override
+    public void onDestroyView() {
+        subscription.unsubscribe();
+        super.onDestroyView();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -43,28 +61,33 @@ public class NewsDetailFragment extends Fragment {
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         newsDetail.setLayoutManager(layoutManager);
 
-        newsDetail.setAdapter(new NewsDetailAdapter(this, news));
+        newsDetailAdapter = new NewsDetailAdapter(this, news);
+        newsDetail.setAdapter(newsDetailAdapter);
 
         RecyclerView.ItemDecoration itemDecoration =
                 new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
         newsDetail.addItemDecoration(itemDecoration);
 
-        news.getTopLevelComments()
+        loadComments(news);
+    }
+
+    private void loadComments(News news) {
+        subscription = AppObservable.bindFragment(this, dataSource.getComments(news))
                 .subscribe(new Subscriber<List<Comment>>() {
                     @Override
                     public void onCompleted() {
-                        Log.d("comment list", "complete");
+                        Log.d("comments", "completed");
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.d("comment list", e.toString());
+                        Log.d("comments", e.toString());
                     }
 
                     @Override
                     public void onNext(List<Comment> comments) {
-                        Log.d("comment list", String.valueOf(comments.size()));
-                        Log.d("comment list", comments.toString());
+                        Log.d("comments", String.valueOf(comments.size()));
+                        newsDetailAdapter.addDataset(comments);
                     }
                 });
     }
