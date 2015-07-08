@@ -79,27 +79,33 @@ public class MainActivity extends AppCompatActivity {
 
     private void onSideNavMenuSelected(MenuItem menuItem) {
         Intent intent = null;
+        NewsListFragment fragment = (NewsListFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_main);
 
         switch (menuItem.getItemId()) {
             case R.id.sidenav_menu_top:
-                // TODO: Display top news
                 getSupportActionBar().setTitle(menuItem.getTitle());
+                fragment.setNewsType(R.string.top);
+                fragment.forceRefresh();
                 break;
             case R.id.sidenav_menu_new:
-                // TODO: Display recent news
                 getSupportActionBar().setTitle(menuItem.getTitle());
+                fragment.setNewsType(R.string.recent);
+                fragment.forceRefresh();
                 break;
             case R.id.sidenav_menu_ask:
-                // TODO: Display ask HN
                 getSupportActionBar().setTitle(menuItem.getTitle());
+                fragment.setNewsType(R.string.ask_hn);
+                fragment.forceRefresh();
                 break;
             case R.id.sidenav_menu_show:
-                // TODO: Display show HN
                 getSupportActionBar().setTitle(menuItem.getTitle());
+                fragment.setNewsType(R.string.show_hn);
+                fragment.forceRefresh();
                 break;
             case R.id.sidenav_menu_job:
-                // TODO: Display HN jobs
                 getSupportActionBar().setTitle(menuItem.getTitle());
+                fragment.setNewsType(R.string.job);
+                fragment.forceRefresh();
                 break;
             case R.id.sidenav_menu_setting:
                 intent = new Intent(this, SettingsActivity.class);

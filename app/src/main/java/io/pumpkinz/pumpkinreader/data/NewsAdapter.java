@@ -19,7 +19,10 @@ import io.pumpkinz.pumpkinreader.model.News;
 import io.pumpkinz.pumpkinreader.util.Util;
 
 
-public class NewsAdapter extends RecyclerView.Adapter<NewsViewHolder> {
+public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+    private static final int ITEM_NEWS = 0;
+    private static final int ITEM_LOADING = 1;
 
     private Fragment fragment;
     private List<News> dataset;
@@ -43,26 +46,48 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsViewHolder> {
     }
 
     @Override
-    public NewsViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.news_item, viewGroup, false);
-        v.setOnClickListener(this.onClickListener);
-        return new NewsViewHolder(v);
+    public int getItemViewType(int position) {
+        return this.dataset.get(position) == null ? ITEM_LOADING : ITEM_NEWS;
     }
 
     @Override
-    public void onBindViewHolder(NewsViewHolder newsViewHolder, int i) {
-        News news = this.dataset.get(i);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+        View v;
 
-        newsViewHolder.getTitle().setText(news.getTitle());
-        newsViewHolder.getSubmitter().setText(news.getBy());
-        newsViewHolder.getUrl().setText(Util.getDomainName(news.getUrl()));
-        newsViewHolder.getDate().setText(this.dateFormatter.timeAgo(news.getTime()));
-        newsViewHolder.getScore().setText(Integer.toString(news.getScore()));
+        switch (viewType) {
+            case ITEM_NEWS:
+                v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.news_item, viewGroup, false);
+                v.setOnClickListener(this.onClickListener);
+                return new NewsViewHolder(v);
+            case ITEM_LOADING:
+                v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.loading_item, viewGroup, false);
+                return new LoadingViewHolder(v);
+            default:
+                return null;
+        }
+    }
 
-        Resources r = this.fragment.getActivity().getResources();
-        int nComment = news.getComments().size();
-        String commentCountFormat = r.getQuantityString(R.plurals.comments, nComment, nComment);
-        newsViewHolder.getCommentCount().setText(commentCountFormat);
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+        switch (viewHolder.getItemViewType()) {
+            case ITEM_NEWS:
+                News news = this.dataset.get(position);
+                NewsViewHolder newsViewHolder = (NewsViewHolder) viewHolder;
+
+                newsViewHolder.getTitle().setText(news.getTitle());
+                newsViewHolder.getSubmitter().setText(news.getBy());
+                newsViewHolder.getUrl().setText(Util.getDomainName(news.getUrl()));
+                newsViewHolder.getDate().setText(this.dateFormatter.timeAgo(news.getTime()));
+                newsViewHolder.getScore().setText(Integer.toString(news.getScore()));
+
+                Resources r = this.fragment.getActivity().getResources();
+                int nComment = news.getComments().size();
+                String commentCountFormat = r.getQuantityString(R.plurals.comments, nComment, nComment);
+                newsViewHolder.getCommentCount().setText(commentCountFormat);
+                break;
+            case ITEM_LOADING:
+                break;
+        }
     }
 
     @Override
@@ -79,4 +104,19 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsViewHolder> {
         this.dataset.clear();
         notifyDataSetChanged();
     }
+
+    public News getItem(int position) {
+        return this.dataset.get(position);
+    }
+
+    public void addItem(News news) {
+        this.dataset.add(news);
+        notifyItemInserted(this.dataset.size() - 1);
+    }
+
+    public void removeItem(int position) {
+        this.dataset.remove(position);
+        notifyItemRemoved(position);
+    }
+
 }
