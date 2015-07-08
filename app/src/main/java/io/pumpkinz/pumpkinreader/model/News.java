@@ -1,5 +1,6 @@
 package io.pumpkinz.pumpkinreader.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -9,9 +10,12 @@ public abstract class News extends Item {
     String url;
     int score;
     String title;
-    List<Comment> comments;
+    int descendants;
 
-    public News() {}
+    public News() {
+        this.kids = new ArrayList<>();
+        this.descendants = 0;
+    }
 
     public News(int id, boolean deleted, String type, String by, long time, String text,
                 boolean dead, List<Integer> kids, String url, int score, String title) {
@@ -20,9 +24,11 @@ public abstract class News extends Item {
         this.url = url;
         this.score = score;
         this.title = title;
+        this.kids = new ArrayList<>();
+        this.descendants = 0;
     }
 
-    public List<Integer> getKids() {
+    public List<Integer> getCommentIds() {
         return kids;
     }
 
@@ -38,12 +44,8 @@ public abstract class News extends Item {
         return title;
     }
 
-    public List<Comment> getComments() {
-        return comments;
-    }
-
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
+    public int getTotalComments() {
+        return descendants;
     }
 
     @Override
@@ -55,6 +57,8 @@ public abstract class News extends Item {
                 .append("URL=" + getUrl())
                 .append("; Score=" + getScore())
                 .append("; Title=" + getTitle())
+                .append("; Descendants=" + getTotalComments())
+                .append("; Kids=" + getCommentIds().toString())
                 .append("\n");
 
         return sb.toString();

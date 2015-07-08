@@ -10,6 +10,9 @@ import android.view.ViewGroup;
 
 import net.koofr.android.timeago.TimeAgo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.pumpkinz.pumpkinreader.R;
 import io.pumpkinz.pumpkinreader.model.Comment;
 import io.pumpkinz.pumpkinreader.model.News;
@@ -19,12 +22,14 @@ import io.pumpkinz.pumpkinreader.util.Util;
 public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Fragment fragment;
-    private News dataset;
+    private News news;
+    private List<Comment> dataset;
     private TimeAgo dateFormatter;
 
-    public NewsDetailAdapter(final Fragment fragment, final News dataset) {
+    public NewsDetailAdapter(final Fragment fragment, final News news) {
         this.fragment = fragment;
-        this.dataset = dataset;
+        this.news = news;
+        this.dataset = new ArrayList<>();
         this.dateFormatter = new TimeAgo(fragment.getActivity());
     }
 
@@ -50,10 +55,9 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder viewHolder, final int i) {
         switch (viewHolder.getItemViewType()) {
             case 0:
-                News news = this.dataset;
                 NewsViewHolder newsViewHolder = (NewsViewHolder) viewHolder;
 
                 newsViewHolder.getTitle().setText(news.getTitle());
@@ -63,7 +67,7 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 newsViewHolder.getScore().setText(Integer.toString(news.getScore()));
 
                 Resources r = this.fragment.getActivity().getResources();
-                int nComment = news.getComments().size();
+                int nComment = news.getTotalComments();
                 String commentCountFormat = r.getQuantityString(R.plurals.comments, nComment, nComment);
                 newsViewHolder.getCommentCount().setText(commentCountFormat);
 
@@ -75,12 +79,12 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 break;
             case 1:
-                Comment comment = this.dataset.getComments().get(i - 1);
+                Comment comment = this.dataset.get(i - 1);
                 CommentViewHolder commentViewHolder = (CommentViewHolder) viewHolder;
 
                 commentViewHolder.getSubmitter().setText(comment.getBy());
                 commentViewHolder.getDate().setText(this.dateFormatter.timeAgo(comment.getTime()));
-                commentViewHolder.getBody().setText(comment.getText());
+                commentViewHolder.getBody().setText(Html.fromHtml(comment.getText()));
 
                 break;
         }
@@ -88,7 +92,12 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemCount() {
-        return dataset.getComments().size() + 1;
+        return dataset.size() + 1;
+    }
+
+    public void addDataset(List<Comment> dataset) {
+        this.dataset.addAll(dataset);
+        notifyDataSetChanged();
     }
 
 }

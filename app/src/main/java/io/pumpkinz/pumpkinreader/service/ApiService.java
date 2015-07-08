@@ -2,7 +2,7 @@ package io.pumpkinz.pumpkinreader.service;
 
 import java.util.List;
 
-import io.pumpkinz.pumpkinreader.model.Item;
+import io.pumpkinz.pumpkinreader.model.Comment;
 import io.pumpkinz.pumpkinreader.model.News;
 import retrofit.http.GET;
 import retrofit.http.Path;
@@ -26,10 +26,10 @@ public interface ApiService {
     @GET("/jobstories.json")
     Observable<List<Integer>> getHNJobIds();
 
-    @GET("/item/{item}.json")
-    Observable<Item> getItem(@Path("item") int itemId);
-
     @GET("/item/{news}.json")
     Observable<News> getNews(@Path("news") int newsId);
+
+    @GET("/item/{comment}.json")
+    Observable<Comment> getComment(@Path("comment") int commentId);
 
 }

@@ -4,19 +4,43 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import org.parceler.Parcels;
 
+import java.util.List;
+
 import io.pumpkinz.pumpkinreader.data.NewsDetailAdapter;
 import io.pumpkinz.pumpkinreader.etc.Constants;
 import io.pumpkinz.pumpkinreader.etc.DividerItemDecoration;
+import io.pumpkinz.pumpkinreader.model.Comment;
 import io.pumpkinz.pumpkinreader.model.News;
+import io.pumpkinz.pumpkinreader.service.DataSource;
+import rx.Subscriber;
+import rx.Subscription;
+import rx.android.app.AppObservable;
+import rx.subscriptions.Subscriptions;
 
 
 public class NewsDetailFragment extends Fragment {
+
+    private Subscription subscription = Subscriptions.empty();
+    private DataSource dataSource;
+    private NewsDetailAdapter newsDetailAdapter;
+
+    public NewsDetailFragment() {
+        setRetainInstance(true);
+        this.dataSource = new DataSource(getActivity());
+    }
+
+    @Override
+    public void onDestroyView() {
+        subscription.unsubscribe();
+        super.onDestroyView();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -37,11 +61,35 @@ public class NewsDetailFragment extends Fragment {
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         newsDetail.setLayoutManager(layoutManager);
 
-        newsDetail.setAdapter(new NewsDetailAdapter(this, news));
+        newsDetailAdapter = new NewsDetailAdapter(this, news);
+        newsDetail.setAdapter(newsDetailAdapter);
 
         RecyclerView.ItemDecoration itemDecoration =
                 new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
         newsDetail.addItemDecoration(itemDecoration);
+
+        loadComments(news);
+    }
+
+    private void loadComments(News news) {
+        subscription = AppObservable.bindFragment(this, dataSource.getComments(news))
+                .subscribe(new Subscriber<List<Comment>>() {
+                    @Override
+                    public void onCompleted() {
+                        Log.d("comments", "completed");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.d("comments", e.toString());
+                    }
+
+                    @Override
+                    public void onNext(List<Comment> comments) {
+                        Log.d("comments", String.valueOf(comments.size()));
+                        newsDetailAdapter.addDataset(comments);
+                    }
+                });
     }
 
 }
