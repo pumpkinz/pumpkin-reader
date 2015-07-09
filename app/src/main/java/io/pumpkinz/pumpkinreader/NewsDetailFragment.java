@@ -55,7 +55,6 @@ public class NewsDetailFragment extends Fragment {
         News news = Parcels.unwrap(getActivity().getIntent().getParcelableExtra(Constants.NEWS));
 
         RecyclerView newsDetail = (RecyclerView) view.findViewById(R.id.news_detail);
-        newsDetail.setHasFixedSize(true);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
