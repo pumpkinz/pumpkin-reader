@@ -46,4 +46,18 @@ public class Util {
         return retval;
     }
 
+    public static CharSequence trim(CharSequence source) {
+
+        if(source == null)
+            return "";
+
+        int i = source.length();
+
+        // loop back to the first non-whitespace character
+        while(--i >= 0 && Character.isWhitespace(source.charAt(i))) {
+        }
+
+        return source.subSequence(0, i+1);
+    }
+
 }

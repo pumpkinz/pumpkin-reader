@@ -84,7 +84,7 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 commentViewHolder.getSubmitter().setText(comment.getBy());
                 commentViewHolder.getDate().setText(this.dateFormatter.timeAgo(comment.getTime()));
-                commentViewHolder.getBody().setText(Html.fromHtml(comment.getText()));
+                commentViewHolder.getBody().setText(Util.trim(Html.fromHtml(comment.getText())));
 
                 break;
         }
