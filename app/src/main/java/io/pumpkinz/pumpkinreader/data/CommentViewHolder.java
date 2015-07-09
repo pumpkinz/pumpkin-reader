@@ -3,7 +3,6 @@ package io.pumpkinz.pumpkinreader.data;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import io.pumpkinz.pumpkinreader.R;

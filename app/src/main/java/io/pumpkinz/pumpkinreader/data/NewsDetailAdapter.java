@@ -37,6 +37,10 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         this.onClickListener = new OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (view.getId() == R.id.comment_body) {
+                    view = (View) view.getParent().getParent();
+                }
+
                 RecyclerView recyclerView = (RecyclerView) fragment.getView().findViewById(R.id.news_detail);
                 int position = recyclerView.getChildAdapterPosition(view);
                 Comment comment = dataset.get(position - 1);
@@ -83,7 +87,6 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 return new NewsViewHolder(v);
             case 1:
                 v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.comment_item, viewGroup, false);
-                v.setOnClickListener(this.onClickListener);
                 return new CommentViewHolder(v);
             default:
                 return null;
@@ -126,6 +129,9 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 commentViewHolder.getSubmitter().setText(comment.getBy());
                 commentViewHolder.getDate().setText(this.dateFormatter.timeAgo(comment.getTime()));
                 commentViewHolder.getBody().setText(Util.trim(Html.fromHtml(comment.getText())));
+
+                commentViewHolder.getContainer().setOnClickListener(this.onClickListener);
+                commentViewHolder.getBody().setOnClickListener(this.onClickListener);
 
                 break;
         }
