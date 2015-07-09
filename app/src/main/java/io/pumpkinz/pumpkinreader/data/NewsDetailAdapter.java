@@ -13,6 +13,7 @@ import net.koofr.android.timeago.TimeAgo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 import io.pumpkinz.pumpkinreader.R;
 import io.pumpkinz.pumpkinreader.model.Comment;
@@ -49,24 +50,10 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     return;
                 }
 
-                int start = position + 1;
-                int size = comment.getChildComments().size();
-                int level = comment.getLevel() + 1;
-
                 if (comment.isExpanded()) {
-                    dataset.subList(position, position + size).clear();
-                    notifyItemRangeRemoved(start, size);
-                    comment.setExpanded(false);
+                    collapseComments(comment, position);
                 } else {
-                    List<Comment> childComments = new ArrayList<>(comment.getChildComments());
-
-                    for (Comment child : childComments) {
-                        child.setLevel(level);
-                    }
-
-                    dataset.addAll(position, childComments);
-                    notifyItemRangeInserted(start, size);
-                    comment.setExpanded(true);
+                    expandComments(comment, position);
                 }
             }
         };
@@ -145,6 +132,41 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public void addDataset(List<Comment> dataset) {
         this.dataset.addAll(dataset);
         notifyDataSetChanged();
+    }
+
+    private void collapseComments(Comment comment, int position) {
+        ListIterator it = dataset.listIterator(position);
+        int count = 0;
+
+        while (it.hasNext()) {
+            Comment com = (Comment) it.next();
+
+            if (com.getLevel() <= comment.getLevel()) {
+                break;
+            }
+
+            it.remove();
+            count++;
+        }
+
+        notifyItemRangeRemoved(position + 1, count);
+        comment.setExpanded(false);
+    }
+
+    private void expandComments(Comment comment, int position) {
+        int start = position + 1;
+        int size = comment.getChildComments().size();
+        int level = comment.getLevel() + 1;
+
+        List<Comment> childComments = new ArrayList<>(comment.getChildComments());
+
+        for (Comment child : childComments) {
+            child.setLevel(level);
+        }
+
+        dataset.addAll(position, childComments);
+        notifyItemRangeInserted(start, size);
+        comment.setExpanded(true);
     }
 
 }
