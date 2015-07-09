@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
 import net.koofr.android.timeago.TimeAgo;
@@ -25,12 +26,46 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private News news;
     private List<Comment> dataset;
     private TimeAgo dateFormatter;
+    private OnClickListener onClickListener;
 
     public NewsDetailAdapter(final Fragment fragment, final News news) {
         this.fragment = fragment;
         this.news = news;
         this.dataset = new ArrayList<>();
         this.dateFormatter = new TimeAgo(fragment.getActivity());
+
+        this.onClickListener = new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RecyclerView recyclerView = (RecyclerView) fragment.getView().findViewById(R.id.news_detail);
+                int position = recyclerView.getChildAdapterPosition(view);
+                Comment comment = dataset.get(position - 1);
+
+                if (position <= 0 || comment.getChildComments().size() <= 0) {
+                    return;
+                }
+
+                int start = position + 1;
+                int size = comment.getChildComments().size();
+                int level = comment.getLevel() + 1;
+
+                if (comment.isExpanded()) {
+                    dataset.subList(position, position + size).clear();
+                    notifyItemRangeRemoved(start, size);
+                    comment.setExpanded(false);
+                } else {
+                    List<Comment> childComments = new ArrayList<>(comment.getChildComments());
+
+                    for (Comment child : childComments) {
+                        child.setLevel(level);
+                    }
+
+                    dataset.addAll(position, childComments);
+                    notifyItemRangeInserted(start, size);
+                    comment.setExpanded(true);
+                }
+            }
+        };
     }
 
     @Override
@@ -48,6 +83,7 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 return new NewsViewHolder(v);
             case 1:
                 v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.comment_item, viewGroup, false);
+                v.setOnClickListener(this.onClickListener);
                 return new CommentViewHolder(v);
             default:
                 return null;
@@ -82,6 +118,11 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 Comment comment = this.dataset.get(i - 1);
                 CommentViewHolder commentViewHolder = (CommentViewHolder) viewHolder;
 
+                RecyclerView.LayoutParams params = (RecyclerView.LayoutParams)
+                        commentViewHolder.getContainer().getLayoutParams();
+                params.setMarginStart(Util.dpToPx(comment.getLevel() * 8));
+
+                commentViewHolder.getContainer().setLayoutParams(params);
                 commentViewHolder.getSubmitter().setText(comment.getBy());
                 commentViewHolder.getDate().setText(this.dateFormatter.timeAgo(comment.getTime()));
                 commentViewHolder.getBody().setText(Util.trim(Html.fromHtml(comment.getText())));

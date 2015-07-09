@@ -13,10 +13,14 @@ public class Comment extends Item implements Serializable {
     int parent;
     List<Integer> kids;
     List<Comment> childComments;
+    boolean expanded;
+    int level;
 
     public Comment() {
         this.kids = new ArrayList<>();
         this.childComments = new ArrayList<>();
+        this.expanded = false;
+        this.level = 0;
     }
 
     public Comment(int id, boolean deleted, String type, String by, long time, String text,
@@ -25,6 +29,8 @@ public class Comment extends Item implements Serializable {
         this.parent = parent;
         this.kids = kids;
         this.childComments = new ArrayList<>();
+        this.expanded = false;
+        this.level = 0;
     }
 
     public int getParentId() {
@@ -41,6 +47,22 @@ public class Comment extends Item implements Serializable {
 
     public void addChildComment(Comment childComment) {
         this.childComments.add(childComment);
+    }
+
+    public boolean isExpanded() {
+        return this.expanded;
+    }
+
+    public void setExpanded(boolean expanded) {
+        this.expanded = expanded;
+    }
+
+    public int getLevel() {
+        return this.level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
     }
 
     @Override
