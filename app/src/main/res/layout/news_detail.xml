@@ -14,6 +14,7 @@
         android:paddingBottom="@dimen/abc_action_bar_content_inset_material"
         android:paddingEnd="@dimen/abc_action_bar_content_inset_material"
         android:paddingStart="@dimen/abc_action_bar_content_inset_material"
+        android:background="@color/grey_1000w"
         android:textColor="@color/grey_1000b" />
 
 </LinearLayout>
