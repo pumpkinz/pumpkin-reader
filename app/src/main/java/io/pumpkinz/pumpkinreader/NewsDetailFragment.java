@@ -30,6 +30,7 @@ public class NewsDetailFragment extends Fragment {
     private Subscription subscription = Subscriptions.empty();
     private DataSource dataSource;
     private NewsDetailAdapter newsDetailAdapter;
+    private RecyclerView newsDetail;
 
     public NewsDetailFragment() {
         setRetainInstance(true);
@@ -54,7 +55,7 @@ public class NewsDetailFragment extends Fragment {
 
         News news = Parcels.unwrap(getActivity().getIntent().getParcelableExtra(Constants.NEWS));
 
-        RecyclerView newsDetail = (RecyclerView) view.findViewById(R.id.news_detail);
+        newsDetail = (RecyclerView) view.findViewById(R.id.news_detail);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -63,14 +64,12 @@ public class NewsDetailFragment extends Fragment {
         newsDetailAdapter = new NewsDetailAdapter(this, news);
         newsDetail.setAdapter(newsDetailAdapter);
 
-        RecyclerView.ItemDecoration itemDecoration =
-                new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
-        newsDetail.addItemDecoration(itemDecoration);
-
         loadComments(news);
     }
 
     private void loadComments(News news) {
+        newsDetailAdapter.addItem(null);
+
         subscription = AppObservable.bindFragment(this, dataSource.getComments(news))
                 .subscribe(new Subscriber<List<Comment>>() {
                     @Override
@@ -86,8 +85,15 @@ public class NewsDetailFragment extends Fragment {
                     @Override
                     public void onNext(List<Comment> comments) {
                         Log.d("comments", String.valueOf(comments.size()));
+
+                        newsDetailAdapter.removeItem(newsDetailAdapter.getItemCount() - 1);
+
                         newsDetailAdapter.addDataset(comments);
                         newsDetailAdapter.expandAllComments();
+
+                        RecyclerView.ItemDecoration itemDecoration =
+                                new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
+                        newsDetail.addItemDecoration(itemDecoration);
                     }
                 });
     }

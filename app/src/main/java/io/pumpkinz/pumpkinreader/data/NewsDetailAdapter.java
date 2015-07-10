@@ -63,7 +63,15 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemViewType(int position) {
-        return position == 0 ? 0 : 1;
+        if (position == 0) {
+            return 0;
+        }
+
+        if (this.dataset.get(position - 1) == null) {
+            return 2;
+        }
+
+        return 1;
     }
 
     @Override
@@ -76,6 +84,9 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 return new NewsViewHolder(v);
             case 1:
                 v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.comment_item, viewGroup, false);
+                return new CommentViewHolder(v);
+            case 2:
+                v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.loading_item, viewGroup, false);
                 return new CommentViewHolder(v);
             default:
                 return null;
@@ -123,6 +134,8 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 commentViewHolder.getBody().setOnClickListener(this.onClickListener);
 
                 break;
+            case 2:
+                break;
         }
     }
 
@@ -134,6 +147,16 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public void addDataset(List<Comment> dataset) {
         this.dataset.addAll(dataset);
         notifyDataSetChanged();
+    }
+
+    public void addItem(Comment comment) {
+        this.dataset.add(comment);
+        notifyItemInserted(this.dataset.size());
+    }
+
+    public void removeItem(int position) {
+        this.dataset.remove(position - 1);
+        notifyItemRemoved(position);
     }
 
     public void expandAllComments() {
