@@ -44,7 +44,6 @@
         android:layout_margin="16dp"
         android:src="@drawable/ic_refresh_white_18dp"
         app:borderWidth="0dp"
-        app:fabSize="normal"
-        app:rippleColor="@color/grey_1000w"/>
+        app:fabSize="normal" />
 
 </android.support.design.widget.CoordinatorLayout>
