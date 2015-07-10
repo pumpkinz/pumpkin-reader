@@ -5,6 +5,7 @@ import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import io.pumpkinz.pumpkinreader.R;
@@ -20,6 +21,7 @@ public class NewsViewHolder extends RecyclerView.ViewHolder implements SharedPre
     private TextView date;
     private TextView score;
     private TextView commentCount;
+    private LinearLayout newsItemContainer;
 
     private SharedPreferences preferences;
 
@@ -33,6 +35,7 @@ public class NewsViewHolder extends RecyclerView.ViewHolder implements SharedPre
         this.date = (TextView) view.findViewById(R.id.news_age);
         this.score = (TextView) view.findViewById(R.id.news_score);
         this.commentCount = (TextView) view.findViewById(R.id.news_comment_count);
+        this.newsItemContainer = (LinearLayout) view.findViewById(R.id.news_item_container);
 
         this.preferences = PreferenceManager.getDefaultSharedPreferences(view.getContext());
         this.preferences.registerOnSharedPreferenceChangeListener(this);
@@ -75,6 +78,10 @@ public class NewsViewHolder extends RecyclerView.ViewHolder implements SharedPre
 
     public TextView getCommentCount() {
         return commentCount;
+    }
+
+    public LinearLayout getNewsItemContainer() {
+        return newsItemContainer;
     }
 
     private void setTitleTextSize() {

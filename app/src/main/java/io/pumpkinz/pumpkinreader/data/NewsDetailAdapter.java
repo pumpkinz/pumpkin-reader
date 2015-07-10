@@ -1,6 +1,8 @@
 package io.pumpkinz.pumpkinreader.data;
 
+import android.content.Intent;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -29,6 +31,7 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private News news;
     private List<Comment> dataset;
     private TimeAgo dateFormatter;
+    private OnClickListener newsOnClickListener;
     private OnClickListener onClickListener;
 
     public NewsDetailAdapter(final Fragment fragment, final News news) {
@@ -37,6 +40,17 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         this.dataset = new ArrayList<>();
         this.dateFormatter = new TimeAgo(fragment.getActivity());
 
+        this.newsOnClickListener = new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (news.getUrl() != null && !news.getUrl().isEmpty()) {
+                    Uri uri = Uri.parse(news.getUrl());
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    fragment.startActivity(intent);
+                }
+            }
+        };
+
         this.onClickListener = new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -44,7 +58,10 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     view = (View) view.getParent().getParent();
                 }
 
-                RecyclerView recyclerView = (RecyclerView) fragment.getView().findViewById(R.id.news_detail);
+                RecyclerView recyclerView = (RecyclerView) fragment.getView();
+
+                if (recyclerView == null) return;
+
                 int position = recyclerView.getChildAdapterPosition(view);
                 Comment comment = dataset.get(position - 1);
 
@@ -81,6 +98,7 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         switch (viewType) {
             case 0:
                 v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.news_detail, viewGroup, false);
+                v.setOnClickListener(this.newsOnClickListener);
                 return new NewsViewHolder(v);
             case 1:
                 v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.comment_item, viewGroup, false);
@@ -115,6 +133,8 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 } else {
                     newsViewHolder.getBody().setVisibility(View.GONE);
                 }
+
+                newsViewHolder.getNewsItemContainer().setBackground(null);
 
                 break;
             case 1:
