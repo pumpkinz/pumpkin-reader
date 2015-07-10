@@ -14,12 +14,14 @@ public class Comment extends Item implements Serializable {
     List<Integer> kids;
     List<Comment> childComments;
     boolean expanded;
+    boolean hide;
     int level;
 
     public Comment() {
         this.kids = new ArrayList<>();
         this.childComments = new ArrayList<>();
         this.expanded = false;
+        this.hide = false;
         this.level = 0;
     }
 
@@ -57,6 +59,14 @@ public class Comment extends Item implements Serializable {
         this.expanded = expanded;
     }
 
+    public boolean isHidden() {
+        return this.hide;
+    }
+
+    public void setHidden(boolean hide) {
+        this.hide = hide;
+    }
+
     public int getLevel() {
         return this.level;
     }
@@ -76,6 +86,7 @@ public class Comment extends Item implements Serializable {
 
         StringBuilder sb = new StringBuilder();
         sb.append(parent)
+                .append(";\tLevel=" + String.valueOf(getLevel()))
                 .append(";\tKids=" + getCommentIds().toString())
                 .append("\tText=" + getText().substring(0, Math.min(getText().length(), 20)))
                 .append("\t" + childCommentsSb)
