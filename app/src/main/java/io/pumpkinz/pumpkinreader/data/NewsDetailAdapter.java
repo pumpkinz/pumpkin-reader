@@ -1,11 +1,14 @@
 package io.pumpkinz.pumpkinreader.data;
 
+import android.content.Intent;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
 import net.koofr.android.timeago.TimeAgo;
@@ -25,12 +28,24 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private News news;
     private List<Comment> dataset;
     private TimeAgo dateFormatter;
+    private OnClickListener newsOnClickListener;
 
     public NewsDetailAdapter(final Fragment fragment, final News news) {
         this.fragment = fragment;
         this.news = news;
         this.dataset = new ArrayList<>();
         this.dateFormatter = new TimeAgo(fragment.getActivity());
+
+        this.newsOnClickListener = new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (news.getUrl() != null && !news.getUrl().isEmpty()) {
+                    Uri uri = Uri.parse(news.getUrl());
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    fragment.startActivity(intent);
+                }
+            }
+        };
     }
 
     @Override
@@ -45,6 +60,7 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         switch (viewType) {
             case 0:
                 v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.news_detail, viewGroup, false);
+                v.setOnClickListener(this.newsOnClickListener);
                 return new NewsViewHolder(v);
             case 1:
                 v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.comment_item, viewGroup, false);
@@ -76,6 +92,8 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 } else {
                     newsViewHolder.getBody().setVisibility(View.GONE);
                 }
+
+                newsViewHolder.getNewsItemContainer().setBackground(null);
 
                 break;
             case 1:
