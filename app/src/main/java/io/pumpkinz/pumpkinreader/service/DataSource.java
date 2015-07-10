@@ -9,6 +9,7 @@ import java.util.Hashtable;
 import java.util.List;
 
 import io.pumpkinz.pumpkinreader.etc.Constants;
+import io.pumpkinz.pumpkinreader.exception.EndOfListException;
 import io.pumpkinz.pumpkinreader.model.Comment;
 import io.pumpkinz.pumpkinreader.model.News;
 import io.pumpkinz.pumpkinreader.util.Util;
@@ -242,10 +243,12 @@ public class DataSource {
         final Dictionary<Integer, News> dict = new Hashtable<>();
         private int from;
         private int count;
+        private int to;
 
         public NewsTransformer(int from, int count) {
             this.from = from;
             this.count = count;
+            this.to = from + count;
         }
 
         @Override
@@ -253,8 +256,16 @@ public class DataSource {
             return newsIds
                     .map(new Func1<List<Integer>, List<Integer>>() {
                         @Override // Get a subset from Top News IDs and save it for later lookup
-                        public List<Integer> call(List<Integer> ids) {
-                            subNewsIds.addAll(ids.subList(from, from + count));
+                        public List<Integer> call(List<Integer> newsIds) {
+                            if (from >= newsIds.size()) {
+                                throw new EndOfListException();
+                            }
+
+                            if (to > newsIds.size()) {
+                                to = newsIds.size();
+                            }
+
+                            subNewsIds.addAll(newsIds.subList(from, to));
                             return subNewsIds;
                         }
                     })
