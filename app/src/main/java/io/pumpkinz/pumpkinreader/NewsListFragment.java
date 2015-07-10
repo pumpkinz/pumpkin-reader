@@ -83,6 +83,10 @@ public class NewsListFragment extends Fragment {
         });
     }
 
+    public void forceUnsubscribe() {
+        subscription.unsubscribe();
+    }
+
     public void goToNewsDetail(News news) {
         Intent intent = new Intent(getActivity(), NewsDetailActivity.class);
         intent.putExtra(Constants.NEWS, Parcels.wrap(news));
