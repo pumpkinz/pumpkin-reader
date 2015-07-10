@@ -23,6 +23,8 @@ import io.pumpkinz.pumpkinreader.util.Util;
 
 public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    public static final int MAX_COMMENT_LEVEL = 5;
+
     private Fragment fragment;
     private News news;
     private List<Comment> dataset;
@@ -132,6 +134,17 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public void addDataset(List<Comment> dataset) {
         this.dataset.addAll(dataset);
         notifyDataSetChanged();
+    }
+
+    public void expandAllComments() {
+        for (int i = 0; i < MAX_COMMENT_LEVEL; i++) {
+            for (int j = 0; j < this.dataset.size(); j++) {
+                if (this.dataset.get(j).getLevel() == i) {
+                    int position = j + 1;
+                    expandComments(this.dataset.get(j), position);
+                }
+            }
+        }
     }
 
     private void collapseComments(Comment comment, int position) {

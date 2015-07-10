@@ -87,6 +87,7 @@ public class NewsDetailFragment extends Fragment {
                     public void onNext(List<Comment> comments) {
                         Log.d("comments", String.valueOf(comments.size()));
                         newsDetailAdapter.addDataset(comments);
+                        newsDetailAdapter.expandAllComments();
                     }
                 });
     }
