@@ -77,7 +77,27 @@ public class DataSource {
                         return (comment != null) && !comment.isDeleted() && !comment.isDead();
                     }
                 })
-                .toList();
+                .toList()
+                .map(new Func1<List<Comment>, List<Comment>>() {
+                    @Override
+                    public List<Comment> call(List<Comment> comments) {
+                        Dictionary<Integer, Comment> commentDict = new Hashtable<>();
+                        List<Comment> retval = new ArrayList<>();
+
+                        for (Comment comment : comments) {
+                            commentDict.put(comment.getId(), comment);
+                        }
+
+                        for (Integer commentId : news.getCommentIds()) {
+                            Comment comment = commentDict.get(commentId);
+                            if (comment != null) {
+                                retval.add(getCommentWithChild(comment, commentDict));
+                            }
+                        }
+
+                        return retval;
+                    }
+                });
     }
 
     private Observable<List<Integer>> getHNNewIds(boolean isRefresh) {
@@ -151,6 +171,7 @@ public class DataSource {
 
     private Observable<Comment> getInnerComments(final int level, Comment comment) {
         comment.setLevel(level);
+        g
         if (comment.getCommentIds().size() > 0) {
             return Observable.merge(
                     Observable.just(comment),
@@ -177,6 +198,20 @@ public class DataSource {
         }
 
         return Observable.just(comment);
+    }
+
+    private Comment getCommentWithChild(Comment comment, Dictionary<Integer, Comment> commentDict) {
+        if (comment.getCommentIds().size() == 0) {
+            return comment;
+        }
+
+        for (Integer commentId : comment.getCommentIds()) {
+            Comment childComment = commentDict.get(commentId);
+            if (childComment != null) {
+                comment.addChildComment(getCommentWithChild(childComment, commentDict));
+            }
+        }
+        return comment;
     }
 
     private class putToSpAction implements Action1<List<Integer>> {
