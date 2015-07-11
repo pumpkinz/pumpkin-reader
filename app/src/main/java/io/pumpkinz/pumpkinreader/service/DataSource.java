@@ -2,6 +2,7 @@ package io.pumpkinz.pumpkinreader.service;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Dictionary;
@@ -68,7 +69,7 @@ public class DataSource {
                 .flatMap(new Func1<Comment, Observable<Comment>>() {
                     @Override
                     public Observable<Comment> call(Comment comment) {
-                        return getInnerComments(0, comment);
+                        return getInnerComments(comment);
                     }
                 })
                 .filter(new Func1<Comment, Boolean>() {
@@ -77,7 +78,27 @@ public class DataSource {
                         return (comment != null) && !comment.isDeleted() && !comment.isDead();
                     }
                 })
-                .toList();
+                .toList()
+                .map(new Func1<List<Comment>, List<Comment>>() {
+                    @Override
+                    public List<Comment> call(List<Comment> comments) {
+                        Dictionary<Integer, Comment> commentDict = new Hashtable<>();
+                        List<Comment> retval = new ArrayList<>();
+
+                        for (Comment comment : comments) {
+                            commentDict.put(comment.getId(), comment);
+                        }
+
+                        for (Integer commentId : news.getCommentIds()) {
+                            Comment comment = commentDict.get(commentId);
+                            if (comment != null) {
+                                retval.add(getCommentWithChild(0, comment, commentDict));
+                            }
+                        }
+
+                        return retval;
+                    }
+                });
     }
 
     private Observable<List<Integer>> getHNNewIds(boolean isRefresh) {
@@ -149,9 +170,8 @@ public class DataSource {
         return retval;
     }
 
-    private Observable<Comment> getInnerComments(final int level, Comment comment) {
-        comment.setLevel(level);
-        if (comment.getCommentIds().size() > 0) {
+    private Observable<Comment> getInnerComments(Comment comment) {
+        if (comment != null && comment.getCommentIds().size() > 0) {
             return Observable.merge(
                     Observable.just(comment),
                     Observable.from(comment.getCommentIds())
@@ -170,13 +190,30 @@ public class DataSource {
                             .flatMap(new Func1<Comment, Observable<Comment>>() {
                                 @Override
                                 public Observable<Comment> call(Comment comment) {
-                                    return getInnerComments(level+1, comment);
+                                    return getInnerComments(comment);
                                 }
                             })
             );
         }
 
         return Observable.just(comment);
+    }
+
+    private Comment getCommentWithChild(int level, Comment comment, Dictionary<Integer, Comment> commentDict) {
+        if (comment.getCommentIds().size() == 0) {
+            comment.setLevel(level);
+            return comment;
+        }
+
+        for (Integer commentId : comment.getCommentIds()) {
+            Comment childComment = commentDict.get(commentId);
+            if (childComment != null) {
+                comment.addChildComment(getCommentWithChild(level+1, childComment, commentDict));
+            }
+        }
+
+        comment.setLevel(level);
+        return comment;
     }
 
     private class putToSpAction implements Action1<List<Integer>> {
