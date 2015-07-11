@@ -2,6 +2,7 @@ package io.pumpkinz.pumpkinreader.service;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Dictionary;
@@ -68,7 +69,7 @@ public class DataSource {
                 .flatMap(new Func1<Comment, Observable<Comment>>() {
                     @Override
                     public Observable<Comment> call(Comment comment) {
-                        return getInnerComments(0, comment);
+                        return getInnerComments(comment);
                     }
                 })
                 .filter(new Func1<Comment, Boolean>() {
@@ -91,7 +92,7 @@ public class DataSource {
                         for (Integer commentId : news.getCommentIds()) {
                             Comment comment = commentDict.get(commentId);
                             if (comment != null) {
-                                retval.add(getCommentWithChild(comment, commentDict));
+                                retval.add(getCommentWithChild(0, comment, commentDict));
                             }
                         }
 
@@ -169,10 +170,8 @@ public class DataSource {
         return retval;
     }
 
-    private Observable<Comment> getInnerComments(final int level, Comment comment) {
-        comment.setLevel(level);
-        
-        if (comment.getCommentIds().size() > 0) {
+    private Observable<Comment> getInnerComments(Comment comment) {
+        if (comment != null && comment.getCommentIds().size() > 0) {
             return Observable.merge(
                     Observable.just(comment),
                     Observable.from(comment.getCommentIds())
@@ -191,7 +190,7 @@ public class DataSource {
                             .flatMap(new Func1<Comment, Observable<Comment>>() {
                                 @Override
                                 public Observable<Comment> call(Comment comment) {
-                                    return getInnerComments(level+1, comment);
+                                    return getInnerComments(comment);
                                 }
                             })
             );
@@ -200,17 +199,20 @@ public class DataSource {
         return Observable.just(comment);
     }
 
-    private Comment getCommentWithChild(Comment comment, Dictionary<Integer, Comment> commentDict) {
+    private Comment getCommentWithChild(int level, Comment comment, Dictionary<Integer, Comment> commentDict) {
         if (comment.getCommentIds().size() == 0) {
+            comment.setLevel(level);
             return comment;
         }
 
         for (Integer commentId : comment.getCommentIds()) {
             Comment childComment = commentDict.get(commentId);
             if (childComment != null) {
-                comment.addChildComment(getCommentWithChild(childComment, commentDict));
+                comment.addChildComment(getCommentWithChild(level+1, childComment, commentDict));
             }
         }
+
+        comment.setLevel(level);
         return comment;
     }
 
