@@ -63,10 +63,7 @@ public class NewsListFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
-        if (!subscription.isUnsubscribed()) {
-            subscription.unsubscribe();
-        }
-
+        forceUnsubscribe();
         super.onDestroyView();
     }
 
