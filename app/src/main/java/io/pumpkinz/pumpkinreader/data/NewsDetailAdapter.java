@@ -98,7 +98,6 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         switch (viewType) {
             case 0:
                 v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.news_detail, viewGroup, false);
-                v.setOnClickListener(this.newsOnClickListener);
                 return new NewsViewHolder(v);
             case 1:
                 v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.comment_item, viewGroup, false);
@@ -119,7 +118,6 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 newsViewHolder.getTitle().setText(news.getTitle());
                 newsViewHolder.getSubmitter().setText(news.getBy());
-                newsViewHolder.getUrl().setText(Util.getDomainName(news.getUrl()));
                 newsViewHolder.getDate().setText(this.dateFormatter.timeAgo(news.getTime()));
                 newsViewHolder.getScore().setText(Integer.toString(news.getScore()));
 
@@ -134,7 +132,12 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     newsViewHolder.getBody().setVisibility(View.GONE);
                 }
 
-                newsViewHolder.getNewsItemContainer().setBackground(null);
+                if (news.getUrl() != null && !news.getUrl().isEmpty()) {
+                    newsViewHolder.getUrl().setText(Util.getDomainName(news.getUrl()));
+                    newsViewHolder.getLinkButton().setOnClickListener(this.newsOnClickListener);
+                } else {
+                    newsViewHolder.getLinkButton().setVisibility(View.INVISIBLE);
+                }
 
                 break;
             case 1:
