@@ -171,7 +171,7 @@ public class DataSource {
 
     private Observable<Comment> getInnerComments(final int level, Comment comment) {
         comment.setLevel(level);
-        g
+        
         if (comment.getCommentIds().size() > 0) {
             return Observable.merge(
                     Observable.just(comment),
