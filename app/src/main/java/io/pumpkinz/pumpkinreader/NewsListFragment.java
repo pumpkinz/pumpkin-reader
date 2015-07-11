@@ -63,7 +63,7 @@ public class NewsListFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
-        subscription.unsubscribe();
+        forceUnsubscribe();
         super.onDestroyView();
     }
 
@@ -81,6 +81,12 @@ public class NewsListFragment extends Fragment {
                 loadNews(0, N_NEWS_PER_LOAD, true);
             }
         });
+    }
+
+    public void forceUnsubscribe() {
+        if (!subscription.isUnsubscribed()) {
+            subscription.unsubscribe();
+        }
     }
 
     public void goToNewsDetail(News news) {

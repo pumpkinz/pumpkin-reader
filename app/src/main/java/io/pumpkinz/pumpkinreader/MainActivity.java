@@ -81,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = null;
         NewsListFragment fragment = (NewsListFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_main);
 
+        fragment.forceUnsubscribe();
         switch (menuItem.getItemId()) {
             case R.id.sidenav_menu_top:
                 getSupportActionBar().setTitle(menuItem.getTitle());
