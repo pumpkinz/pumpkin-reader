@@ -96,7 +96,7 @@ public class DataSource {
                             }
                         }
 
-                        return retval;
+                        return flattenComments(retval);
                     }
                 });
     }
@@ -214,6 +214,19 @@ public class DataSource {
 
         comment.setLevel(level);
         return comment;
+    }
+
+    private List<Comment> flattenComments(List<Comment> comments) {
+        List<Comment> retval = new ArrayList<>();
+
+        for (Comment comment : comments) {
+            retval.add(comment);
+            if (comment.getCommentIds().size() > 0) {
+                retval.addAll(flattenComments(comment.getChildComments()));
+            }
+        }
+
+        return retval;
     }
 
     private class putToSpAction implements Action1<List<Integer>> {

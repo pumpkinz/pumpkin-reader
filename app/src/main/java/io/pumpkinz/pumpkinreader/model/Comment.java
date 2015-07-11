@@ -79,17 +79,11 @@ public class Comment extends Item implements Serializable {
     public String toString() {
         String parent = super.toString();
 
-        StringBuilder childCommentsSb = new StringBuilder();
-        for (Comment comment : getChildComments()) {
-            childCommentsSb.append("\t" + comment.toString());
-        }
-
         StringBuilder sb = new StringBuilder();
         sb.append(parent)
                 .append(";\tLevel=" + String.valueOf(getLevel()))
                 .append(";\tKids=" + getCommentIds().toString())
                 .append("\tText=" + getText().substring(0, Math.min(getText().length(), 20)))
-                .append("\t" + childCommentsSb)
                 .append("\n");
 
         return sb.toString();
