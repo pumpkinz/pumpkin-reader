@@ -129,7 +129,7 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 newsViewHolder.getCommentCount().setText(commentCountFormat);
 
                 if (news.getText() != null && !news.getText().isEmpty()) {
-                    newsViewHolder.getBody().setText(Html.fromHtml(news.getText()));
+                    newsViewHolder.getBody().setText(Util.trim(Html.fromHtml(news.getText())));
                 } else {
                     newsViewHolder.getBody().setVisibility(View.GONE);
                 }
