@@ -217,7 +217,7 @@ public class DataSource {
         for (Integer commentId : comment.getCommentIds()) {
             Comment childComment = commentDict.get(commentId);
             if (childComment != null) {
-                comment.addChildComment(getCommentWithChild(level+1, childComment, commentDict));
+                comment.addChildComment(getCommentWithChild(level + 1, childComment, commentDict));
             }
         }
 
