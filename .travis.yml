@@ -7,12 +7,12 @@ android:
     - extra-android-m2repository
 
 script:
-   - ./gradlew build
+   - ./gradlew cleanTest test && ./gradlew build
 
 notifications:
   email:
     recipients:
       - kristiadi7@gmail.com
       - timotiusnc@gmail.com
-    on_success: always
-    on_failure: always
+    on_success: change
+    on_failure: change
