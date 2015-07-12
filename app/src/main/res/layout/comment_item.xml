@@ -38,11 +38,9 @@
                 android:id="@+id/child_comment_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/pumpkin_accent"
-                android:textColor="@color/grey_1000w"
+                android:textColor="@color/pumpkin_accent"
                 android:textSize="12sp"
-                android:textStyle="bold"
-                android:visibility="gone" />
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/comment_age"

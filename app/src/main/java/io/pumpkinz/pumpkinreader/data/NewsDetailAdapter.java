@@ -154,6 +154,13 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 commentViewHolder.getDate().setText(this.dateFormatter.timeAgo(comment.getTime()));
                 commentViewHolder.getBody().setText(Util.trim(Html.fromHtml(comment.getText())));
 
+                if (comment.getCommentIds().size() > 0 && !comment.isExpanded()) {
+                    commentViewHolder.getChildCount().setText("+" + comment.getAllChildCount() + " comments");
+                    commentViewHolder.getChildCount().setVisibility(View.VISIBLE);
+                } else {
+                    commentViewHolder.getChildCount().setVisibility(View.GONE);
+                }
+
                 int level = comment.getLevel();
 
                 if (level > 0) {
@@ -184,13 +191,6 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public void addComment(List<Comment> dataset) {
         this.comments.addAll(dataset);
         this.dataset.addAll(dataset);
-
-        StringBuilder sb = new StringBuilder();
-
-        for (Comment c : dataset) {
-            sb.append(c.getLevel());
-            sb.append(", ");
-        }
 
         notifyDataSetChanged();
     }
@@ -229,8 +229,11 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             count++;
         }
 
-        notifyItemRangeRemoved(idxToPos(idx) + 1, count);
         comment.setExpanded(false);
+
+        // Also notify the parent to show child count badge
+        notifyItemRangeRemoved(idxToPos(idx) + 1, count);
+        notifyItemChanged(idxToPos(idx));
     }
 
     private void expandComments(Comment comment, int idx) {
@@ -257,6 +260,9 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 addComment(++currIdx, currComment);
             }
         }
+
+        // Notify parent to show child count badge
+        notifyItemChanged(idxToPos(idx));
     }
 
     private int getColorCode(int level) {
