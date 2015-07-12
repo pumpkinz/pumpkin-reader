@@ -2,7 +2,6 @@ package io.pumpkinz.pumpkinreader.service;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Dictionary;
@@ -97,6 +96,16 @@ public class DataSource {
                         }
 
                         return flattenComments(retval);
+                    }
+                })
+                .map(new Func1<List<Comment>, List<Comment>>() {
+                    @Override
+                    public List<Comment> call(List<Comment> comments) {
+                        for (Comment comment : comments) {
+                            comment.setAllChildCount(getAllChildCount(comment));
+                        }
+
+                        return comments;
                     }
                 });
     }
@@ -208,7 +217,7 @@ public class DataSource {
         for (Integer commentId : comment.getCommentIds()) {
             Comment childComment = commentDict.get(commentId);
             if (childComment != null) {
-                comment.addChildComment(getCommentWithChild(level+1, childComment, commentDict));
+                comment.addChildComment(getCommentWithChild(level + 1, childComment, commentDict));
             }
         }
 
@@ -227,6 +236,18 @@ public class DataSource {
         }
 
         return retval;
+    }
+
+    private int getAllChildCount(Comment comment) {
+        int size = comment.getChildComments().size();
+
+        if (size > 0) {
+            for (Comment childComment : comment.getChildComments()) {
+                size += getAllChildCount(childComment);
+            }
+        }
+
+        return size;
     }
 
     private class putToSpAction implements Action1<List<Integer>> {

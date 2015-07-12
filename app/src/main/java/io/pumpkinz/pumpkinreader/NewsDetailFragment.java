@@ -85,6 +85,7 @@ public class NewsDetailFragment extends Fragment {
                     @Override
                     public void onNext(List<Comment> comments) {
                         Log.d("comments", String.valueOf(comments.size()));
+                        Log.d("comments", comments.toString());
 
                         newsDetailAdapter.removeItem(newsDetailAdapter.getCommentCount() - 1);
                         newsDetailAdapter.addComment(comments);
