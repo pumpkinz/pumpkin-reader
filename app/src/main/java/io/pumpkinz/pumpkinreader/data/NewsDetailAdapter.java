@@ -25,10 +25,9 @@ import io.pumpkinz.pumpkinreader.util.Util;
 
 public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    public static final int MAX_COMMENT_LEVEL = 5;
-
     private Fragment fragment;
     private News news;
+    private List<Comment> comments;
     private List<Comment> dataset;
     private TimeAgo dateFormatter;
     private OnClickListener newsOnClickListener;
@@ -37,6 +36,7 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public NewsDetailAdapter(final Fragment fragment, final News news) {
         this.fragment = fragment;
         this.news = news;
+        this.comments = new ArrayList<>();
         this.dataset = new ArrayList<>();
         this.dateFormatter = new TimeAgo(fragment.getActivity());
 
@@ -63,16 +63,17 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 if (recyclerView == null) return;
 
                 int position = recyclerView.getChildAdapterPosition(view);
-                Comment comment = dataset.get(position - 1);
+                int idx = posToIdx(position);
+                Comment comment = dataset.get(idx);
 
-                if (position <= 0 || comment.getChildComments().size() <= 0) {
+                if (position <= 0) {
                     return;
                 }
 
                 if (comment.isExpanded()) {
-                    collapseComments(comment, position);
+                    collapseComments(comment, idx);
                 } else {
-                    expandComments(comment, position);
+                    expandComments(comment, idx);
                 }
             }
         };
@@ -167,65 +168,94 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return dataset.size() + 1;
     }
 
-    public void addDataset(List<Comment> dataset) {
+    public int getCommentCount() {
+        return dataset.size();
+    }
+
+    public void addComment(List<Comment> dataset) {
+        this.comments.addAll(dataset);
         this.dataset.addAll(dataset);
+
+        StringBuilder sb = new StringBuilder();
+
+        for (Comment c : dataset) {
+            sb.append(c.getLevel());
+            sb.append(", ");
+        }
+
         notifyDataSetChanged();
     }
 
-    public void addItem(Comment comment) {
+    public void addComment(Comment comment) {
         this.dataset.add(comment);
-        notifyItemInserted(this.dataset.size());
+        notifyItemInserted(idxToPos(this.dataset.size() - 1));
     }
 
-    public void removeItem(int position) {
-        this.dataset.remove(position - 1);
-        notifyItemRemoved(position);
+    public void addComment(int idx, Comment comment) {
+        this.dataset.add(idx, comment);
+        notifyItemInserted(idxToPos(idx));
     }
 
-    public void expandAllComments() {
-        for (int i = 0; i < MAX_COMMENT_LEVEL; i++) {
-            for (int j = 0; j < this.dataset.size(); j++) {
-                if (this.dataset.get(j).getLevel() == i) {
-                    int position = j + 1;
-                    expandComments(this.dataset.get(j), position);
-                }
-            }
-        }
+    public void removeItem(int idx) {
+        this.dataset.remove(idx);
+        notifyItemRemoved(idxToPos(idx));
     }
 
-    private void collapseComments(Comment comment, int position) {
-        ListIterator it = dataset.listIterator(position);
+    private void collapseComments(Comment comment, int idx) {
+        ListIterator<Comment> it = dataset.listIterator(idx + 1);
         int count = 0;
 
         while (it.hasNext()) {
-            Comment com = (Comment) it.next();
+            Comment com = it.next();
 
             if (com.getLevel() <= comment.getLevel()) {
                 break;
+            }
+
+            if (com.getLevel() == comment.getLevel() + 1) {
+                comments.get(comments.indexOf(com)).setHidden(true);
             }
 
             it.remove();
             count++;
         }
 
-        notifyItemRangeRemoved(position + 1, count);
+        notifyItemRangeRemoved(idxToPos(idx) + 1, count);
         comment.setExpanded(false);
     }
 
-    private void expandComments(Comment comment, int position) {
-        int start = position + 1;
-        int size = comment.getChildComments().size();
-        int level = comment.getLevel() + 1;
-
-        List<Comment> childComments = new ArrayList<>(comment.getChildComments());
-
-        for (Comment child : childComments) {
-            child.setLevel(level);
-        }
-
-        dataset.addAll(position, childComments);
-        notifyItemRangeInserted(start, size);
+    private void expandComments(Comment comment, int idx) {
         comment.setExpanded(true);
+        comment.setHidden(false);
+
+        int currLevel = comment.getLevel();
+        ListIterator<Comment> it = comments.listIterator(comments.indexOf(comment) + 1);
+
+        int currIdx = idx;
+
+        while (it.hasNext()) {
+            Comment currComment = it.next();
+
+            if (currComment.getLevel() <= currLevel) {
+                break;
+            }
+
+            if (currComment.getLevel() == currLevel + 1) {
+                currComment.setHidden(false);
+                addComment(++currIdx, currComment);
+            } else {
+                if (currComment.isHidden()) continue;
+                addComment(++currIdx, currComment);
+            }
+        }
+    }
+
+    private int idxToPos(int idx) {
+        return idx + 1;
+    }
+
+    private int posToIdx(int pos) {
+        return pos - 1;
     }
 
 }

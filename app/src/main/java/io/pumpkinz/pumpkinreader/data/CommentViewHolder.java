@@ -14,6 +14,7 @@ public class CommentViewHolder extends RecyclerView.ViewHolder {
     private TextView submitter;
     private TextView date;
     private TextView body;
+    private TextView childCount;
 
     public CommentViewHolder(View view) {
         super(view);
@@ -21,6 +22,7 @@ public class CommentViewHolder extends RecyclerView.ViewHolder {
         this.submitter = (TextView) view.findViewById(R.id.comment_submitter);
         this.date = (TextView) view.findViewById(R.id.comment_age);
         this.body = (TextView) view.findViewById(R.id.comment_body);
+        this.childCount = (TextView) view.findViewById(R.id.child_comment_count);
     }
 
     public FrameLayout getContainer() {
@@ -37,6 +39,10 @@ public class CommentViewHolder extends RecyclerView.ViewHolder {
 
     public TextView getBody() {
         return body;
+    }
+
+    public TextView getChildCount() {
+        return childCount;
     }
 
 }

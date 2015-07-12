@@ -14,14 +14,14 @@ public class Comment extends Item implements Serializable {
     List<Integer> kids;
     List<Comment> childComments;
     boolean expanded;
-    boolean hide;
+    boolean hidden;
     int level;
 
     public Comment() {
         this.kids = new ArrayList<>();
         this.childComments = new ArrayList<>();
-        this.expanded = false;
-        this.hide = false;
+        this.expanded = true;
+        this.hidden = false;
         this.level = 0;
     }
 
@@ -31,7 +31,8 @@ public class Comment extends Item implements Serializable {
         this.parent = parent;
         this.kids = kids;
         this.childComments = new ArrayList<>();
-        this.expanded = false;
+        this.expanded = true;
+        this.hidden = false;
         this.level = 0;
     }
 
@@ -60,11 +61,11 @@ public class Comment extends Item implements Serializable {
     }
 
     public boolean isHidden() {
-        return this.hide;
+        return this.hidden;
     }
 
-    public void setHidden(boolean hide) {
-        this.hide = hide;
+    public void setHidden(boolean hidden) {
+        this.hidden = hidden;
     }
 
     public int getLevel() {
@@ -73,6 +74,14 @@ public class Comment extends Item implements Serializable {
 
     public void setLevel(int level) {
         this.level = level;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null) return false;
+        if (!(o instanceof Comment)) return false;
+
+        return this.id == ((Comment) o).getId();
     }
 
     @Override
