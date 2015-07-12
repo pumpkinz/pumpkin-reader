@@ -2,9 +2,11 @@ package io.pumpkinz.pumpkinreader;
 
 
 import org.junit.Test;
-import static org.junit.Assert.assertEquals;
 
 import io.pumpkinz.pumpkinreader.util.Util;
+
+import static org.junit.Assert.assertEquals;
+
 
 public class UtilTest {
 
