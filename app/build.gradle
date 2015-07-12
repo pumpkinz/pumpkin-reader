@@ -56,4 +56,8 @@ dependencies {
     compile 'net.koofr:android-timeago:1.0.1'
     compile 'org.parceler:parceler-api:1.0.1'
     apt 'org.parceler:parceler:1.0.1'
+
+    // Roboelectric
+    testCompile "junit:junit:4.12"
+    testCompile "org.robolectric:robolectric:3.0"
 }
