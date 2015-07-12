@@ -16,6 +16,7 @@ public class Comment extends Item implements Serializable {
     boolean expanded;
     boolean hidden;
     int level;
+    int allChildCount;
 
     public Comment() {
         this.kids = new ArrayList<>();
@@ -23,6 +24,7 @@ public class Comment extends Item implements Serializable {
         this.expanded = true;
         this.hidden = false;
         this.level = 0;
+        this.allChildCount = 0;
     }
 
     public Comment(int id, boolean deleted, String type, String by, long time, String text,
@@ -76,6 +78,14 @@ public class Comment extends Item implements Serializable {
         this.level = level;
     }
 
+    public int getAllChildCount() {
+        return this.allChildCount;
+    }
+
+    public void setAllChildCount(int allChildCount) {
+        this.allChildCount = allChildCount;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null) return false;
@@ -92,6 +102,7 @@ public class Comment extends Item implements Serializable {
         sb.append(parent)
                 .append(";\tLevel=" + String.valueOf(getLevel()))
                 .append(";\tKids=" + getCommentIds().toString())
+                .append(";\tAll Kids=" + String.valueOf(getAllChildCount()))
                 .append("\tText=" + getText().substring(0, Math.min(getText().length(), 20)))
                 .append("\n");
 
