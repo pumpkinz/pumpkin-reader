@@ -68,7 +68,7 @@ public class NewsDetailFragment extends Fragment {
     }
 
     private void loadComments(News news) {
-        newsDetailAdapter.addItem(null);
+        newsDetailAdapter.addComment((Comment) null);
 
         subscription = AppObservable.bindFragment(this, dataSource.getComments(news))
                 .subscribe(new Subscriber<List<Comment>>() {
@@ -86,10 +86,8 @@ public class NewsDetailFragment extends Fragment {
                     public void onNext(List<Comment> comments) {
                         Log.d("comments", String.valueOf(comments.size()));
 
-                        newsDetailAdapter.removeItem(newsDetailAdapter.getItemCount() - 1);
-
-                        newsDetailAdapter.addDataset(comments);
-                        newsDetailAdapter.expandAllComments();
+                        newsDetailAdapter.removeItem(newsDetailAdapter.getCommentCount() - 1);
+                        newsDetailAdapter.addComment(comments);
 
                         RecyclerView.ItemDecoration itemDecoration =
                                 new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);

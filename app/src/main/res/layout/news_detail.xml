@@ -3,20 +3,51 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?android:selectableItemBackground"
     android:orientation="vertical">
 
     <include layout="@layout/news_item" />
 
-    <TextView
-        android:id="@+id/news_body"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:autoLink="web"
         android:background="@color/grey_1000w"
-        android:paddingBottom="@dimen/abc_action_bar_content_inset_material"
+        android:orientation="vertical"
         android:paddingEnd="@dimen/abc_action_bar_content_inset_material"
-        android:paddingStart="@dimen/abc_action_bar_content_inset_material"
-        android:textColor="@color/grey_1000b" />
+        android:paddingStart="@dimen/abc_action_bar_content_inset_material">
+
+        <TextView
+            android:id="@+id/news_body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:autoLink="web"
+            android:textColor="@color/grey_1000b" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:fontFamily="sans-serif-medium"
+                android:text="@string/comments"
+                android:textColor="@color/grey_1000b" />
+
+            <Button
+                android:id="@+id/button_link"
+                style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:text="@string/open_link" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
 
 </LinearLayout>

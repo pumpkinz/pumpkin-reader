@@ -1,19 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/comment_item_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/grey_1000w"
-    android:elevation="1dp">
+    android:background="@color/grey_1000w">
+
+    <View
+        android:id="@+id/color_code"
+        android:layout_width="4dp"
+        android:layout_height="match_parent"
+        android:background="@color/pumpkin_accent" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingBottom="16dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"
         android:paddingTop="12dp">
 
         <LinearLayout
@@ -26,7 +31,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/abc_button_padding_horizontal_material"
+                android:fontFamily="sans-serif-medium"
                 android:textSize="@dimen/abc_text_size_caption_material" />
+
+            <TextView
+                android:id="@+id/child_comment_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/pumpkin_accent"
+                android:textSize="12sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/comment_age"
@@ -47,4 +61,4 @@
 
     </LinearLayout>
 
-</FrameLayout>
+</LinearLayout>

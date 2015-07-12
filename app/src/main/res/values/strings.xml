@@ -8,6 +8,8 @@
     <string name="title_activity_web_view">News Article</string>
     <string name="pumpkinz_about"><b>Pumpkinz</b> \nhttp://pumpkinz.io \n\n<b>wiseodd</b> \nhttps://github.com/wiseodd \n\n<b>timotiusnc</b> \nhttps://github.com/timotiusnc</string>
     <string name="pumpkinz_credits"><b>Retrofit</b> \nhttps://github.com/square/retrofit\n\n<b>RxJava</b> \nhttps://github.com/ReactiveX/RxJava\n\n<b>RxAndroid</b> \nhttps://github.com/ReactiveX/RxAndroid\n\n<b>Pumpkin Icon</b> \nhttp://www.iconarchive.com/show/windows-8-icons-by-icons8/Holidays-Pumpkin-icon.html</string>
+    <string name="comments">Comments</string>
+    <string name="open_link">Open Link</string>
 
     <string name="about">About</string>
     <string name="credits">Credits</string>
