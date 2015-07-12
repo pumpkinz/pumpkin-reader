@@ -2,6 +2,7 @@
 ## HackerNews Reader for Android 
 
 Why another HN app? Well, we've tried several of HN app out there in Google Play Store, but we never found the one that suits our taste, so we build one! 
+
 Pumpkin Reader is the manifestation of what we see the ideal HN app for our needs.
 
 ### Features (v1.0):
