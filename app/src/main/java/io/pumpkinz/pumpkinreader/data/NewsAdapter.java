@@ -3,7 +3,6 @@ package io.pumpkinz.pumpkinreader.data;
 import android.content.res.Resources;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -77,9 +76,12 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                 newsViewHolder.getTitle().setText(news.getTitle());
                 newsViewHolder.getSubmitter().setText(news.getBy());
-                newsViewHolder.getUrl().setText(Util.getDomainName(news.getUrl()));
                 newsViewHolder.getDate().setText(this.dateFormatter.timeAgo(news.getTime()));
                 newsViewHolder.getScore().setText(Integer.toString(news.getScore()));
+
+                if (news.getUrl() != null && !news.getUrl().isEmpty()) {
+                    newsViewHolder.getUrl().setText(Util.getDomainName(news.getUrl()));
+                }
 
                 Resources r = this.fragment.getActivity().getResources();
                 int nComment = news.getTotalComments();

@@ -14,15 +14,17 @@ public class Comment extends Item implements Serializable {
     List<Integer> kids;
     List<Comment> childComments;
     boolean expanded;
-    boolean hide;
+    boolean hidden;
     int level;
+    int allChildCount;
 
     public Comment() {
         this.kids = new ArrayList<>();
         this.childComments = new ArrayList<>();
-        this.expanded = false;
-        this.hide = false;
+        this.expanded = true;
+        this.hidden = false;
         this.level = 0;
+        this.allChildCount = 0;
     }
 
     public Comment(int id, boolean deleted, String type, String by, long time, String text,
@@ -31,7 +33,8 @@ public class Comment extends Item implements Serializable {
         this.parent = parent;
         this.kids = kids;
         this.childComments = new ArrayList<>();
-        this.expanded = false;
+        this.expanded = true;
+        this.hidden = false;
         this.level = 0;
     }
 
@@ -60,11 +63,11 @@ public class Comment extends Item implements Serializable {
     }
 
     public boolean isHidden() {
-        return this.hide;
+        return this.hidden;
     }
 
-    public void setHidden(boolean hide) {
-        this.hide = hide;
+    public void setHidden(boolean hidden) {
+        this.hidden = hidden;
     }
 
     public int getLevel() {
@@ -75,6 +78,22 @@ public class Comment extends Item implements Serializable {
         this.level = level;
     }
 
+    public int getAllChildCount() {
+        return this.allChildCount;
+    }
+
+    public void setAllChildCount(int allChildCount) {
+        this.allChildCount = allChildCount;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null) return false;
+        if (!(o instanceof Comment)) return false;
+
+        return this.id == ((Comment) o).getId();
+    }
+
     @Override
     public String toString() {
         String parent = super.toString();
@@ -83,6 +102,7 @@ public class Comment extends Item implements Serializable {
         sb.append(parent)
                 .append(";\tLevel=" + String.valueOf(getLevel()))
                 .append(";\tKids=" + getCommentIds().toString())
+                .append(";\tAll Kids=" + String.valueOf(getAllChildCount()))
                 .append("\tText=" + getText().substring(0, Math.min(getText().length(), 20)))
                 .append("\n");
 

@@ -25,10 +25,9 @@ import io.pumpkinz.pumpkinreader.util.Util;
 
 public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    public static final int MAX_COMMENT_LEVEL = 5;
-
     private Fragment fragment;
     private News news;
+    private List<Comment> comments;
     private List<Comment> dataset;
     private TimeAgo dateFormatter;
     private OnClickListener newsOnClickListener;
@@ -37,6 +36,7 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public NewsDetailAdapter(final Fragment fragment, final News news) {
         this.fragment = fragment;
         this.news = news;
+        this.comments = new ArrayList<>();
         this.dataset = new ArrayList<>();
         this.dateFormatter = new TimeAgo(fragment.getActivity());
 
@@ -63,16 +63,17 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 if (recyclerView == null) return;
 
                 int position = recyclerView.getChildAdapterPosition(view);
-                Comment comment = dataset.get(position - 1);
+                int idx = posToIdx(position);
+                Comment comment = dataset.get(idx);
 
-                if (position <= 0 || comment.getChildComments().size() <= 0) {
+                if (position <= 0) {
                     return;
                 }
 
                 if (comment.isExpanded()) {
-                    collapseComments(comment, position);
+                    collapseComments(comment, idx);
                 } else {
-                    expandComments(comment, position);
+                    expandComments(comment, idx);
                 }
             }
         };
@@ -98,7 +99,6 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         switch (viewType) {
             case 0:
                 v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.news_detail, viewGroup, false);
-                v.setOnClickListener(this.newsOnClickListener);
                 return new NewsViewHolder(v);
             case 1:
                 v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.comment_item, viewGroup, false);
@@ -119,7 +119,6 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 newsViewHolder.getTitle().setText(news.getTitle());
                 newsViewHolder.getSubmitter().setText(news.getBy());
-                newsViewHolder.getUrl().setText(Util.getDomainName(news.getUrl()));
                 newsViewHolder.getDate().setText(this.dateFormatter.timeAgo(news.getTime()));
                 newsViewHolder.getScore().setText(Integer.toString(news.getScore()));
 
@@ -129,12 +128,17 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 newsViewHolder.getCommentCount().setText(commentCountFormat);
 
                 if (news.getText() != null && !news.getText().isEmpty()) {
-                    newsViewHolder.getBody().setText(Html.fromHtml(news.getText()));
+                    newsViewHolder.getBody().setText(Util.trim(Html.fromHtml(news.getText())));
                 } else {
                     newsViewHolder.getBody().setVisibility(View.GONE);
                 }
 
-                newsViewHolder.getNewsItemContainer().setBackground(null);
+                if (news.getUrl() != null && !news.getUrl().isEmpty()) {
+                    newsViewHolder.getUrl().setText(Util.getDomainName(news.getUrl()));
+                    newsViewHolder.getLinkButton().setOnClickListener(this.newsOnClickListener);
+                } else {
+                    newsViewHolder.getLinkButton().setVisibility(View.INVISIBLE);
+                }
 
                 break;
             case 1:
@@ -143,12 +147,28 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 RecyclerView.LayoutParams params = (RecyclerView.LayoutParams)
                         commentViewHolder.getContainer().getLayoutParams();
-                params.setMarginStart(Util.dpToPx(comment.getLevel() * 8));
+                params.setMarginStart(Util.dpToPx(comment.getLevel() * 4));
 
                 commentViewHolder.getContainer().setLayoutParams(params);
                 commentViewHolder.getSubmitter().setText(comment.getBy());
                 commentViewHolder.getDate().setText(this.dateFormatter.timeAgo(comment.getTime()));
                 commentViewHolder.getBody().setText(Util.trim(Html.fromHtml(comment.getText())));
+
+                if (comment.getCommentIds().size() > 0 && !comment.isExpanded()) {
+                    commentViewHolder.getChildCount().setText("+" + comment.getAllChildCount() + " comments");
+                    commentViewHolder.getChildCount().setVisibility(View.VISIBLE);
+                } else {
+                    commentViewHolder.getChildCount().setVisibility(View.GONE);
+                }
+
+                int level = comment.getLevel();
+
+                if (level > 0) {
+                    commentViewHolder.getColorCode().setBackgroundColor(getColorCode(level));
+                    commentViewHolder.getColorCode().setVisibility(View.VISIBLE);
+                } else {
+                    commentViewHolder.getColorCode().setVisibility(View.GONE);
+                }
 
                 commentViewHolder.getContainer().setOnClickListener(this.onClickListener);
                 commentViewHolder.getBody().setOnClickListener(this.onClickListener);
@@ -164,65 +184,120 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return dataset.size() + 1;
     }
 
-    public void addDataset(List<Comment> dataset) {
+    public int getCommentCount() {
+        return dataset.size();
+    }
+
+    public void addComment(List<Comment> dataset) {
+        this.comments.addAll(dataset);
         this.dataset.addAll(dataset);
+
         notifyDataSetChanged();
     }
 
-    public void addItem(Comment comment) {
+    public void addComment(Comment comment) {
         this.dataset.add(comment);
-        notifyItemInserted(this.dataset.size());
+        notifyItemInserted(idxToPos(this.dataset.size() - 1));
     }
 
-    public void removeItem(int position) {
-        this.dataset.remove(position - 1);
-        notifyItemRemoved(position);
+    public void addComment(int idx, Comment comment) {
+        this.dataset.add(idx, comment);
+        notifyItemInserted(idxToPos(idx));
     }
 
-    public void expandAllComments() {
-        for (int i = 0; i < MAX_COMMENT_LEVEL; i++) {
-            for (int j = 0; j < this.dataset.size(); j++) {
-                if (this.dataset.get(j).getLevel() == i) {
-                    int position = j + 1;
-                    expandComments(this.dataset.get(j), position);
-                }
-            }
-        }
+    public void removeItem(int idx) {
+        this.dataset.remove(idx);
+        notifyItemRemoved(idxToPos(idx));
     }
 
-    private void collapseComments(Comment comment, int position) {
-        ListIterator it = dataset.listIterator(position);
+    private void collapseComments(Comment comment, int idx) {
+        ListIterator<Comment> it = dataset.listIterator(idx + 1);
         int count = 0;
 
         while (it.hasNext()) {
-            Comment com = (Comment) it.next();
+            Comment com = it.next();
 
             if (com.getLevel() <= comment.getLevel()) {
                 break;
+            }
+
+            if (com.getLevel() == comment.getLevel() + 1) {
+                comments.get(comments.indexOf(com)).setHidden(true);
             }
 
             it.remove();
             count++;
         }
 
-        notifyItemRangeRemoved(position + 1, count);
         comment.setExpanded(false);
+
+        // Also notify the parent to show child count badge
+        notifyItemRangeRemoved(idxToPos(idx) + 1, count);
+        notifyItemChanged(idxToPos(idx));
     }
 
-    private void expandComments(Comment comment, int position) {
-        int start = position + 1;
-        int size = comment.getChildComments().size();
-        int level = comment.getLevel() + 1;
+    private void expandComments(Comment comment, int idx) {
+        comment.setExpanded(true);
+        comment.setHidden(false);
 
-        List<Comment> childComments = new ArrayList<>(comment.getChildComments());
+        int currLevel = comment.getLevel();
+        ListIterator<Comment> it = comments.listIterator(comments.indexOf(comment) + 1);
 
-        for (Comment child : childComments) {
-            child.setLevel(level);
+        int currIdx = idx;
+
+        while (it.hasNext()) {
+            Comment currComment = it.next();
+
+            if (currComment.getLevel() <= currLevel) {
+                break;
+            }
+
+            if (currComment.getLevel() == currLevel + 1) {
+                currComment.setHidden(false);
+                addComment(++currIdx, currComment);
+            } else {
+                if (currComment.isHidden()) continue;
+                addComment(++currIdx, currComment);
+            }
         }
 
-        dataset.addAll(position, childComments);
-        notifyItemRangeInserted(start, size);
-        comment.setExpanded(true);
+        // Notify parent to show child count badge
+        notifyItemChanged(idxToPos(idx));
+    }
+
+    private int getColorCode(int level) {
+        int color;
+
+        switch (level % 5) {
+            case 0:
+                color = fragment.getResources().getColor(R.color.amber_400);
+                break;
+            case 1:
+                color = fragment.getResources().getColor(R.color.blue_400);
+                break;
+            case 2:
+                color = fragment.getResources().getColor(R.color.green_400);
+                break;
+            case 3:
+                color = fragment.getResources().getColor(R.color.red_400);
+                break;
+            case 4:
+                color = fragment.getResources().getColor(R.color.purple_400);
+                break;
+            default:
+                color = fragment.getResources().getColor(R.color.purple_400);
+                break;
+        }
+
+        return color;
+    }
+
+    private int idxToPos(int idx) {
+        return idx + 1;
+    }
+
+    private int posToIdx(int pos) {
+        return pos - 1;
     }
 
 }
