@@ -147,12 +147,21 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 RecyclerView.LayoutParams params = (RecyclerView.LayoutParams)
                         commentViewHolder.getContainer().getLayoutParams();
-                params.setMarginStart(Util.dpToPx(comment.getLevel() * 8));
+                params.setMarginStart(Util.dpToPx(comment.getLevel() * 4));
 
                 commentViewHolder.getContainer().setLayoutParams(params);
                 commentViewHolder.getSubmitter().setText(comment.getBy());
                 commentViewHolder.getDate().setText(this.dateFormatter.timeAgo(comment.getTime()));
                 commentViewHolder.getBody().setText(Util.trim(Html.fromHtml(comment.getText())));
+
+                int level = comment.getLevel();
+
+                if (level > 0) {
+                    commentViewHolder.getColorCode().setBackgroundColor(getColorCode(level));
+                    commentViewHolder.getColorCode().setVisibility(View.VISIBLE);
+                } else {
+                    commentViewHolder.getColorCode().setVisibility(View.GONE);
+                }
 
                 commentViewHolder.getContainer().setOnClickListener(this.onClickListener);
                 commentViewHolder.getBody().setOnClickListener(this.onClickListener);
@@ -248,6 +257,33 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 addComment(++currIdx, currComment);
             }
         }
+    }
+
+    private int getColorCode(int level) {
+        int color;
+
+        switch (level % 5) {
+            case 0:
+                color = fragment.getResources().getColor(R.color.amber_400);
+                break;
+            case 1:
+                color = fragment.getResources().getColor(R.color.blue_400);
+                break;
+            case 2:
+                color = fragment.getResources().getColor(R.color.green_400);
+                break;
+            case 3:
+                color = fragment.getResources().getColor(R.color.red_400);
+                break;
+            case 4:
+                color = fragment.getResources().getColor(R.color.purple_400);
+                break;
+            default:
+                color = fragment.getResources().getColor(R.color.purple_400);
+                break;
+        }
+
+        return color;
     }
 
     private int idxToPos(int idx) {
