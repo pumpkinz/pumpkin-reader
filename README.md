@@ -7,9 +7,27 @@ Why another HN app? Well, we've tried several of HN app out there in Google Play
 
 Pumpkin Reader is the manifestation of what we see the ideal HN app for our needs.
 
-### Features (v1.0):
+## Features (v1.0):
 
 1. Material design, done right
 2. Color coded, hierarchical comments
 3. Readable, clean UI
 4. All the features from HN API (read only, limitation of HN API)
+
+## License
+
+```
+            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
+                    Version 2, December 2004
+
+ Copyright (C) 2004 Sam Hocevar <sam@hocevar.net>
+
+ Everyone is permitted to copy and distribute verbatim or modified
+ copies of this license document, and changing it is allowed as long
+ as the name is changed.
+
+            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
+   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
+
+  0. You just DO WHAT THE FUCK YOU WANT TO.
+```
