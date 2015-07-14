@@ -81,6 +81,8 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                 if (news.getUrl() != null && !news.getUrl().isEmpty()) {
                     newsViewHolder.getUrl().setText(Util.getDomainName(news.getUrl()));
+                } else {
+                    newsViewHolder.getUrl().setText("");
                 }
 
                 Resources r = this.fragment.getActivity().getResources();
