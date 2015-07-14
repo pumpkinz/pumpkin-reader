@@ -18,17 +18,24 @@ import io.pumpkinz.pumpkinreader.model.News;
 
 public class NewsDetailActivity extends AppCompatActivity {
 
+    public static final int TAB_LINK_IDX = 0;
+    public static final int TAB_COMMENTS_IDX = 1;
+
+    private News news;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_news_detail);
 
+        news = Parcels.unwrap(getIntent().getParcelableExtra(Constants.NEWS));
+
         ViewPager viewPager = (ViewPager) findViewById(R.id.news_detail_pager);
         setUpViewPager(viewPager);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.news_detail_tab);
-        tabLayout.setupWithViewPager(viewPager);
+        setUpTab(tabLayout, viewPager);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.news_detail_fab);
         setUpFAB(fab);
@@ -56,13 +63,20 @@ public class NewsDetailActivity extends AppCompatActivity {
         viewPager.setAdapter(adapter);
     }
 
+    private void setUpTab(TabLayout tabLayout, ViewPager viewPager) {
+        tabLayout.setupWithViewPager(viewPager);
+
+        if (news.getUrl() == null || news.getUrl().isEmpty()) {
+            tabLayout.getTabAt(TAB_COMMENTS_IDX).select();
+        }
+    }
+
     private void setUpFAB(FloatingActionButton fab) {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
 
-                News news = Parcels.unwrap(getIntent().getParcelableExtra(Constants.NEWS));
                 String text;
 
                 if (news.getUrl() != null && !news.getUrl().isEmpty()) {
