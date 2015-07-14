@@ -1,10 +1,9 @@
 package io.pumpkinz.pumpkinreader;
 
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import io.pumpkinz.pumpkinreader.data.NewsDetailViewPagerAdapter;
@@ -17,7 +16,12 @@ public class NewsDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_news_detail);
-        setUpToolbar();
+
+        ViewPager viewPager = (ViewPager) findViewById(R.id.news_detail_pager);
+        setUpViewPager(viewPager);
+
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.news_detail_tab);
+        tabLayout.setupWithViewPager(viewPager);
     }
 
     @Override
@@ -33,12 +37,13 @@ public class NewsDetailActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void setUpToolbar() {
-        Toolbar appBar = (Toolbar) findViewById(R.id.app_bar);
-        setSupportActionBar(appBar);
+    private void setUpViewPager(ViewPager viewPager) {
+        NewsDetailViewPagerAdapter adapter = new NewsDetailViewPagerAdapter(getSupportFragmentManager());
 
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        adapter.addFragment(getResources().getString(R.string.link), new WebViewFragment());
+        adapter.addFragment(getResources().getString(R.string.comments), new NewsDetailFragment());
+
+        viewPager.setAdapter(adapter);
     }
 
 }
