@@ -31,7 +31,7 @@ import rx.subscriptions.Subscriptions;
 public class NewsListFragment extends Fragment {
 
     private static final int N_NEWS_PER_LOAD = 50;
-    private static final int LOADING_THRESHOLD = 1;
+    private static final int LOADING_THRESHOLD = 15;
 
     private RecyclerView newsList;
     private NewsAdapter newsAdapter;
