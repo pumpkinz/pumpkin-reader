@@ -298,7 +298,6 @@ public class DataSource {
                     .map(new Func1<List<Integer>, List<Integer>>() {
                         @Override // Get a subset from Top News IDs and save it for later lookup
                         public List<Integer> call(List<Integer> newsIds) {
-                            Log.d("news", newsIds.toString());
                             if (from >= newsIds.size()) {
                                 throw new EndOfListException();
                             }
