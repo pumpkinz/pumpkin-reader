@@ -8,23 +8,23 @@
         <item
             android:id="@+id/sidenav_menu_top"
             android:checked="true"
-            android:icon="@drawable/ic_thumb_up_black_18dp"
+            android:icon="@drawable/ic_thumb_up_black_24dp"
             android:title="@string/top" />
         <item
             android:id="@+id/sidenav_menu_new"
-            android:icon="@drawable/ic_access_time_black_18dp"
+            android:icon="@drawable/ic_access_time_black_24dp"
             android:title="@string/recent" />
         <item
             android:id="@+id/sidenav_menu_ask"
-            android:icon="@drawable/ic_help_black_18dp"
+            android:icon="@drawable/ic_help_black_24dp"
             android:title="@string/ask_hn" />
         <item
             android:id="@+id/sidenav_menu_show"
-            android:icon="@drawable/ic_collections_bookmark_black_18dp"
+            android:icon="@drawable/ic_collections_bookmark_black_24dp"
             android:title="@string/show_hn" />
         <item
             android:id="@+id/sidenav_menu_job"
-            android:icon="@drawable/ic_business_black_18dp"
+            android:icon="@drawable/ic_domain_black_24dp"
             android:title="@string/job" />
 
     </group>
@@ -35,11 +35,11 @@
 
         <item
             android:id="@+id/sidenav_menu_setting"
-            android:icon="@drawable/ic_settings_black_18dp"
+            android:icon="@drawable/ic_settings_black_24dp"
             android:title="@string/action_settings" />
         <item
             android:id="@+id/sidenav_menu_about"
-            android:icon="@drawable/ic_info_black_18dp"
+            android:icon="@drawable/ic_info_black_24dp"
             android:title="@string/title_activity_about" />
 
     </group>

@@ -42,7 +42,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
-        android:src="@drawable/ic_refresh_white_18dp"
+        android:src="@drawable/ic_refresh_white_24dp"
         app:borderWidth="0dp"
         app:fabSize="normal" />
 
