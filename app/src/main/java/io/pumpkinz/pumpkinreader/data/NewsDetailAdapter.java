@@ -258,10 +258,7 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             } else {
                 if (currComment.isHidden()) continue;
 
-                Comment parent = new Comment();
-                parent.setId(currComment.getParentId());
-
-                parent = comments.get(comments.indexOf(parent));
+                Comment parent = currComment.getParentComment();
 
                 if (parent == null || parent.isHidden() || !parent.isExpanded()) continue;
 
