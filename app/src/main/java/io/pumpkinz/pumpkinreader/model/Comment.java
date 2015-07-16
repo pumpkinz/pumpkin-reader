@@ -109,4 +109,8 @@ public class Comment extends Item implements Serializable {
         return sb.toString();
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
 }

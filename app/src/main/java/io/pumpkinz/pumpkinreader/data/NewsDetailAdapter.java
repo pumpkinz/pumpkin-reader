@@ -257,6 +257,14 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 addComment(++currIdx, currComment);
             } else {
                 if (currComment.isHidden()) continue;
+
+                Comment parent = new Comment();
+                parent.setId(currComment.getParentId());
+
+                parent = comments.get(comments.indexOf(parent));
+
+                if (parent == null || parent.isHidden() || !parent.isExpanded()) continue;
+
                 addComment(++currIdx, currComment);
             }
         }
