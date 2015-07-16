@@ -109,10 +109,10 @@ public class Comment extends Item implements Serializable {
 
         StringBuilder sb = new StringBuilder();
         sb.append(parent)
-                .append(";\tLevel=" + String.valueOf(getLevel()))
-                .append(";\tKids=" + getCommentIds().toString())
-                .append(";\tAll Kids=" + String.valueOf(getAllChildCount()))
-                .append("\tText=" + getText().substring(0, Math.min(getText().length(), 20)))
+                .append("Level=" + String.valueOf(getLevel()))
+                .append("; Kids=" + getCommentIds().toString())
+                .append("; All Kids=" + String.valueOf(getAllChildCount()))
+                .append(" Text=" + getText().substring(0, Math.min(getText().length(), 20)))
                 .append("\n");
 
         return sb.toString();
