@@ -8,10 +8,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import org.parceler.Parcels;
 
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 
 import io.pumpkinz.pumpkinreader.data.NewsDetailAdapter;
 import io.pumpkinz.pumpkinreader.etc.Constants;
@@ -80,6 +82,9 @@ public class NewsDetailFragment extends Fragment {
                     @Override
                     public void onError(Throwable e) {
                         Log.d("comments", e.toString());
+                        if (e.getClass() == TimeoutException.class) {
+                            Toast.makeText(getActivity(), getResources().getString(R.string.timeout), Toast.LENGTH_LONG).show();
+                        }
                     }
 
                     @Override

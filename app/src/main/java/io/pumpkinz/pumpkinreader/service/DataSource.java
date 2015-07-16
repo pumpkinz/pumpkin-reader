@@ -2,11 +2,13 @@ package io.pumpkinz.pumpkinreader.service;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.pumpkinz.pumpkinreader.etc.Constants;
 import io.pumpkinz.pumpkinreader.exception.EndOfListException;
@@ -71,6 +73,8 @@ public class DataSource {
                         return getInnerComments(comment);
                     }
                 })
+                //TODO: use value from setting
+                .timeout(10, TimeUnit.SECONDS)
                 .filter(new Func1<Comment, Boolean>() {
                     @Override
                     public Boolean call(Comment comment) {
@@ -279,14 +283,12 @@ public class DataSource {
     private class NewsTransformer implements Observable.Transformer<List<Integer>, List<News>> {
 
         final List<Integer> subNewsIds = new ArrayList<>();
-        final Dictionary<Integer, News> dict = new Hashtable<>();
+        //final Dictionary<Integer, News> dict = new Hashtable<>();
         private int from;
-        private int count;
         private int to;
 
         public NewsTransformer(int from, int count) {
             this.from = from;
-            this.count = count;
             this.to = from + count;
         }
 
@@ -296,6 +298,7 @@ public class DataSource {
                     .map(new Func1<List<Integer>, List<Integer>>() {
                         @Override // Get a subset from Top News IDs and save it for later lookup
                         public List<Integer> call(List<Integer> newsIds) {
+                            Log.d("news", newsIds.toString());
                             if (from >= newsIds.size()) {
                                 throw new EndOfListException();
                             }
@@ -326,24 +329,24 @@ public class DataSource {
                                     });
                         }
                     })
+                    //TODO: use value from setting
+                    .timeout(10, TimeUnit.SECONDS)
                     .filter(new Func1<News, Boolean>() {
                         @Override //Filter out the NULL News (from any parse error)
                         public Boolean call(News news) {
                             return (news != null) && !news.isDeleted() && !news.isDead();
                         }
                     })
-                    .doOnNext(new Action1<News>() {
-                        @Override // Put the News into dictionary for faster lookup
-                        public void call(News news) {
-                            dict.put(news.getId(), news);
-                        }
-                    })
                     .toList()
                     .map(new Func1<List<News>, List<News>>() {
                         @Override
-                        // Discard the formed List<News> (what?!) and use the ones on dictionary instead
                         public List<News> call(List<News> newses) {
                             List<News> retval = new ArrayList<>();
+                            Dictionary<Integer, News> dict = new Hashtable<>();
+
+                            for (News news : newses) {
+                                dict.put(news.getId(), news);
+                            }
 
                             for (Integer topStory : subNewsIds) {
                                 retval.add(dict.get(topStory));

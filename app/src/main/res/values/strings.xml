@@ -29,6 +29,8 @@
         <item quantity="other">%d comments</item>
     </plurals>
 
+    <string name="timeout">Connection Timeout. Please try again.</string>
+
     <!--Begin Time Ago Strings-->
     <string name="time_ago_prefix"></string>
     <string name="time_ago_suffix"></string>
