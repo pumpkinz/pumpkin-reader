@@ -47,7 +47,13 @@ public class WebViewFragment extends Fragment {
             }
         });
 
+        webView.getSettings().setBuiltInZoomControls(true);
+        webView.getSettings().setDisplayZoomControls(false);
+        webView.getSettings().setSupportZoom(true);
+        webView.getSettings().setUseWideViewPort(true);
+        webView.getSettings().setLoadWithOverviewMode(true);
         webView.getSettings().setJavaScriptEnabled(true);
+
         webView.loadUrl(news.getUrl());
     }
 
