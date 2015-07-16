@@ -217,6 +217,7 @@ public class DataSource {
         for (Integer commentId : comment.getCommentIds()) {
             Comment childComment = commentDict.get(commentId);
             if (childComment != null) {
+                childComment.setParentComment(comment);
                 comment.addChildComment(getCommentWithChild(level + 1, childComment, commentDict));
             }
         }
@@ -328,7 +329,7 @@ public class DataSource {
                     .filter(new Func1<News, Boolean>() {
                         @Override //Filter out the NULL News (from any parse error)
                         public Boolean call(News news) {
-                            return (news != null);
+                            return (news != null) && !news.isDeleted() && !news.isDead();
                         }
                     })
                     .doOnNext(new Action1<News>() {

@@ -3,6 +3,7 @@ package io.pumpkinz.pumpkinreader.data;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -231,9 +232,18 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         comment.setExpanded(false);
 
-        // Also notify the parent to show child count badge
         notifyItemRangeRemoved(idxToPos(idx) + 1, count);
-        notifyItemChanged(idxToPos(idx));
+
+        final int pos = idxToPos(idx);
+        Handler handler = new Handler();
+
+        // Also notify the parent to show child count badge
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                notifyItemChanged(pos);
+            }
+        }, 100);
     }
 
     private void expandComments(Comment comment, int idx) {
@@ -257,6 +267,8 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 addComment(++currIdx, currComment);
             } else {
                 if (currComment.isHidden()) continue;
+                if (!isParentsExpanded(currComment)) continue;
+
                 addComment(++currIdx, currComment);
             }
         }
@@ -290,6 +302,21 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
 
         return color;
+    }
+
+    private boolean isParentsExpanded(Comment comment) {
+        Comment parent = comment.getParentComment();
+        boolean expand = true;
+
+        while (parent != null) {
+            if (parent.isHidden() || !parent.isExpanded()) {
+                expand = false;
+            }
+
+            parent = parent.getParentComment();
+        }
+
+        return expand;
     }
 
     private int idxToPos(int idx) {
