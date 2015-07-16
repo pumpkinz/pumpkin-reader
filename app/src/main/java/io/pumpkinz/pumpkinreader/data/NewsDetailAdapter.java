@@ -257,10 +257,7 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 addComment(++currIdx, currComment);
             } else {
                 if (currComment.isHidden()) continue;
-
-                Comment parent = currComment.getParentComment();
-
-                if (parent == null || parent.isHidden() || !parent.isExpanded()) continue;
+                if (!isParentsExpanded(currComment)) continue;
 
                 addComment(++currIdx, currComment);
             }
@@ -295,6 +292,21 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
 
         return color;
+    }
+
+    private boolean isParentsExpanded(Comment comment) {
+        Comment parent = comment.getParentComment();
+        boolean expand = true;
+
+        while (parent != null) {
+            if (parent.isHidden() || !parent.isExpanded()) {
+                expand = false;
+            }
+
+            parent = parent.getParentComment();
+        }
+
+        return expand;
     }
 
     private int idxToPos(int idx) {
