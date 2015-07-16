@@ -76,6 +76,7 @@ public class NewsDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                shareIntent.putExtra(Intent.EXTRA_SUBJECT, news.getTitle());
 
                 String text;
 
