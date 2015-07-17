@@ -73,8 +73,7 @@ public class DataSource {
                         return getInnerComments(comment);
                     }
                 })
-                //TODO: use value from setting
-                .timeout(10, TimeUnit.SECONDS)
+                .timeout(Constants.CONN_TIMEOUT_SEC, TimeUnit.SECONDS)
                 .filter(new Func1<Comment, Boolean>() {
                     @Override
                     public Boolean call(Comment comment) {
@@ -283,7 +282,6 @@ public class DataSource {
     private class NewsTransformer implements Observable.Transformer<List<Integer>, List<News>> {
 
         final List<Integer> subNewsIds = new ArrayList<>();
-        //final Dictionary<Integer, News> dict = new Hashtable<>();
         private int from;
         private int to;
 
@@ -328,8 +326,7 @@ public class DataSource {
                                     });
                         }
                     })
-                    //TODO: use value from setting
-                    .timeout(10, TimeUnit.SECONDS)
+                    .timeout(Constants.CONN_TIMEOUT_SEC, TimeUnit.SECONDS)
                     .filter(new Func1<News, Boolean>() {
                         @Override //Filter out the NULL News (from any parse error)
                         public Boolean call(News news) {

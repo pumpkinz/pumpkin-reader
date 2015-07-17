@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -128,8 +129,13 @@ public class NewsListFragment extends Fragment {
             @Override
             public void onError(Throwable e) {
                 Log.d("stories", e.toString());
+
                 if (e.getClass() == TimeoutException.class) {
-                    Toast.makeText(getActivity(), getResources().getString(R.string.timeout), Toast.LENGTH_LONG).show();
+                    progressBar.setVisibility(View.GONE);
+
+                    Toast toast = Toast.makeText(getActivity(), R.string.timeout, Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.CENTER, 0, 0);
+                    toast.show();
                 }
             }
 
