@@ -1,7 +1,11 @@
 package io.pumpkinz.pumpkinreader;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -92,10 +96,27 @@ public class NewsListFragment extends Fragment {
         }
     }
 
-    public void goToNewsDetail(News news) {
-        Intent intent = new Intent(getActivity(), NewsDetailActivity.class);
-        intent.putExtra(Constants.NEWS, Parcels.wrap(news));
+    public void goToNewsDetail(final News news) {
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        Intent intent;
 
+        if (pref.getBoolean(Constants.CONFIG_EXTERNAL_BROWSER, false)) {
+            intent = new Intent(getActivity(), NewsCommentsActivity.class);
+
+            if (news.getUrl() != null && !news.getUrl().isEmpty()) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Uri uri = Uri.parse(news.getUrl());
+                        startActivity(new Intent(Intent.ACTION_VIEW, uri));
+                    }
+                }, 300);
+            }
+        } else {
+            intent = new Intent(getActivity(), NewsDetailActivity.class);
+        }
+
+        intent.putExtra(Constants.NEWS, Parcels.wrap(news));
         startActivity(intent);
     }
 

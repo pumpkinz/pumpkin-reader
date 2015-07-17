@@ -63,6 +63,7 @@
         <item quantity="other">%d years</item>
     </plurals>
     <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_news_comments">News</string>
     <!--End Time Ago Strings-->
 
 </resources>

@@ -196,6 +196,13 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         notifyDataSetChanged();
     }
 
+    public void addComment(List<Comment> dataset, List<Comment> allComments) {
+        this.comments.addAll(allComments);
+        this.dataset.addAll(dataset);
+
+        notifyDataSetChanged();
+    }
+
     public void addComment(Comment comment) {
         this.dataset.add(comment);
         notifyItemInserted(idxToPos(this.dataset.size() - 1));

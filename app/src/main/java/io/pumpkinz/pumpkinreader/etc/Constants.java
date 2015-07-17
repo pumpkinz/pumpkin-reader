@@ -8,7 +8,9 @@ public class Constants {
     public static final String COMMENT = "io.pumpkinz.pumpkinreader.model.Comment";
     public static final String LINK = "io.pumpkinz.pumpkinreader-Link";
 
+    public static final String CONFIG_EXTERNAL_BROWSER = "config_external_browser";
     public static final String CONFIG_SMALLER_TEXT = "config_smaller_text";
+    public static final String CONFIG_AUTO_EXPAND_COMMENTS = "config_auto_expand_comments";
 
     // Shared Preferences Constants
     public static final String NEW_FILE_SP = "io.pumpkinz.pumpkinreader.new_sharedpref_file";

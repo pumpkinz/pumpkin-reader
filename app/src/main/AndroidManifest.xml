@@ -26,6 +26,9 @@
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings" />
+        <activity
+            android:name=".NewsCommentsActivity"
+            android:label="@string/title_activity_news_comments" />
     </application>
 
 </manifest>
