@@ -30,4 +30,6 @@ public class Constants {
 
     public static final String MIME_TEXT_PLAIN = "text/plain";
 
+    public static final int CONN_TIMEOUT_SEC = 120;
+
 }

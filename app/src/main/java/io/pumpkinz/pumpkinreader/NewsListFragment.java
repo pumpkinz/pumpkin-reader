@@ -7,14 +7,17 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import org.parceler.Parcels;
 
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 
 import io.pumpkinz.pumpkinreader.data.NewsAdapter;
 import io.pumpkinz.pumpkinreader.etc.Constants;
@@ -126,6 +129,14 @@ public class NewsListFragment extends Fragment {
             @Override
             public void onError(Throwable e) {
                 Log.d("stories", e.toString());
+
+                if (e.getClass() == TimeoutException.class) {
+                    progressBar.setVisibility(View.GONE);
+
+                    Toast toast = Toast.makeText(getActivity(), R.string.timeout, Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.CENTER, 0, 0);
+                    toast.show();
+                }
             }
 
             @Override
