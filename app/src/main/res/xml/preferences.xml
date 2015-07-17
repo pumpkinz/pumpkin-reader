@@ -6,7 +6,7 @@
         android:defaultValue="false"
         android:key="config_external_browser"
         android:summary="Use system's default web browser"
-        android:title="External Web Browser" />
+        android:title="Use External Browser" />
 
     <CheckBoxPreference
         android:defaultValue="false"
