@@ -1,6 +1,8 @@
 package io.pumpkinz.pumpkinreader;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +13,7 @@ import android.view.ViewGroup;
 
 import org.parceler.Parcels;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.pumpkinz.pumpkinreader.data.NewsDetailAdapter;
@@ -87,7 +90,23 @@ public class NewsDetailFragment extends Fragment {
                         Log.d("comments", String.valueOf(comments.size()));
 
                         newsDetailAdapter.removeItem(newsDetailAdapter.getCommentCount() - 1);
-                        newsDetailAdapter.addComment(comments);
+
+                        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+                        if (pref.getBoolean(Constants.CONFIG_AUTO_EXPAND_COMMENTS, false)) {
+                            newsDetailAdapter.addComment(comments);
+                        } else {
+                            List<Comment> dataset = new ArrayList<>();
+
+                            for (Comment c : comments) {
+                                if (c.getLevel() == 0) {
+                                    c.setExpanded(false);
+                                    dataset.add(c);
+                                }
+                            }
+
+                            newsDetailAdapter.addComment(dataset, comments);
+                        }
 
                         RecyclerView.ItemDecoration itemDecoration =
                                 new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
