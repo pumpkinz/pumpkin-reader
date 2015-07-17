@@ -7,6 +7,8 @@ Why another HN app? Well, we've tried several of HN app out there in Google Play
 
 Pumpkin Reader is the manifestation of what we see the ideal HN app for our needs.
 
+We only support Android 4.4+ because we believe that fragmentation in Android world is really bad. Hence the only way to go is to quickly abandon the older and now irrelevant versions.
+
 ## Features (v1.0):
 
 1. Material design, done right
