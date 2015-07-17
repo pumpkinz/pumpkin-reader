@@ -95,11 +95,10 @@ public class NewsListFragment extends Fragment {
 
     public void goToNewsDetail(final News news) {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        Intent intent;
 
         if (pref.getBoolean(Constants.CONFIG_EXTERNAL_BROWSER, false)) {
-            Intent intent = new Intent(getActivity(), NewsCommentsActivity.class);
-            intent.putExtra(Constants.NEWS, Parcels.wrap(news));
-            startActivity(intent);
+            intent = new Intent(getActivity(), NewsCommentsActivity.class);
 
             if (news.getUrl() != null && !news.getUrl().isEmpty()) {
                 new Handler().postDelayed(new Runnable() {
@@ -111,10 +110,11 @@ public class NewsListFragment extends Fragment {
                 }, 300);
             }
         } else {
-            Intent intent = new Intent(getActivity(), NewsDetailActivity.class);
-            intent.putExtra(Constants.NEWS, Parcels.wrap(news));
-            startActivity(intent);
+            intent = new Intent(getActivity(), NewsDetailActivity.class);
         }
+
+        intent.putExtra(Constants.NEWS, Parcels.wrap(news));
+        startActivity(intent);
     }
 
     public void setNewsType(int newsTypeId) {
