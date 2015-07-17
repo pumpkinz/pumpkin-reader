@@ -3,6 +3,12 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <CheckBoxPreference
+        android:key="config_external_browser"
+        android:defaultValue="false"
+        android:summary="Use system's default web browser"
+        android:title="External Web Browser" />
+
+    <CheckBoxPreference
         android:key="config_smaller_text"
         android:defaultValue="false"
         android:summary="Reduce news list font size"
