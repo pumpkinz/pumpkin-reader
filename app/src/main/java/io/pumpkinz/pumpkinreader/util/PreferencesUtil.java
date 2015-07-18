@@ -9,14 +9,20 @@ import io.pumpkinz.pumpkinreader.model.News;
 
 public class PreferencesUtil {
 
+    private static final String KEY_PREFIX_READ_STATUS = "read_";
+
     public static void markNewsAsRead(Context ctx, News news) {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(ctx);
-        pref.edit().putBoolean(String.valueOf(news.getId()), true).commit();
+        pref.edit().putBoolean(getNewsId(news), true).commit();
     }
 
     public static boolean isNewsRead(Context ctx, News news) {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(ctx);
-        return pref.getBoolean(String.valueOf(news.getId()), false);
+        return pref.getBoolean(getNewsId(news), false);
+    }
+
+    private static String getNewsId(News news) {
+        return KEY_PREFIX_READ_STATUS + news.getId();
     }
 
 }
