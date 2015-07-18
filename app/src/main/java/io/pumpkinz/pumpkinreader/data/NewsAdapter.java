@@ -16,6 +16,7 @@ import java.util.List;
 import io.pumpkinz.pumpkinreader.NewsListFragment;
 import io.pumpkinz.pumpkinreader.R;
 import io.pumpkinz.pumpkinreader.model.News;
+import io.pumpkinz.pumpkinreader.util.PreferencesUtil;
 import io.pumpkinz.pumpkinreader.util.Util;
 
 
@@ -40,7 +41,12 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 RecyclerView recyclerView = (RecyclerView) fragment.getView().findViewById(R.id.news_list);
                 int position = recyclerView.getChildAdapterPosition(view);
 
-                ((NewsListFragment) fragment).goToNewsDetail(dataset.get(position));
+                News news = dataset.get(position);
+
+                PreferencesUtil.markNewsAsRead(fragment.getActivity(), news);
+                notifyItemChanged(position);
+
+                ((NewsListFragment) fragment).goToNewsDetail(news);
             }
         };
     }
@@ -73,6 +79,16 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             case ITEM_NEWS:
                 News news = this.dataset.get(position);
                 NewsViewHolder newsViewHolder = (NewsViewHolder) viewHolder;
+
+                int color;
+
+                if (PreferencesUtil.isNewsRead(fragment.getActivity(), news)) {
+                    color = fragment.getResources().getColor(R.color.grey_200);
+                } else {
+                    color = fragment.getResources().getColor(R.color.grey_1000w);
+                }
+
+                newsViewHolder.getNewsItemContainer().setBackgroundColor(color);
 
                 newsViewHolder.getTitle().setText(news.getTitle());
                 newsViewHolder.getSubmitter().setText(news.getBy());
