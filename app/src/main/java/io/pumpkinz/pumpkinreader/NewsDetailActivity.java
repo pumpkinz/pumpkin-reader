@@ -8,6 +8,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebView;
 
 import org.parceler.Parcels;
 
@@ -22,6 +23,9 @@ public class NewsDetailActivity extends AppCompatActivity {
     public static final int TAB_COMMENTS_IDX = 1;
 
     private News news;
+    private WebView webView;
+    private TabLayout tabLayout;
+    private NewsDetailViewPagerAdapter pagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,8 +38,8 @@ public class NewsDetailActivity extends AppCompatActivity {
         ViewPager viewPager = (ViewPager) findViewById(R.id.news_detail_pager);
         setUpViewPager(viewPager);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.news_detail_tab);
-        setUpTab(tabLayout, viewPager);
+        tabLayout = (TabLayout) findViewById(R.id.news_detail_tab);
+        setUpTab(viewPager);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.news_detail_fab);
         setUpFAB(fab);
@@ -54,16 +58,30 @@ public class NewsDetailActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void setUpViewPager(ViewPager viewPager) {
-        NewsDetailViewPagerAdapter adapter = new NewsDetailViewPagerAdapter(getSupportFragmentManager());
+    @Override
+    public void onBackPressed() {
+        if (tabLayout.getSelectedTabPosition() != TAB_LINK_IDX) {
+            super.onBackPressed();
+            return;
+        }
 
-        adapter.addFragment(getResources().getString(R.string.link), new WebViewFragment());
-        adapter.addFragment(getResources().getString(R.string.comments), new NewsDetailFragment());
-
-        viewPager.setAdapter(adapter);
+        if (getWebView().canGoBack()) {
+            getWebView().goBack();
+        } else {
+            super.onBackPressed();
+        }
     }
 
-    private void setUpTab(TabLayout tabLayout, ViewPager viewPager) {
+    private void setUpViewPager(ViewPager viewPager) {
+        pagerAdapter = new NewsDetailViewPagerAdapter(getSupportFragmentManager());
+
+        pagerAdapter.addFragment(getResources().getString(R.string.link), new WebViewFragment());
+        pagerAdapter.addFragment(getResources().getString(R.string.comments), new NewsDetailFragment());
+
+        viewPager.setAdapter(pagerAdapter);
+    }
+
+    private void setUpTab(ViewPager viewPager) {
         tabLayout.setupWithViewPager(viewPager);
 
         if (news.getUrl() == null || news.getUrl().isEmpty()) {
@@ -92,6 +110,14 @@ public class NewsDetailActivity extends AppCompatActivity {
                 startActivity(Intent.createChooser(shareIntent, getResources().getString(R.string.share)));
             }
         });
+    }
+
+    private WebView getWebView() {
+        if (webView == null) {
+            webView = (WebView) pagerAdapter.getItem(TAB_LINK_IDX).getView().findViewById(R.id.news_web_view);
+        }
+
+        return webView;
     }
 
 }
