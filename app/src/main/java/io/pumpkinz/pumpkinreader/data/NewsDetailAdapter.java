@@ -7,6 +7,8 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -154,6 +156,8 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 commentViewHolder.getSubmitter().setText(comment.getBy());
                 commentViewHolder.getDate().setText(this.dateFormatter.timeAgo(comment.getTime()));
                 commentViewHolder.getBody().setText(Util.trim(Html.fromHtml(comment.getText())));
+                commentViewHolder.getBody().setMovementMethod(LinkMovementMethod.getInstance());
+                commentViewHolder.getBody().setAutoLinkMask(Linkify.WEB_URLS);
 
                 if (comment.getCommentIds().size() > 0 && !comment.isExpanded()) {
                     commentViewHolder.getChildCount().setText("+" + comment.getAllChildCount() + " comments");
