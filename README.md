@@ -1,6 +1,6 @@
 # Pumpkin Reader [![Build Status](https://travis-ci.org/pumpkinz/pumpkin-reader.svg)](https://travis-ci.org/pumpkinz/pumpkin-reader)
 ## HackerNews Reader for Android 
-### Current version: 1.2
+### Current version: 1.2.1
 
 [![Get it on Google Play](https://developer.android.com/images/brand/en_generic_rgb_wo_60.png)](https://play.google.com/store/apps/details?id=io.pumpkinz.pumpkinreader)
 
