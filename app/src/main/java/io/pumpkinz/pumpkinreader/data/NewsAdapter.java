@@ -81,19 +81,16 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 News news = this.dataset.get(position);
                 NewsViewHolder newsViewHolder = (NewsViewHolder) viewHolder;
 
+                TypedValue titleColor = new TypedValue();
+
                 if (PreferencesUtil.isNewsRead(fragment.getActivity(), news)) {
-                    TypedValue dimTitleColor = new TypedValue();
-                    fragment.getActivity().getTheme().resolveAttribute(R.attr.dim_title_color, dimTitleColor, true);
-
-                    newsViewHolder.getTitle().setTextColor(dimTitleColor.data);
-                    newsViewHolder.getScore().setTextColor(dimTitleColor.data);
+                    fragment.getActivity().getTheme().resolveAttribute(R.attr.dim_title_color, titleColor, true);
                 } else {
-                    TypedValue titleColor = new TypedValue();
                     fragment.getActivity().getTheme().resolveAttribute(R.attr.title_color, titleColor, true);
-
-                    newsViewHolder.getTitle().setTextColor(titleColor.data);
-                    newsViewHolder.getScore().setTextColor(titleColor.data);
                 }
+
+                newsViewHolder.getTitle().setTextColor(titleColor.data);
+                newsViewHolder.getScore().setTextColor(titleColor.data);
 
                 newsViewHolder.getTitle().setText(news.getTitle());
                 newsViewHolder.getSubmitter().setText(news.getBy());
