@@ -5,7 +5,7 @@
     android:id="@+id/app_bar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/pumpkin_primary"
+    android:background="?colorPrimary"
     android:elevation="@dimen/appbar_elevation"
     android:minHeight="@dimen/abc_action_bar_default_height_material"
     android:theme="@style/ThemeOverlay.AppCompat.Dark"

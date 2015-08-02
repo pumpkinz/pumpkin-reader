@@ -4,7 +4,7 @@
     android:id="@+id/comment_item_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/grey_1000w">
+    android:background="?list_bg_color">
 
     <View
         android:id="@+id/color_code"
@@ -56,7 +56,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:textColor="@color/grey_1000b" />
+            android:textColor="?title_color" />
 
     </LinearLayout>
 

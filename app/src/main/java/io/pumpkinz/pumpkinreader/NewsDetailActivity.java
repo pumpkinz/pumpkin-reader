@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
@@ -17,7 +16,7 @@ import io.pumpkinz.pumpkinreader.etc.Constants;
 import io.pumpkinz.pumpkinreader.model.News;
 
 
-public class NewsDetailActivity extends AppCompatActivity {
+public class NewsDetailActivity extends PumpkinReaderActivity {
 
     public static final int TAB_LINK_IDX = 0;
     public static final int TAB_COMMENTS_IDX = 1;

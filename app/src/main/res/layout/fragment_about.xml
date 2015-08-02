@@ -14,6 +14,7 @@
 
         <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
             android:id="@+id/card_about"
+            style="?card_style"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -36,7 +37,7 @@
                         android:layout_height="wrap_content"
                         android:paddingBottom="16dp"
                         android:text="@string/about"
-                        android:textColor="@color/grey_1000b"
+                        android:textColor="?title_color"
                         android:textSize="@dimen/abc_text_size_headline_material" />
 
                     <TextView
@@ -75,6 +76,7 @@
 
         <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
             android:id="@+id/card_credits"
+            style="?card_style"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -92,7 +94,7 @@
                     android:layout_height="wrap_content"
                     android:paddingBottom="16dp"
                     android:text="@string/credits"
-                    android:textColor="@color/grey_1000b"
+                    android:textColor="?title_color"
                     android:textSize="@dimen/abc_text_size_headline_material" />
 
                 <TextView

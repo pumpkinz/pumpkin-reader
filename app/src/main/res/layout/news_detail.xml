@@ -10,7 +10,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/grey_1000w"
+        android:background="?list_bg_color"
         android:orientation="vertical"
         android:paddingEnd="@dimen/abc_action_bar_content_inset_material"
         android:paddingStart="@dimen/abc_action_bar_content_inset_material">
@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             android:autoLink="web"
-            android:textColor="@color/grey_1000b" />
+            android:textColor="?title_color" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -35,7 +35,7 @@
                 android:layout_centerVertical="true"
                 android:fontFamily="sans-serif-medium"
                 android:text="@string/comments"
-                android:textColor="@color/grey_1000b" />
+                android:textColor="?title_color" />
 
             <Button
                 android:id="@+id/button_link"

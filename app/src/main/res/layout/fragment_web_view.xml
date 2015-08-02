@@ -9,7 +9,8 @@
     <WebView
         android:id="@+id/news_web_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent" />
 
     <ProgressBar
         android:id="@+id/web_view_progress"
