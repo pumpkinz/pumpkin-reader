@@ -6,11 +6,19 @@
     android:layout_centerInParent="true"
     android:orientation="vertical">
 
-    <WebView
-        android:id="@+id/news_web_view"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/web_view_refresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/transparent" />
+        android:layout_height="match_parent">
+
+        <WebView
+            android:id="@+id/news_web_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent" />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
 
     <ProgressBar
         android:id="@+id/web_view_progress"
