@@ -6,8 +6,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -15,7 +15,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import org.parceler.Parcels;
@@ -44,7 +43,7 @@ public class NewsListFragment extends Fragment {
     private NewsAdapter newsAdapter;
     private DataSource dataSource;
     private Subscription subscription = Subscriptions.empty();
-    private LinearLayout progressBar;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private boolean isLoading = false;
     private int newsType = R.string.top;
 
@@ -62,8 +61,23 @@ public class NewsListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_news_list, container, false);
 
-        this.progressBar = (LinearLayout) view.findViewById(R.id.news_list_progress);
-        this.progressBar.setVisibility(View.VISIBLE);
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.news_list_refresh_container);
+        swipeRefreshLayout.setColorSchemeResources(R.color.pumpkin_accent);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (!swipeRefreshLayout.canChildScrollUp()) {
+                    forceRefresh();
+                }
+            }
+        });
+
+        swipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                swipeRefreshLayout.setRefreshing(true);
+            }
+        });
 
         return view;
     }
@@ -80,14 +94,6 @@ public class NewsListFragment extends Fragment {
 
         setUpNewsList(view);
         loadNews(0, N_NEWS_PER_LOAD, true);
-
-        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.news_list_fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                loadNews(0, N_NEWS_PER_LOAD, true);
-            }
-        });
     }
 
     public void forceUnsubscribe() {
@@ -132,7 +138,6 @@ public class NewsListFragment extends Fragment {
         if (refresh) {
             newsAdapter.clearDataset();
             newsAdapter.notifyDataSetChanged();
-            progressBar.setVisibility(View.VISIBLE);
         }
 
         isLoading = true;
@@ -142,8 +147,8 @@ public class NewsListFragment extends Fragment {
         subscription = stories.subscribe(new Subscriber<List<News>>() {
             @Override
             public void onCompleted() {
-                progressBar.setVisibility(View.GONE);
                 isLoading = false;
+                swipeRefreshLayout.setRefreshing(false);
                 Log.d("stories", "completed");
             }
 
@@ -152,7 +157,7 @@ public class NewsListFragment extends Fragment {
                 Log.d("stories", e.toString());
 
                 if (e.getClass() == TimeoutException.class) {
-                    progressBar.setVisibility(View.GONE);
+                    swipeRefreshLayout.setRefreshing(false);
 
                     Toast toast = Toast.makeText(getActivity(), R.string.timeout, Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.CENTER, 0, 0);
