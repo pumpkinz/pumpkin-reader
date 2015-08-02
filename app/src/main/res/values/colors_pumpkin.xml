@@ -4,4 +4,5 @@
     <color name="pumpkin_primaryDark">@color/orange_900</color>
     <color name="pumpkin_accent">@color/light_blue_A700</color>
     <color name="text_accent">@color/blue_A700</color>
+    <color name="background_dark">#303030</color>
 </resources>

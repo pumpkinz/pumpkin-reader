@@ -3,6 +3,7 @@ package io.pumpkinz.pumpkinreader.data;
 import android.content.res.Resources;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -80,15 +81,19 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 News news = this.dataset.get(position);
                 NewsViewHolder newsViewHolder = (NewsViewHolder) viewHolder;
 
-                int color;
-
                 if (PreferencesUtil.isNewsRead(fragment.getActivity(), news)) {
-                    color = fragment.getResources().getColor(R.color.grey_200);
-                } else {
-                    color = fragment.getResources().getColor(R.color.grey_1000w);
-                }
+                    TypedValue dimTitleColor = new TypedValue();
+                    fragment.getActivity().getTheme().resolveAttribute(R.attr.dim_title_color, dimTitleColor, true);
 
-                newsViewHolder.getNewsItemContainer().setBackgroundColor(color);
+                    newsViewHolder.getTitle().setTextColor(dimTitleColor.data);
+                    newsViewHolder.getScore().setTextColor(dimTitleColor.data);
+                } else {
+                    TypedValue titleColor = new TypedValue();
+                    fragment.getActivity().getTheme().resolveAttribute(R.attr.title_color, titleColor, true);
+
+                    newsViewHolder.getTitle().setTextColor(titleColor.data);
+                    newsViewHolder.getScore().setTextColor(titleColor.data);
+                }
 
                 newsViewHolder.getTitle().setText(news.getTitle());
                 newsViewHolder.getSubmitter().setText(news.getBy());

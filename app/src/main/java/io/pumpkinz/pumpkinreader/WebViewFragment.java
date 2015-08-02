@@ -54,6 +54,8 @@ public class WebViewFragment extends Fragment {
         webView.getSettings().setLoadWithOverviewMode(true);
         webView.getSettings().setJavaScriptEnabled(true);
 
+        webView.setBackgroundColor(0);
+
         webView.loadUrl(news.getUrl());
     }
 
