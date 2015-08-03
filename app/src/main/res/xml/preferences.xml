@@ -23,7 +23,7 @@
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="config_dark_theme"
-        android:summary="Dark Theme"
-        android:title="Use white on dark theme" />
+        android:summary="Use white on dark theme"
+        android:title="Dark Theme" />
 
 </PreferenceScreen>
