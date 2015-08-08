@@ -64,6 +64,9 @@
     </plurals>
     <string name="title_activity_settings">Settings</string>
     <string name="title_activity_news_comments">News</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
     <!--End Time Ago Strings-->
 
 </resources>

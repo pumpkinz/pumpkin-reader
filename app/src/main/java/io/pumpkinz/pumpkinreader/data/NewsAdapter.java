@@ -26,12 +26,12 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int ITEM_NEWS = 0;
     private static final int ITEM_LOADING = 1;
 
-    private Fragment fragment;
+    private NewsListFragment fragment;
     private List<News> dataset;
     private OnClickListener onClickListener;
     private TimeAgo dateFormatter;
 
-    public NewsAdapter(final Fragment fragment) {
+    public NewsAdapter(final NewsListFragment fragment) {
         this.fragment = fragment;
         this.dataset = new ArrayList<>();
         this.dateFormatter = new TimeAgo(fragment.getActivity());
@@ -47,7 +47,8 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 PreferencesUtil.markNewsAsRead(fragment.getActivity(), news);
                 notifyItemChanged(position);
 
-                ((NewsListFragment) fragment).goToNewsDetail(news);
+                fragment.onNewsSelected(news);
+                //fragment.goToNewsDetail(news);
             }
         };
     }

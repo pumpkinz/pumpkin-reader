@@ -59,21 +59,33 @@ public class NewsDetailFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        News news = Parcels.unwrap(getActivity().getIntent().getParcelableExtra(Constants.NEWS));
-
         newsDetail = (RecyclerView) view.findViewById(R.id.news_detail);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         newsDetail.setLayoutManager(layoutManager);
-
-        newsDetailAdapter = new NewsDetailAdapter(this, news);
-        newsDetail.setAdapter(newsDetailAdapter);
-
-        loadComments(news);
     }
 
-    private void loadComments(News news) {
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        News news = Parcels.unwrap(getActivity().getIntent().getParcelableExtra(Constants.NEWS));
+        if (news != null) {
+            newsDetailAdapter = new NewsDetailAdapter(this, news);
+            newsDetail.setAdapter(newsDetailAdapter);
+
+            loadComments(news);
+        }
+    }
+
+    public void loadComments(News news) {
+        Log.d("NewsDetailFragment", "load comments for news " + news.toString());
+        if (newsDetailAdapter == null) {
+            newsDetailAdapter = new NewsDetailAdapter(this, news);
+            newsDetail.setAdapter(newsDetailAdapter);
+        }
+
         newsDetailAdapter.addComment((Comment) null);
 
         subscription = AppObservable.bindFragment(this, dataSource.getComments(news))

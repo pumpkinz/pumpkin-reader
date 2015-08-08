@@ -1,5 +1,6 @@
 package io.pumpkinz.pumpkinreader;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -46,6 +47,7 @@ public class NewsListFragment extends Fragment {
     private SwipeRefreshLayout swipeRefreshLayout;
     private boolean isLoading = false;
     private int newsType = R.string.top;
+    private OnNewsSelectedListener mCallback;
 
     public NewsListFragment() {
         setRetainInstance(true);
@@ -96,13 +98,27 @@ public class NewsListFragment extends Fragment {
         loadNews(0, N_NEWS_PER_LOAD, true);
     }
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception.
+        try {
+            mCallback = (OnNewsSelectedListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnHeadlineSelectedListener");
+        }
+    }
+
     public void forceUnsubscribe() {
         if (!subscription.isUnsubscribed()) {
             subscription.unsubscribe();
         }
     }
 
-    public void goToNewsDetail(final News news) {
+    private void goToNewsDetail(final News news) {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
         Intent intent;
 
@@ -135,6 +151,7 @@ public class NewsListFragment extends Fragment {
     }
 
     private void loadNews(int from, int count, boolean refresh) {
+        Log.d("stories", "loading news");
         if (refresh) {
             newsAdapter.clearDataset();
             newsAdapter.notifyDataSetChanged();
@@ -242,4 +259,12 @@ public class NewsListFragment extends Fragment {
         });
     }
 
+    public void onNewsSelected(News news) {
+        Log.d("NewsListFragment", "news selected " + news.toString());
+        mCallback.onNewsSelected(news);
+    }
+
+    public interface OnNewsSelectedListener {
+        void onNewsSelected(News news);
+    }
 }

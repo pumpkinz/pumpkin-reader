@@ -9,16 +9,40 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
+import io.pumpkinz.pumpkinreader.model.News;
 
-public class MainActivity extends PumpkinReaderActivity {
+
+public class MainActivity extends PumpkinReaderActivity implements NewsListFragment.OnNewsSelectedListener {
+    private NewsDetailFragment newsDetailFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if (findViewById(R.id.fragment_container) != null) {
+            Log.d("MainActivity", "fragment_container NOT null");
+            if (savedInstanceState != null) {
+                return;
+            }
+
+            // Create a new Fragment to be placed in the activity layout
+            newsDetailFragment = new NewsDetailFragment();
+
+            // In case this activity was started with special instructions from an
+            // Intent, pass the Intent's extras to the fragment as arguments
+            newsDetailFragment.setArguments(getIntent().getExtras());
+
+            // Add the fragment to the 'fragment_container' FrameLayout
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.fragment_container, newsDetailFragment).commit();
+        } else {
+            Log.d("MainActivity", "fragment_container NULL");
+        }
 
         setUpToolbar();
         setUpSideNav();
@@ -120,4 +144,17 @@ public class MainActivity extends PumpkinReaderActivity {
         }
     }
 
+    @Override
+    public void onNewsSelected(News news) {
+        Log.d("MainActivity", "onNewsSelected, load comment");
+
+        if (newsDetailFragment != null) {
+            Log.d("MainActivity", "newsDetailFragment NOT null");
+            newsDetailFragment.loadComments(news);
+        } else {
+            newsDetailFragment = (NewsDetailFragment)
+                    getSupportFragmentManager().findFragmentById(R.id.news_detail);
+            Log.d("MainActivity", "newsDetailFragment null");
+        }
+    }
 }
