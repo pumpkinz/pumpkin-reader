@@ -33,6 +33,9 @@ import rx.subscriptions.Subscriptions;
 
 public class NewsDetailFragment extends Fragment {
 
+    private static final String SAVED_DATASET = "io.pumpkinz.pumpkinreader.model.saved_dataset";
+    private static final String SAVED_COMMENTS = "io.pumpkinz.pumpkinreader.model.saved_comments";
+
     private Subscription subscription = Subscriptions.empty();
     private DataSource dataSource;
     private NewsDetailAdapter newsDetailAdapter;
@@ -70,7 +73,20 @@ public class NewsDetailFragment extends Fragment {
         newsDetailAdapter = new NewsDetailAdapter(this, news);
         newsDetail.setAdapter(newsDetailAdapter);
 
-        loadComments(news);
+        if (savedInstanceState != null) {
+            List<Comment> savedDataset = Parcels.unwrap(savedInstanceState.getParcelable(SAVED_DATASET));
+            List<Comment> savedComments = Parcels.unwrap(savedInstanceState.getParcelable(SAVED_COMMENTS));
+            newsDetailAdapter.addComment(savedDataset, savedComments);
+        } else {
+            loadComments(news);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(SAVED_DATASET, Parcels.wrap(newsDetailAdapter.getDataSet()));
+        outState.putParcelable(SAVED_COMMENTS, Parcels.wrap(newsDetailAdapter.getComments()));
     }
 
     private void loadComments(News news) {
