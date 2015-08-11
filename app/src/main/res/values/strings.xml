@@ -30,6 +30,8 @@
     </plurals>
 
     <string name="timeout">Connection Timeout. Please try again.</string>
+    <string name="endoflist">You have reached the end of list.</string>
+    <string name="unknown">Unknown error occured. Please try again.</string>
 
     <!--Begin Time Ago Strings-->
     <string name="time_ago_prefix"></string>

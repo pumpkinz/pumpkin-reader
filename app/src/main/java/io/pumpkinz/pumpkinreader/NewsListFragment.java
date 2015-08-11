@@ -1,5 +1,6 @@
 package io.pumpkinz.pumpkinreader;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -25,6 +26,7 @@ import java.util.concurrent.TimeoutException;
 import io.pumpkinz.pumpkinreader.data.NewsAdapter;
 import io.pumpkinz.pumpkinreader.etc.Constants;
 import io.pumpkinz.pumpkinreader.etc.DividerItemDecoration;
+import io.pumpkinz.pumpkinreader.exception.EndOfListException;
 import io.pumpkinz.pumpkinreader.model.News;
 import io.pumpkinz.pumpkinreader.service.DataSource;
 import rx.Observable;
@@ -43,19 +45,24 @@ public class NewsListFragment extends Fragment {
     private RecyclerView newsList;
     private NewsAdapter newsAdapter;
     private DataSource dataSource;
+    private Observable<List<News>> stories;
     private Subscription subscription = Subscriptions.empty();
     private SwipeRefreshLayout swipeRefreshLayout;
     private boolean isLoading = false;
     private int newsType = R.string.top;
 
-    public NewsListFragment() {
-        setRetainInstance(true);
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        dataSource = new DataSource(activity);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        dataSource = new DataSource(getActivity());
+
+        setRetainInstance(true);
+        stories = AppObservable.bindFragment(this, loadNewsData(0, N_NEWS_PER_LOAD, true));
     }
 
     @Override
@@ -73,13 +80,6 @@ public class NewsListFragment extends Fragment {
             }
         });
 
-        swipeRefreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                swipeRefreshLayout.setRefreshing(savedInstanceState == null);
-            }
-        });
-
         return view;
     }
 
@@ -93,13 +93,20 @@ public class NewsListFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        boolean isRefresh = true;
         setUpNewsList(view);
 
         if (savedInstanceState != null) {
             List<News> savedNews = Parcels.unwrap(savedInstanceState.getParcelable(SAVED_NEWS));
-            newsAdapter.addDataset(savedNews);
-        } else {
-            loadNews(0, N_NEWS_PER_LOAD, true);
+            if (savedNews.size() > 0) {
+                newsAdapter.addDataset(savedNews);
+                isRefresh = false;
+            }
+        }
+
+        if (newsAdapter.getDataSet().isEmpty() || hasLoadingMore(newsAdapter)) {
+            //Config changes in the middle of refreshing OR loading more News
+            subscription = stories.subscribe(new StoriesSubscriber(isRefresh));
         }
     }
 
@@ -148,50 +155,8 @@ public class NewsListFragment extends Fragment {
     }
 
     private void loadNews(int from, int count, boolean refresh) {
-        if (refresh) {
-            newsAdapter.clearDataset();
-            newsAdapter.notifyDataSetChanged();
-        }
-
-        isLoading = true;
-        Observable<List<News>> stories =
-                AppObservable.bindFragment(this, loadNewsData(from, count, refresh));
-
-        subscription = stories.subscribe(new Subscriber<List<News>>() {
-            @Override
-            public void onCompleted() {
-                isLoading = false;
-                swipeRefreshLayout.setRefreshing(false);
-                Log.d("stories", "completed");
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Log.d("stories", e.toString());
-
-                if (e.getClass() == TimeoutException.class) {
-                    swipeRefreshLayout.setRefreshing(false);
-
-                    Toast toast = Toast.makeText(getActivity(), R.string.timeout, Toast.LENGTH_LONG);
-                    toast.setGravity(Gravity.CENTER, 0, 0);
-                    toast.show();
-                }
-            }
-
-            @Override
-            public void onNext(List<News> items) {
-                Log.d("stories", String.valueOf(items.size()));
-
-                NewsAdapter adapter = (NewsAdapter) newsList.getAdapter();
-                int lastItemIdx = adapter.getItemCount() - 1;
-
-                if (lastItemIdx >= 0 && adapter.getItem(lastItemIdx) == null) {
-                    adapter.removeItem(lastItemIdx);
-                }
-
-                newsAdapter.addDataset(items);
-            }
-        });
+        stories = AppObservable.bindFragment(this, loadNewsData(from, count, refresh));
+        subscription = stories.subscribe(new StoriesSubscriber(refresh));
     }
 
     private Observable<List<News>> loadNewsData(int from, int count, boolean refresh) {
@@ -253,6 +218,79 @@ public class NewsListFragment extends Fragment {
                 }
             }
         });
+    }
+
+    private void setRefreshingState(final boolean isRefreshing) {
+        swipeRefreshLayout.post(new Runnable() { // Use post to make sure it takes effect
+            @Override
+            public void run() {
+                swipeRefreshLayout.setRefreshing(isRefreshing);
+            }
+        });
+    }
+
+    private void removeLoadingMoreItem() {
+        NewsAdapter adapter = (NewsAdapter) newsList.getAdapter();
+        int lastItemIdx = adapter.getItemCount() - 1;
+
+        if (hasLoadingMore(adapter)) {
+            adapter.removeItem(lastItemIdx);
+        }
+    }
+
+    private boolean hasLoadingMore(NewsAdapter adapter) {
+        int lastItemIdx = adapter.getItemCount() - 1;
+        return (lastItemIdx >= 0 && adapter.getItem(lastItemIdx) == null);
+    }
+
+    private class StoriesSubscriber extends Subscriber<List<News>> {
+
+        public StoriesSubscriber(boolean isRefresh) {
+            if (isRefresh) {
+                setRefreshingState(true);
+                newsAdapter.clearDataset();
+                newsAdapter.notifyDataSetChanged();
+            }
+        }
+
+        @Override
+        public void onStart() {
+            super.onStart();
+            isLoading = true;
+        }
+
+        @Override
+        public void onCompleted() {
+            Log.d("stories", "completed");
+            isLoading = false;
+            setRefreshingState(false);
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            Log.d("stories", e.toString());
+
+            setRefreshingState(false);
+            removeLoadingMoreItem();
+
+            Toast toast = Toast.makeText(getActivity(), R.string.unknown, Toast.LENGTH_LONG);
+            if (e.getClass() == TimeoutException.class) {
+                toast = Toast.makeText(getActivity(), R.string.timeout, Toast.LENGTH_LONG);
+            } else if (e.getClass() == EndOfListException.class) {
+                toast = Toast.makeText(getActivity(), R.string.endoflist, Toast.LENGTH_LONG);
+            }
+
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
+        }
+
+        @Override
+        public void onNext(List<News> items) {
+            Log.d("stories", String.valueOf(items.size()));
+            removeLoadingMoreItem();
+            newsAdapter.addDataset(items);
+        }
+
     }
 
 }
