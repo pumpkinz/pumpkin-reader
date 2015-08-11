@@ -1,5 +1,6 @@
 package io.pumpkinz.pumpkinreader;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -25,6 +26,7 @@ import io.pumpkinz.pumpkinreader.etc.DividerItemDecoration;
 import io.pumpkinz.pumpkinreader.model.Comment;
 import io.pumpkinz.pumpkinreader.model.News;
 import io.pumpkinz.pumpkinreader.service.DataSource;
+import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.app.AppObservable;
@@ -36,20 +38,32 @@ public class NewsDetailFragment extends Fragment {
     private static final String SAVED_DATASET = "io.pumpkinz.pumpkinreader.model.saved_dataset";
     private static final String SAVED_COMMENTS = "io.pumpkinz.pumpkinreader.model.saved_comments";
 
+    private News news;
+    private Observable<List<Comment>> comments;
     private Subscription subscription = Subscriptions.empty();
     private DataSource dataSource;
     private NewsDetailAdapter newsDetailAdapter;
     private RecyclerView newsDetail;
 
-    public NewsDetailFragment() {
-        setRetainInstance(true);
-        this.dataSource = new DataSource(getActivity());
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        dataSource = new DataSource(getActivity());
     }
 
     @Override
     public void onDestroyView() {
-        subscription.unsubscribe();
+        forceUnsubscribe();
         super.onDestroyView();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        setRetainInstance(true);
+        news = Parcels.unwrap(getActivity().getIntent().getParcelableExtra(Constants.NEWS));
+        comments = AppObservable.bindFragment(this, dataSource.getComments(news).cache());
     }
 
     @Override
@@ -61,8 +75,6 @@ public class NewsDetailFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        News news = Parcels.unwrap(getActivity().getIntent().getParcelableExtra(Constants.NEWS));
 
         newsDetail = (RecyclerView) view.findViewById(R.id.news_detail);
 
@@ -78,7 +90,7 @@ public class NewsDetailFragment extends Fragment {
             List<Comment> savedComments = Parcels.unwrap(savedInstanceState.getParcelable(SAVED_COMMENTS));
             newsDetailAdapter.addComment(savedDataset, savedComments);
         } else {
-            loadComments(news);
+            subscription = comments.subscribe(new CommentsSubscriber());
         }
     }
 
@@ -89,59 +101,67 @@ public class NewsDetailFragment extends Fragment {
         outState.putParcelable(SAVED_COMMENTS, Parcels.wrap(newsDetailAdapter.getComments()));
     }
 
-    private void loadComments(News news) {
+    private void forceUnsubscribe() {
+        if (subscription.isUnsubscribed()) {
+            subscription.unsubscribe();
+        }
+    }
+
+    private void loadComments() {
         newsDetailAdapter.addComment((Comment) null);
 
-        subscription = AppObservable.bindFragment(this, dataSource.getComments(news))
-                .subscribe(new Subscriber<List<Comment>>() {
-                    @Override
-                    public void onCompleted() {
-                        Log.d("comments", "completed");
+    }
+
+    private class CommentsSubscriber extends Subscriber<List<Comment>> {
+
+        @Override
+        public void onCompleted() {
+            Log.d("comments", "completed");
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            Log.d("comments", e.toString());
+
+            if (e.getClass() == TimeoutException.class) {
+                if (newsDetailAdapter.getItemCount() > 1) {
+                    newsDetailAdapter.removeItem(newsDetailAdapter.getCommentCount() - 1);
+                }
+
+                Toast toast = Toast.makeText(getActivity(), R.string.timeout, Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+            }
+        }
+
+        @Override
+        public void onNext(List<Comment> comments) {
+            Log.d("comments", String.valueOf(comments.size()));
+
+            newsDetailAdapter.removeItem(newsDetailAdapter.getCommentCount() - 1);
+
+            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+            if (pref.getBoolean(Constants.CONFIG_AUTO_EXPAND_COMMENTS, false)) {
+                newsDetailAdapter.addComment(comments);
+            } else {
+                List<Comment> dataset = new ArrayList<>();
+
+                for (Comment c : comments) {
+                    if (c.getLevel() == 0) {
+                        c.setExpanded(false);
+                        dataset.add(c);
                     }
+                }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.d("comments", e.toString());
+                newsDetailAdapter.addComment(dataset, comments);
+            }
 
-                        if (e.getClass() == TimeoutException.class) {
-                            if (newsDetailAdapter.getItemCount() > 1) {
-                                newsDetailAdapter.removeItem(newsDetailAdapter.getCommentCount() - 1);
-                            }
+            RecyclerView.ItemDecoration itemDecoration =
+                    new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
+            newsDetail.addItemDecoration(itemDecoration);
+        }
 
-                            Toast toast = Toast.makeText(getActivity(), R.string.timeout, Toast.LENGTH_LONG);
-                            toast.setGravity(Gravity.CENTER, 0, 0);
-                            toast.show();
-                        }
-                    }
-
-                    @Override
-                    public void onNext(List<Comment> comments) {
-                        Log.d("comments", String.valueOf(comments.size()));
-
-                        newsDetailAdapter.removeItem(newsDetailAdapter.getCommentCount() - 1);
-
-                        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-
-                        if (pref.getBoolean(Constants.CONFIG_AUTO_EXPAND_COMMENTS, false)) {
-                            newsDetailAdapter.addComment(comments);
-                        } else {
-                            List<Comment> dataset = new ArrayList<>();
-
-                            for (Comment c : comments) {
-                                if (c.getLevel() == 0) {
-                                    c.setExpanded(false);
-                                    dataset.add(c);
-                                }
-                            }
-
-                            newsDetailAdapter.addComment(dataset, comments);
-                        }
-
-                        RecyclerView.ItemDecoration itemDecoration =
-                                new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
-                        newsDetail.addItemDecoration(itemDecoration);
-                    }
-                });
     }
 
 }

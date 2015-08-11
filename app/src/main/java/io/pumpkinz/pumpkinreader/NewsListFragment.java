@@ -43,11 +43,11 @@ public class NewsListFragment extends Fragment {
     private static final String SAVED_NEWS = "io.pumpkinz.pumpkinreader.model.saved_news";
 
     private RecyclerView newsList;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private NewsAdapter newsAdapter;
     private DataSource dataSource;
     private Observable<List<News>> stories;
     private Subscription subscription = Subscriptions.empty();
-    private SwipeRefreshLayout swipeRefreshLayout;
     private boolean isLoading = false;
     private int newsType = R.string.top;
 
@@ -92,21 +92,19 @@ public class NewsListFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        boolean isRefresh = true;
         setUpNewsList(view);
 
         if (savedInstanceState != null) {
             List<News> savedNews = Parcels.unwrap(savedInstanceState.getParcelable(SAVED_NEWS));
             if (savedNews.size() > 0) {
                 newsAdapter.addDataset(savedNews);
-                isRefresh = false;
             }
         }
 
-        if (newsAdapter.getDataSet().isEmpty() || hasLoadingMore(newsAdapter)) {
-            //Config changes in the middle of refreshing OR loading more News
-            subscription = stories.subscribe(new StoriesSubscriber(isRefresh));
+        if (newsAdapter.getDataSet().isEmpty()) { //Config changes in the middle of refreshing News
+            subscription = stories.subscribe(new StoriesSubscriber(true));
+        } else if (hasLoadingMore(newsAdapter)) { //Config changes in the middle of loading more News
+            subscription = stories.subscribe(new StoriesSubscriber(false));
         }
     }
 
@@ -213,7 +211,6 @@ public class NewsListFragment extends Fragment {
                 if (!isLoading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + LOADING_THRESHOLD)) {
                     ((NewsAdapter) recyclerView.getAdapter()).addItem(null);
                     loadNews(recyclerView.getAdapter().getItemCount(), N_NEWS_PER_LOAD, false);
-
                     Log.v("stories", "Load next " + N_NEWS_PER_LOAD + " news");
                 }
             }
