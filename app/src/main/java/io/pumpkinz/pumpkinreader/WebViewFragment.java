@@ -3,6 +3,7 @@ package io.pumpkinz.pumpkinreader;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,8 @@ import io.pumpkinz.pumpkinreader.model.News;
 
 public class WebViewFragment extends Fragment {
 
+    private WebView webView;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -30,7 +33,7 @@ public class WebViewFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         News news = Parcels.unwrap(getActivity().getIntent().getParcelableExtra(Constants.NEWS));
-        final WebView webView = (WebView) view.findViewById(R.id.news_web_view);
+        webView = (WebView) view.findViewById(R.id.news_web_view);
 
         final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.web_view_progress);
         progressBar.setVisibility(View.VISIBLE);
@@ -70,7 +73,16 @@ public class WebViewFragment extends Fragment {
 
         webView.setBackgroundColor(0);
 
-        webView.loadUrl(news.getUrl());
+        if (savedInstanceState == null) {
+            webView.loadUrl(news.getUrl());
+        } else {
+            webView.restoreState(savedInstanceState);
+        }
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        webView.saveState(outState);
+    }
 }
