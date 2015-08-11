@@ -1,6 +1,7 @@
 package io.pumpkinz.pumpkinreader.util;
 
 import android.content.res.Resources;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 
 import java.net.MalformedURLException;
@@ -69,6 +70,15 @@ public class Util {
     public static int pxToDp(int px)
     {
         return (int) (px / Resources.getSystem().getDisplayMetrics().density);
+    }
+
+    public static String printFragment(List<Fragment> fragments) {
+        StringBuilder sb = new StringBuilder();
+        for (Fragment fragment : fragments) {
+            sb.append("fr " + fragment.getId());
+        }
+
+        return sb.toString();
     }
 
 }

@@ -39,6 +39,7 @@ public class NewsListFragment extends Fragment {
 
     private static final int N_NEWS_PER_LOAD = 50;
     private static final int LOADING_THRESHOLD = 15;
+    private static final String SAVED_NEWS = "io.pumpkinz.pumpkinreader.model.saved_news";
 
     private RecyclerView newsList;
     private NewsAdapter newsAdapter;
@@ -48,6 +49,10 @@ public class NewsListFragment extends Fragment {
     private boolean isLoading = false;
     private int newsType = R.string.top;
     private OnNewsSelectedListener mCallback;
+
+    public interface OnNewsSelectedListener {
+        void onNewsSelected(News news);
+    }
 
     public NewsListFragment() {
         setRetainInstance(true);
@@ -60,7 +65,7 @@ public class NewsListFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, final Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_news_list, container, false);
 
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.news_list_refresh_container);
@@ -77,7 +82,7 @@ public class NewsListFragment extends Fragment {
         swipeRefreshLayout.post(new Runnable() {
             @Override
             public void run() {
-                swipeRefreshLayout.setRefreshing(true);
+                swipeRefreshLayout.setRefreshing(savedInstanceState == null);
             }
         });
 
@@ -95,15 +100,27 @@ public class NewsListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         setUpNewsList(view);
-        loadNews(0, N_NEWS_PER_LOAD, true);
+
+        if (savedInstanceState != null) {
+            Log.d("Pumpkin", "NewsListFragment: savedInstanceState NOT null");
+            List<News> savedNews = Parcels.unwrap(savedInstanceState.getParcelable(SAVED_NEWS));
+            newsAdapter.addDataset(savedNews);
+        } else {
+            Log.d("Pumpkin", "NewsListFragment: savedInstanceState null");
+            loadNews(0, N_NEWS_PER_LOAD, true);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(SAVED_NEWS, Parcels.wrap(newsAdapter.getDataSet()));
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
-        // This makes sure that the container activity has implemented
-        // the callback interface. If not, it throws an exception.
         try {
             mCallback = (OnNewsSelectedListener) activity;
         } catch (ClassCastException e) {
@@ -112,13 +129,17 @@ public class NewsListFragment extends Fragment {
         }
     }
 
+    public void onNewsSelected(News news) {
+        mCallback.onNewsSelected(news);
+    }
+
     public void forceUnsubscribe() {
         if (!subscription.isUnsubscribed()) {
             subscription.unsubscribe();
         }
     }
 
-    private void goToNewsDetail(final News news) {
+    public void goToNewsDetail(final News news) {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
         Intent intent;
 
@@ -259,12 +280,4 @@ public class NewsListFragment extends Fragment {
         });
     }
 
-    public void onNewsSelected(News news) {
-        Log.d("NewsListFragment", "news selected " + news.toString());
-        mCallback.onNewsSelected(news);
-    }
-
-    public interface OnNewsSelectedListener {
-        void onNewsSelected(News news);
-    }
 }

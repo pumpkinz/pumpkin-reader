@@ -48,7 +48,6 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 notifyItemChanged(position);
 
                 fragment.onNewsSelected(news);
-                //fragment.goToNewsDetail(news);
             }
         };
     }
@@ -117,6 +116,10 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public int getItemCount() {
         return this.dataset.size();
+    }
+
+    public List<News> getDataSet() {
+        return this.dataset;
     }
 
     public void addDataset(List<News> dataset) {

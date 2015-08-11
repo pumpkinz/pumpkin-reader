@@ -193,6 +193,22 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return dataset.size();
     }
 
+    public News getNews() {
+        return this.news;
+    }
+
+    public void setNews(News news) {
+        this.news = news;
+    }
+
+    public List<Comment> getDataSet() {
+        return this.dataset;
+    }
+
+    public List<Comment> getComments() {
+        return this.comments;
+    }
+
     public void addComment(List<Comment> dataset) {
         this.comments.addAll(dataset);
         this.dataset.addAll(dataset);
@@ -220,6 +236,11 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public void removeItem(int idx) {
         this.dataset.remove(idx);
         notifyItemRemoved(idxToPos(idx));
+    }
+
+    public void clearDataset() {
+        this.dataset.removeAll(this.dataset);
+        this.comments.removeAll(this.comments);
     }
 
     private void collapseComments(Comment comment, int idx) {

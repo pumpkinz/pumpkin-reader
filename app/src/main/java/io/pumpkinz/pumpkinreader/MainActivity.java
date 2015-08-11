@@ -14,34 +14,33 @@ import android.view.MenuItem;
 import android.view.WindowManager;
 
 import io.pumpkinz.pumpkinreader.model.News;
+import io.pumpkinz.pumpkinreader.util.Util;
 
 
 public class MainActivity extends PumpkinReaderActivity implements NewsListFragment.OnNewsSelectedListener {
-    private NewsDetailFragment newsDetailFragment;
+
+    private static final String NEWS_DETAIL_TAG = "io.pumpkinz.pumpkinreader.news_detail_fragment";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("Pumpkin", "MainActivity: onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         if (findViewById(R.id.fragment_container) != null) {
-            Log.d("MainActivity", "fragment_container NOT null");
-            if (savedInstanceState != null) {
-                return;
+            Log.d("Pumpkin", "MainActivity: fragment_container NOT null");
+
+            if (savedInstanceState == null) {
+                Log.d("Pumpkin", "MainActivity: add newsDetailFragment");
+                NewsDetailFragment newsDetailFragment = new NewsDetailFragment();
+                newsDetailFragment.setArguments(getIntent().getExtras());
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.fragment_container, newsDetailFragment).commit();
+            } else {
+                Log.d("Pumpkin", "MainActivity: NOT add newsDetailFragment");
             }
-
-            // Create a new Fragment to be placed in the activity layout
-            newsDetailFragment = new NewsDetailFragment();
-
-            // In case this activity was started with special instructions from an
-            // Intent, pass the Intent's extras to the fragment as arguments
-            newsDetailFragment.setArguments(getIntent().getExtras());
-
-            // Add the fragment to the 'fragment_container' FrameLayout
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_container, newsDetailFragment).commit();
         } else {
-            Log.d("MainActivity", "fragment_container NULL");
+            Log.d("Pumpkin", "MainActivity: fragment_container null");
         }
 
         setUpToolbar();
@@ -60,6 +59,21 @@ public class MainActivity extends PumpkinReaderActivity implements NewsListFragm
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onNewsSelected(News news) {
+        Log.d("Pumpkin", "MainActivity " + Util.printFragment(getSupportFragmentManager().getFragments()));
+
+        /*if (newsDetailFragment == null) {
+            Log.d("Pumpkin", "MainActivity: newsDetailFragment null");
+            NewsListFragment newsListFragment = (NewsListFragment)
+                    getSupportFragmentManager().findFragmentById(R.id.fragment_main);
+            newsListFragment.goToNewsDetail(news);
+        } else {
+            Log.d("Pumpkin", "MainActivity: newsDetailFragment NOT null");
+            newsDetailFragment.updateNewsDetail(news);
+        }*/
     }
 
     private void setUpToolbar() {
@@ -144,17 +158,4 @@ public class MainActivity extends PumpkinReaderActivity implements NewsListFragm
         }
     }
 
-    @Override
-    public void onNewsSelected(News news) {
-        Log.d("MainActivity", "onNewsSelected, load comment");
-
-        if (newsDetailFragment != null) {
-            Log.d("MainActivity", "newsDetailFragment NOT null");
-            newsDetailFragment.loadComments(news);
-        } else {
-            newsDetailFragment = (NewsDetailFragment)
-                    getSupportFragmentManager().findFragmentById(R.id.news_detail);
-            Log.d("MainActivity", "newsDetailFragment null");
-        }
-    }
 }
