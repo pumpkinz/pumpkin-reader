@@ -18,12 +18,10 @@ import io.pumpkinz.pumpkinreader.model.News;
 
 public class NewsDetailActivity extends PumpkinReaderActivity {
 
-    public static final int TAB_LINK_IDX = 0;
-    public static final int TAB_COMMENTS_IDX = 1;
-
     private News news;
-    private WebView webView;
+    private ViewPager viewPager;
     private TabLayout tabLayout;
+    private WebView webView;
     private NewsDetailViewPagerAdapter pagerAdapter;
 
     @Override
@@ -34,7 +32,7 @@ public class NewsDetailActivity extends PumpkinReaderActivity {
 
         news = Parcels.unwrap(getIntent().getParcelableExtra(Constants.NEWS));
 
-        ViewPager viewPager = (ViewPager) findViewById(R.id.news_detail_pager);
+        viewPager = (ViewPager) findViewById(R.id.news_detail_pager);
         setUpViewPager(viewPager);
 
         tabLayout = (TabLayout) findViewById(R.id.news_detail_tab);
@@ -59,7 +57,7 @@ public class NewsDetailActivity extends PumpkinReaderActivity {
 
     @Override
     public void onBackPressed() {
-        if (tabLayout.getSelectedTabPosition() != TAB_LINK_IDX) {
+        if (tabLayout.getSelectedTabPosition() != NewsDetailViewPagerAdapter.TAB_LINK_IDX) {
             super.onBackPressed();
             return;
         }
@@ -72,11 +70,7 @@ public class NewsDetailActivity extends PumpkinReaderActivity {
     }
 
     private void setUpViewPager(ViewPager viewPager) {
-        pagerAdapter = new NewsDetailViewPagerAdapter(getSupportFragmentManager());
-
-        pagerAdapter.addFragment(getResources().getString(R.string.link), new WebViewFragment());
-        pagerAdapter.addFragment(getResources().getString(R.string.comments), new NewsDetailFragment());
-
+        pagerAdapter = new NewsDetailViewPagerAdapter(getSupportFragmentManager(), getResources());
         viewPager.setAdapter(pagerAdapter);
     }
 
@@ -84,7 +78,7 @@ public class NewsDetailActivity extends PumpkinReaderActivity {
         tabLayout.setupWithViewPager(viewPager);
 
         if (news.getUrl() == null || news.getUrl().isEmpty()) {
-            tabLayout.getTabAt(TAB_COMMENTS_IDX).select();
+            tabLayout.getTabAt(NewsDetailViewPagerAdapter.TAB_COMMENTS_IDX).select();
         }
     }
 
@@ -113,7 +107,8 @@ public class NewsDetailActivity extends PumpkinReaderActivity {
 
     private WebView getWebView() {
         if (webView == null) {
-            webView = (WebView) pagerAdapter.getItem(TAB_LINK_IDX).getView().findViewById(R.id.news_web_view);
+            WebViewFragment webViewFragment = (WebViewFragment) pagerAdapter.instantiateItem(viewPager, viewPager.getCurrentItem());
+            webView = (WebView) webViewFragment.getView().findViewById(R.id.news_web_view);
         }
 
         return webView;
