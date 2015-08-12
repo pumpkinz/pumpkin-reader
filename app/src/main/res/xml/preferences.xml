@@ -3,6 +3,12 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="config_show_link"
+        android:summary="Always show link first in browser before showing comments"
+        android:title="Show Link" />
+
+    <CheckBoxPreference
         android:defaultValue="false"
         android:key="config_external_browser"
         android:summary="Use system's default web browser"
