@@ -189,6 +189,19 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return dataset.size() + 1;
     }
 
+    public void removeLoadingItem() {
+        int lastItemIdx = getCommentCount() - 1;
+
+        if (hasLoadingMore()) {
+            removeItem(lastItemIdx);
+        }
+    }
+
+    public boolean hasLoadingMore() {
+        int lastItemIdx = getCommentCount() - 1;
+        return (lastItemIdx >= 0 && getDataSetItem(lastItemIdx) == null);
+    }
+
     public int getCommentCount() {
         return dataset.size();
     }
@@ -199,6 +212,10 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public List<Comment> getComments() {
         return this.comments;
+    }
+
+    public Comment getDataSetItem(int position) {
+        return this.dataset.get(position);
     }
 
     public void addComment(List<Comment> dataset) {

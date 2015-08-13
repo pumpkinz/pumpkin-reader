@@ -62,8 +62,7 @@ public class NewsDetailFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         setRetainInstance(true);
-        news = Parcels.unwrap(getActivity().getIntent().getParcelableExtra(Constants.NEWS));
-        comments = AppObservable.bindFragment(this, dataSource.getComments(news).cache());
+        loadComments(null);
     }
 
     @Override
@@ -82,37 +81,71 @@ public class NewsDetailFragment extends Fragment {
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         newsDetail.setLayoutManager(layoutManager);
 
-        newsDetailAdapter = new NewsDetailAdapter(this, news);
-        newsDetail.setAdapter(newsDetailAdapter);
+        if (news != null) {
+            newsDetailAdapter = new NewsDetailAdapter(this, news);
+            newsDetail.setAdapter(newsDetailAdapter);
+        }
 
-        if (savedInstanceState != null) {
+        if (news != null && savedInstanceState != null) {
             List<Comment> savedDataset = Parcels.unwrap(savedInstanceState.getParcelable(SAVED_DATASET));
             List<Comment> savedComments = Parcels.unwrap(savedInstanceState.getParcelable(SAVED_COMMENTS));
             newsDetailAdapter.addComment(savedDataset, savedComments);
-        } else {
-            subscription = comments.subscribe(new CommentsSubscriber());
+
+            if (!newsDetailAdapter.hasLoadingMore()) {
+                RecyclerView.ItemDecoration itemDecoration =
+                        new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
+                newsDetail.addItemDecoration(itemDecoration);
+            }
+        }
+
+        if (news != null && newsDetailAdapter.getDataSet().isEmpty()) {
+            subscription = comments.subscribe(new CommentsSubscriber(true));
+        } else if (news != null && newsDetailAdapter.hasLoadingMore()) {
+            subscription = comments.subscribe(new CommentsSubscriber(false));
         }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable(SAVED_DATASET, Parcels.wrap(newsDetailAdapter.getDataSet()));
-        outState.putParcelable(SAVED_COMMENTS, Parcels.wrap(newsDetailAdapter.getComments()));
+
+        if (newsDetailAdapter != null) {
+            outState.putParcelable(SAVED_DATASET, Parcels.wrap(newsDetailAdapter.getDataSet()));
+            outState.putParcelable(SAVED_COMMENTS, Parcels.wrap(newsDetailAdapter.getComments()));
+        }
+    }
+
+    public void loadComments(News news) {
+        if (news == null) {
+            this.news = Parcels.unwrap(getActivity().getIntent().getParcelableExtra(Constants.NEWS));
+            if (this.news != null) {
+                comments = AppObservable.bindFragment(this, dataSource.getComments(this.news).cache());
+            }
+        } else {
+            this.news = news;
+
+            //Use the new news, so replace the newsDetailAdapter
+            newsDetailAdapter = new NewsDetailAdapter(this, this.news);
+            newsDetail.setAdapter(newsDetailAdapter);
+
+            comments = AppObservable.bindFragment(this, dataSource.getComments(this.news).cache());
+            subscription = comments.subscribe(new CommentsSubscriber(true));
+        }
     }
 
     private void forceUnsubscribe() {
-        if (subscription.isUnsubscribed()) {
+        if (!subscription.isUnsubscribed()) {
             subscription.unsubscribe();
         }
     }
 
-    private void loadComments() {
-        newsDetailAdapter.addComment((Comment) null);
-
-    }
-
     private class CommentsSubscriber extends Subscriber<List<Comment>> {
+
+        public CommentsSubscriber(boolean isEmpty) {
+            if (isEmpty) {
+                newsDetailAdapter.addComment((Comment) null);
+            }
+        }
 
         @Override
         public void onCompleted() {
@@ -138,7 +171,7 @@ public class NewsDetailFragment extends Fragment {
         public void onNext(List<Comment> comments) {
             Log.d("comments", String.valueOf(comments.size()));
 
-            newsDetailAdapter.removeItem(newsDetailAdapter.getCommentCount() - 1);
+            newsDetailAdapter.removeLoadingItem();
 
             SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
 

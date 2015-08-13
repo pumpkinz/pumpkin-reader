@@ -103,7 +103,7 @@ public class NewsListFragment extends Fragment {
 
         if (newsAdapter.getDataSet().isEmpty()) { //Config changes in the middle of refreshing News
             subscription = stories.subscribe(new StoriesSubscriber(true));
-        } else if (hasLoadingMore(newsAdapter)) { //Config changes in the middle of loading more News
+        } else if (newsAdapter.hasLoadingMore()) { //Config changes in the middle of loading more News
             subscription = stories.subscribe(new StoriesSubscriber(false));
         }
     }
@@ -226,20 +226,6 @@ public class NewsListFragment extends Fragment {
         });
     }
 
-    private void removeLoadingMoreItem() {
-        NewsAdapter adapter = (NewsAdapter) newsList.getAdapter();
-        int lastItemIdx = adapter.getItemCount() - 1;
-
-        if (hasLoadingMore(adapter)) {
-            adapter.removeItem(lastItemIdx);
-        }
-    }
-
-    private boolean hasLoadingMore(NewsAdapter adapter) {
-        int lastItemIdx = adapter.getItemCount() - 1;
-        return (lastItemIdx >= 0 && adapter.getItem(lastItemIdx) == null);
-    }
-
     private class StoriesSubscriber extends Subscriber<List<News>> {
 
         public StoriesSubscriber(boolean isRefresh) {
@@ -268,7 +254,7 @@ public class NewsListFragment extends Fragment {
             Log.d("stories", e.toString());
 
             setRefreshingState(false);
-            removeLoadingMoreItem();
+            newsAdapter.removeLoadingMoreItem();
 
             Toast toast = Toast.makeText(getActivity(), R.string.unknown, Toast.LENGTH_LONG);
             if (e.getClass() == TimeoutException.class) {
@@ -284,7 +270,7 @@ public class NewsListFragment extends Fragment {
         @Override
         public void onNext(List<News> items) {
             Log.d("stories", String.valueOf(items.size()));
-            removeLoadingMoreItem();
+            newsAdapter.removeLoadingMoreItem();
             newsAdapter.addDataset(items);
         }
 

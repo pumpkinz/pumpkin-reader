@@ -118,6 +118,19 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return this.dataset.size();
     }
 
+    public void removeLoadingMoreItem() {
+        int lastItemIdx = getItemCount() - 1;
+
+        if (hasLoadingMore()) {
+            removeItem(lastItemIdx);
+        }
+    }
+
+    public boolean hasLoadingMore() {
+        int lastItemIdx = getItemCount() - 1;
+        return (lastItemIdx >= 0 && getItem(lastItemIdx) == null);
+    }
+
     public List<News> getDataSet() {
         return this.dataset;
     }
