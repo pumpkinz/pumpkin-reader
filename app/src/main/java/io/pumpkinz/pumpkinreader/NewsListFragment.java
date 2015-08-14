@@ -106,10 +106,13 @@ public class NewsListFragment extends Fragment {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
         Intent intent;
 
+        boolean shouldOpenLink = pref.getBoolean(Constants.CONFIG_SHOW_LINK, true);
+
         if (pref.getBoolean(Constants.CONFIG_EXTERNAL_BROWSER, false)) {
             intent = new Intent(getActivity(), NewsCommentsActivity.class);
+            boolean isURLValid = news.getUrl() != null && !news.getUrl().isEmpty();
 
-            if (news.getUrl() != null && !news.getUrl().isEmpty()) {
+            if (shouldOpenLink && isURLValid) {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -119,7 +122,11 @@ public class NewsListFragment extends Fragment {
                 }, 300);
             }
         } else {
-            intent = new Intent(getActivity(), NewsDetailActivity.class);
+            if (shouldOpenLink) {
+                intent = new Intent(getActivity(), NewsDetailActivity.class);
+            } else {
+                intent = new Intent(getActivity(), NewsCommentsActivity.class);
+            }
         }
 
         intent.putExtra(Constants.NEWS, Parcels.wrap(news));
