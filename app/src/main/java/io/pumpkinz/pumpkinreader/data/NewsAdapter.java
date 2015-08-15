@@ -47,7 +47,7 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 PreferencesUtil.markNewsAsRead(fragment.getActivity(), news);
                 notifyItemChanged(position);
 
-                ((NewsListFragment) fragment).goToNewsDetail(news);
+                ((NewsListFragment) fragment).onNewsClicked(news);
             }
         };
     }

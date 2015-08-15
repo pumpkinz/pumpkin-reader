@@ -202,6 +202,17 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return (lastItemIdx >= 0 && getDataSetItem(lastItemIdx) == null);
     }
 
+    public void setNews(News news) {
+        this.news = news;
+        notifyItemChanged(0);
+    }
+
+    public void removeDatasetAndComments() {
+        dataset.clear();
+        comments.clear();
+        notifyDataSetChanged();
+    }
+
     public int getCommentCount() {
         return dataset.size();
     }

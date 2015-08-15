@@ -1,27 +1,61 @@
 package io.pumpkinz.pumpkinreader;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
 
+import org.parceler.Parcels;
 
-public class MainActivity extends PumpkinReaderActivity {
+import io.pumpkinz.pumpkinreader.etc.Constants;
+import io.pumpkinz.pumpkinreader.model.News;
+
+
+public class MainActivity extends PumpkinReaderActivity implements NewsListFragment.onNewsClickedListener {
+
+    private static final String NEWS_LIST_FRAGMENT_TAG = "io.pumpkinz.pumpkinreader.newslistfragment";
+    private static final String NEWS_DETAIL_FRAGMENT_TAG = "io.pumpkinz.pumpkinreader.newsdetailfragment";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Log.d("Pumpkin", "Main onCreate");
         setUpToolbar();
         setUpSideNav();
+
+        if (findViewById(R.id.fragment_container) != null) {
+            Log.d("Pumpkin", "Main landscape cont");
+
+            if (savedInstanceState != null) {
+                Log.d("Pumpkin", "Main landscape savedinstancestate not NULL");
+                return;
+            }
+
+            NewsListFragment nlf = new NewsListFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.fragment_container, nlf, NEWS_LIST_FRAGMENT_TAG).commit();
+        }
+    }
+
+    @Override
+    public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
+        return super.onCreateView(parent, name, context, attrs);
     }
 
     @Override
@@ -36,6 +70,44 @@ public class MainActivity extends PumpkinReaderActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onNewsClicked(final News news) {
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        Intent intent;
+
+        boolean shouldOpenLink = pref.getBoolean(Constants.CONFIG_SHOW_LINK, true);
+
+        if (pref.getBoolean(Constants.CONFIG_EXTERNAL_BROWSER, false)) {
+            intent = new Intent(this, NewsCommentsActivity.class);
+            boolean isURLValid = news.getUrl() != null && !news.getUrl().isEmpty();
+
+            if (shouldOpenLink && isURLValid) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Uri uri = Uri.parse(news.getUrl());
+                        startActivity(new Intent(Intent.ACTION_VIEW, uri));
+                    }
+                }, 300);
+            }
+        } else {
+            if (shouldOpenLink) {
+                intent = new Intent(this, NewsDetailActivity.class);
+            } else {
+                intent = new Intent(this, NewsCommentsActivity.class);
+            }
+        }
+
+        intent.putExtra(Constants.NEWS, Parcels.wrap(news));
+
+        if (findViewById(R.id.fragment_container) == null) {
+            NewsDetailFragment newsDetailFragment = (NewsDetailFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_detail);
+            newsDetailFragment.loadComments(news);
+        } else {
+            startActivity(intent);
+        }
     }
 
     private void setUpToolbar() {
@@ -79,6 +151,10 @@ public class MainActivity extends PumpkinReaderActivity {
     private void onSideNavMenuSelected(MenuItem menuItem) {
         Intent intent = null;
         NewsListFragment fragment = (NewsListFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_main);
+
+        if (fragment == null) {
+            fragment = (NewsListFragment) getSupportFragmentManager().findFragmentByTag(NEWS_LIST_FRAGMENT_TAG);
+        }
 
         fragment.forceUnsubscribe();
         switch (menuItem.getItemId()) {

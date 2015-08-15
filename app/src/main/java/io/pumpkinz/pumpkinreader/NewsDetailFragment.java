@@ -44,15 +44,19 @@ public class NewsDetailFragment extends Fragment {
     private DataSource dataSource;
     private NewsDetailAdapter newsDetailAdapter;
     private RecyclerView newsDetail;
+    private RecyclerView.ItemDecoration itemDecoration;
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+
+        Log.d("Pumpkin", "NewsDetail " + getId() + " onAttach");
         dataSource = new DataSource(getActivity());
     }
 
     @Override
     public void onDestroyView() {
+        Log.d("Pumpkin", "NewsDetai " + getId() + " destroy");
         forceUnsubscribe();
         super.onDestroyView();
     }
@@ -61,7 +65,8 @@ public class NewsDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setRetainInstance(true);
+        Log.d("Pumpkin", "NewsDetail " + getId() + " onCreate");
+        //setRetainInstance(true);
         loadComments(null);
     }
 
@@ -75,6 +80,7 @@ public class NewsDetailFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        Log.d("Pumpkin", "NewsDetail " + getId() + " onViewCreated");
         newsDetail = (RecyclerView) view.findViewById(R.id.news_detail);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -86,7 +92,10 @@ public class NewsDetailFragment extends Fragment {
             newsDetail.setAdapter(newsDetailAdapter);
         }
 
+        Log.d("Pumpkin", "NewsDetail " + getId() + " onViewCreated newsDetail.setAdapter " + (savedInstanceState == null));
+
         if (news != null && savedInstanceState != null) {
+            Log.d("Pumpkin", "NewsDetail " + getId() + " savedInstance not null");
             List<Comment> savedDataset = Parcels.unwrap(savedInstanceState.getParcelable(SAVED_DATASET));
             List<Comment> savedComments = Parcels.unwrap(savedInstanceState.getParcelable(SAVED_COMMENTS));
             newsDetailAdapter.addComment(savedDataset, savedComments);
@@ -98,35 +107,50 @@ public class NewsDetailFragment extends Fragment {
             }
         }
 
+        Log.d("Pumpkin", "NewsDetail " + getId() + " onViewCreated after savedInstanceState");
+
         if (news != null && newsDetailAdapter.getDataSet().isEmpty()) {
             subscription = comments.subscribe(new CommentsSubscriber(true));
         } else if (news != null && newsDetailAdapter.hasLoadingMore()) {
             subscription = comments.subscribe(new CommentsSubscriber(false));
         }
+
+        Log.d("Pumpkin", "NewsDetail " + getId() + " onViewCreated finish");
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
+        Log.d("Pumpkin", "NewsDetail " + getId() + " onSaveInstanceState");
         if (newsDetailAdapter != null) {
+            Log.d("Pumpkin", "NewsDetail " + getId() + " onSaveInstanceState not null");
             outState.putParcelable(SAVED_DATASET, Parcels.wrap(newsDetailAdapter.getDataSet()));
             outState.putParcelable(SAVED_COMMENTS, Parcels.wrap(newsDetailAdapter.getComments()));
         }
+
+        Log.d("Pumpkin", "NewsDetail " + getId() + " onSaveInstanceState finish");
     }
 
     public void loadComments(News news) {
         if (news == null) {
-            this.news = Parcels.unwrap(getActivity().getIntent().getParcelableExtra(Constants.NEWS));
+            Log.d("Pumpkin", "NewsDetail " + getId() + " news null");
+            this.news = getNews();
+
             if (this.news != null) {
                 comments = AppObservable.bindFragment(this, dataSource.getComments(this.news).cache());
             }
         } else {
+            Log.d("Pumpkin", "NewsDetail " + getId() + " news NOT null");
             this.news = news;
 
-            //Use the new news, so replace the newsDetailAdapter
-            newsDetailAdapter = new NewsDetailAdapter(this, this.news);
-            newsDetail.setAdapter(newsDetailAdapter);
+            if (newsDetailAdapter == null) {
+                newsDetailAdapter = new NewsDetailAdapter(this, news);
+                newsDetail.setAdapter(newsDetailAdapter);
+            } else {
+                newsDetailAdapter.removeDatasetAndComments();
+                newsDetailAdapter.setNews(news);
+            }
 
             comments = AppObservable.bindFragment(this, dataSource.getComments(this.news).cache());
             subscription = comments.subscribe(new CommentsSubscriber(true));
@@ -139,10 +163,22 @@ public class NewsDetailFragment extends Fragment {
         }
     }
 
+    private News getNews() {
+        News retval = Parcels.unwrap(getActivity().getIntent().getParcelableExtra(Constants.NEWS));
+        if (retval == null && getArguments() != null) {
+            retval = Parcels.unwrap(getArguments().getParcelable(Constants.NEWS));
+        }
+
+        return retval;
+    }
+
     private class CommentsSubscriber extends Subscriber<List<Comment>> {
 
         public CommentsSubscriber(boolean isEmpty) {
             if (isEmpty) {
+                if (itemDecoration != null) {
+                    newsDetail.removeItemDecoration(itemDecoration);
+                }
                 newsDetailAdapter.addComment((Comment) null);
             }
         }
@@ -190,8 +226,9 @@ public class NewsDetailFragment extends Fragment {
                 newsDetailAdapter.addComment(dataset, comments);
             }
 
-            RecyclerView.ItemDecoration itemDecoration =
-                    new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
+            if (itemDecoration == null) {
+                itemDecoration = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
+            }
             newsDetail.addItemDecoration(itemDecoration);
         }
 

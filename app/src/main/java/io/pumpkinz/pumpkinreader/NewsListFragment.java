@@ -48,20 +48,33 @@ public class NewsListFragment extends Fragment {
     private DataSource dataSource;
     private Observable<List<News>> stories;
     private Subscription subscription = Subscriptions.empty();
+    private onNewsClickedListener mCallback;
     private boolean isLoading = false;
     private int newsType = R.string.top;
+
+    public interface onNewsClickedListener {
+        void onNewsClicked(News news);
+    }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         dataSource = new DataSource(activity);
+
+        Log.d("Pumpkin", "NewsList " + getId() + " onAttach " + activity.toString());
+        try {
+            mCallback = (onNewsClickedListener) activity;
+        } catch (ClassCastException ex) {
+            throw new ClassCastException(activity.toString() + " must implement onNewsClickedListener");
+        }
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setRetainInstance(true);
+        Log.d("Pumpkin", "NewsList " + getId() + " onCreate");
+        //setRetainInstance(true);
         stories = AppObservable.bindFragment(this, loadNewsData(0, N_NEWS_PER_LOAD, true));
     }
 
@@ -85,6 +98,7 @@ public class NewsListFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
+        Log.d("Pumpkin", "NewsList " + getId() +  " onDestroy");
         forceUnsubscribe();
         super.onDestroyView();
     }
@@ -92,6 +106,7 @@ public class NewsListFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Log.d("Pumpkin", "NewsList " + getId() + " onViewCreated " + view.getVisibility());
         setUpNewsList(view);
 
         if (savedInstanceState != null) {
@@ -111,7 +126,9 @@ public class NewsListFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        Log.d("Pumpkin", "NewsList " + getId() + " onSaveInstanceState");
         outState.putParcelable(SAVED_NEWS, Parcels.wrap(newsAdapter.getDataSet()));
+        Log.d("Pumpkin", "NewsList " + getId() + " onSaveInstanceState finish");
     }
 
     public void forceUnsubscribe() {
@@ -120,35 +137,8 @@ public class NewsListFragment extends Fragment {
         }
     }
 
-    public void goToNewsDetail(final News news) {
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        Intent intent;
-
-        boolean shouldOpenLink = pref.getBoolean(Constants.CONFIG_SHOW_LINK, true);
-
-        if (pref.getBoolean(Constants.CONFIG_EXTERNAL_BROWSER, false)) {
-            intent = new Intent(getActivity(), NewsCommentsActivity.class);
-            boolean isURLValid = news.getUrl() != null && !news.getUrl().isEmpty();
-
-            if (shouldOpenLink && isURLValid) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        Uri uri = Uri.parse(news.getUrl());
-                        startActivity(new Intent(Intent.ACTION_VIEW, uri));
-                    }
-                }, 300);
-            }
-        } else {
-            if (shouldOpenLink) {
-                intent = new Intent(getActivity(), NewsDetailActivity.class);
-            } else {
-                intent = new Intent(getActivity(), NewsCommentsActivity.class);
-            }
-        }
-
-        intent.putExtra(Constants.NEWS, Parcels.wrap(news));
-        startActivity(intent);
+    public void onNewsClicked(News news) {
+        mCallback.onNewsClicked(news);
     }
 
     public void setNewsType(int newsTypeId) {
@@ -277,6 +267,7 @@ public class NewsListFragment extends Fragment {
         @Override
         public void onNext(List<News> items) {
             Log.d("stories", String.valueOf(items.size()));
+
             newsAdapter.removeLoadingMoreItem();
             newsAdapter.addDataset(items);
         }
