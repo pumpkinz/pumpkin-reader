@@ -111,7 +111,6 @@ public class NewsListFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        Log.d("Pumpkin", "NewsList save instance");
         outState.putParcelable(SAVED_NEWS, Parcels.wrap(newsAdapter.getDataSet()));
     }
 
