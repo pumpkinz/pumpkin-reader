@@ -1,5 +1,7 @@
 package io.pumpkinz.pumpkinreader.model;
 
+import android.os.Parcelable;
+
 import org.parceler.Parcel;
 
 import java.io.Serializable;
@@ -8,7 +10,7 @@ import java.util.List;
 
 
 @Parcel
-public class Comment extends Item implements Serializable {
+public class Comment extends Item implements Serializable, Parcelable {
 
     int parent;
     List<Integer> kids;
@@ -116,6 +118,21 @@ public class Comment extends Item implements Serializable {
                 .append("\n");
 
         return sb.toString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(android.os.Parcel dest, int flags) {
+        dest.writeInt(parent);
+        dest.writeList(kids);
+        dest.writeByte((byte) (expanded ? 1 : 0));
+        dest.writeByte((byte) (hidden ? 1 : 0));
+        dest.writeInt(level);
+        dest.writeInt(allChildCount);
     }
 
 }
