@@ -1,7 +1,5 @@
 package io.pumpkinz.pumpkinreader.model;
 
-import android.util.Log;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
