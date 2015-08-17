@@ -1,6 +1,6 @@
 # Pumpkin Reader [![Build Status](https://travis-ci.org/pumpkinz/pumpkin-reader.svg)](https://travis-ci.org/pumpkinz/pumpkin-reader)
 ## HackerNews Reader for Android 
-### Current version: 1.3
+### Current version: 1.3.3
 
 [![Get it on Google Play](https://developer.android.com/images/brand/en_generic_rgb_wo_60.png)](https://play.google.com/store/apps/details?id=io.pumpkinz.pumpkinreader)
 
@@ -15,9 +15,10 @@ We only support Android 4.4+ because we believe that fragmentation in Android wo
 1. Material design, done right
 2. Color coded, hierarchical comments
 3. Readable, clean UI
-4. All the features from HN API (read only, limitation of HN API)
-5. Integrated web view
-6. Customizable - we're constantly adding new options
+4. Lovely dark theme
+5. All the features from HN API (read only, limitation of HN API)
+6. Integrated web view
+7. Customizable - we're constantly adding new options
 
 ## License
 
