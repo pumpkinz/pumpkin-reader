@@ -345,7 +345,10 @@ public class DataSource {
                             }
 
                             for (Integer topStory : subNewsIds) {
-                                retval.add(dict.get(topStory));
+                                News news = dict.get(topStory);
+                                if (news != null) {
+                                    retval.add(dict.get(topStory));
+                                }
                             }
 
                             return retval;

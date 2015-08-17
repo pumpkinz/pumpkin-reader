@@ -1,6 +1,7 @@
 package io.pumpkinz.pumpkinreader;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
@@ -21,6 +22,11 @@ public class NewsCommentsActivity extends PumpkinReaderActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            finish();
+            return;
+        }
 
         setContentView(R.layout.activity_news_comments);
         setUpToolbar();

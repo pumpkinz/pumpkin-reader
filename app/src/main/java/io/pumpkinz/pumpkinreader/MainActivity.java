@@ -3,6 +3,7 @@ package io.pumpkinz.pumpkinreader;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -21,14 +23,19 @@ import android.view.WindowManager;
 
 import org.parceler.Parcels;
 
+import io.pumpkinz.pumpkinreader.data.NewsDetailAdapter;
 import io.pumpkinz.pumpkinreader.etc.Constants;
 import io.pumpkinz.pumpkinreader.model.News;
+import io.pumpkinz.pumpkinreader.util.CommentParcel;
 
 
 public class MainActivity extends PumpkinReaderActivity implements NewsListFragment.onNewsClickedListener {
 
-    private static final String NEWS_LIST_FRAGMENT_TAG = "io.pumpkinz.pumpkinreader.newslistfragment";
-    private static final String NEWS_DETAIL_FRAGMENT_TAG = "io.pumpkinz.pumpkinreader.newsdetailfragment";
+    public static final String NEWS_DETAIL_BUNDLE = "io.pumpkinz.pumpkinreader.model.news_detail_bundle";
+    public static final String COMMENTS_DATASET = "io.pumpkinz.pumpkinreader.model.coments_dataset";
+    public static final String COMMENTS_SCROLLSTATE = "io.pumpkinz.pumpkinreader.model.comments_scrollstate";
+
+    private News news;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +46,28 @@ public class MainActivity extends PumpkinReaderActivity implements NewsListFragm
         setUpToolbar();
         setUpSideNav();
 
-        if (findViewById(R.id.fragment_container) != null) {
+        Log.d("Pumpkin", "Main savedInstanceState = " + (savedInstanceState == null));
+        if (savedInstanceState != null) {
+            news = Parcels.unwrap(savedInstanceState.getParcelable(Constants.NEWS));
+            if (news != null) {
+                Log.d("Pumpkin", "Main onCreate, news = " + news.toString());
+            }
+        }
+
+        if (news != null) {
+            if (findViewById(R.id.fragment_detail) == null) {
+                Log.d("Pumpkin", "MainActivity land and ndf null");
+                Intent intent = new Intent(this, NewsCommentsActivity.class);
+                intent.putExtra(Constants.NEWS, savedInstanceState.getParcelable(Constants.NEWS));
+                intent.putExtra(NEWS_DETAIL_BUNDLE, savedInstanceState);
+                startActivity(intent);
+            } else {
+                Log.d("Pumpkin", "MainActivity land and ndf NOT null");
+                NewsDetailFragment newsDetailFragment = (NewsDetailFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_detail);
+                newsDetailFragment.loadComments(news);
+            }
+        }
+        /*if (findViewById(R.id.fragment_container) != null) {
             Log.d("Pumpkin", "Main landscape cont");
 
             if (savedInstanceState != null) {
@@ -47,10 +75,11 @@ public class MainActivity extends PumpkinReaderActivity implements NewsListFragm
                 return;
             }
 
+            Log.d("Pumpkin", "Main landscape newslistfragment added");
             NewsListFragment nlf = new NewsListFragment();
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.fragment_container, nlf, NEWS_LIST_FRAGMENT_TAG).commit();
-        }
+        }*/
     }
 
     @Override
@@ -73,7 +102,30 @@ public class MainActivity extends PumpkinReaderActivity implements NewsListFragm
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.d("Pumpkin", "MainActivity saveInstanceState, news = " + (news == null));
+        if (news != null) {
+            Log.d("Pumpkin", "MainActivity saveInstanceState, news = " + news.toString());
+        }
+        outState.putParcelable(Constants.NEWS, Parcels.wrap(news));
+
+        if (findViewById(R.id.fragment_detail) != null) {
+            Log.d("Pumpkin", "MainActivity saveInstanceState ndf NOT null");
+
+            NewsDetailFragment newsDetailFragment = (NewsDetailFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_detail);
+            NewsDetailAdapter nda = (NewsDetailAdapter) newsDetailFragment.getNewsDetail().getAdapter();
+            if (nda != null && !nda.hasLoadingMore()) {
+                outState.putParcelable(COMMENTS_DATASET, Parcels.wrap(CommentParcel.fromComments(nda.getDataSet())));
+                outState.putParcelable(Constants.COMMENT, Parcels.wrap(CommentParcel.fromComments(nda.getComments())));
+                outState.putParcelable(COMMENTS_SCROLLSTATE, newsDetailFragment.getNewsDetail().getLayoutManager().onSaveInstanceState());
+            }
+        }
+    }
+
+    @Override
     public void onNewsClicked(final News news) {
+        this.news = news;
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
         Intent intent;
 
@@ -100,14 +152,26 @@ public class MainActivity extends PumpkinReaderActivity implements NewsListFragm
             }
         }
 
-        intent.putExtra(Constants.NEWS, Parcels.wrap(news));
-
-        if (findViewById(R.id.fragment_container) == null) {
+        /*if (findViewById(R.id.fragment_container) == null) {
             NewsDetailFragment newsDetailFragment = (NewsDetailFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_detail);
             newsDetailFragment.loadComments(news);
         } else {
             startActivity(intent);
+        }*/
+
+        if (findViewById(R.id.fragment_detail) != null) {
+            Log.d("Pumpkin", "MainActivity ndf NOT null");
+            NewsDetailFragment newsDetailFragment = (NewsDetailFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_detail);
+            newsDetailFragment.loadComments(news);
+        } else {
+            Log.d("Pumpkin", "MainActivity ndf null");
+            intent.putExtra(Constants.NEWS, Parcels.wrap(news));
+            startActivity(intent);
         }
+    }
+
+    public void asu() {
+        Log.d("Pumpkin", "MainActivity ASUUUU");
     }
 
     private void setUpToolbar() {
@@ -153,7 +217,7 @@ public class MainActivity extends PumpkinReaderActivity implements NewsListFragm
         NewsListFragment fragment = (NewsListFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_main);
 
         if (fragment == null) {
-            fragment = (NewsListFragment) getSupportFragmentManager().findFragmentByTag(NEWS_LIST_FRAGMENT_TAG);
+            //fragment = (NewsListFragment) getSupportFragmentManager().findFragmentByTag(NEWS_LIST_FRAGMENT_TAG);
         }
 
         fragment.forceUnsubscribe();

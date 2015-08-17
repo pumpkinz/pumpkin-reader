@@ -74,7 +74,7 @@ public class NewsListFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         Log.d("Pumpkin", "NewsList " + getId() + " onCreate");
-        //setRetainInstance(true);
+        setRetainInstance(true);
         stories = AppObservable.bindFragment(this, loadNewsData(0, N_NEWS_PER_LOAD, true));
     }
 
@@ -106,7 +106,7 @@ public class NewsListFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Log.d("Pumpkin", "NewsList " + getId() + " onViewCreated " + view.getVisibility());
+        Log.d("Pumpkin", "NewsList " + getId() + " onViewCreated");
         setUpNewsList(view);
 
         if (savedInstanceState != null) {
@@ -128,7 +128,6 @@ public class NewsListFragment extends Fragment {
         super.onSaveInstanceState(outState);
         Log.d("Pumpkin", "NewsList " + getId() + " onSaveInstanceState");
         outState.putParcelable(SAVED_NEWS, Parcels.wrap(newsAdapter.getDataSet()));
-        Log.d("Pumpkin", "NewsList " + getId() + " onSaveInstanceState finish");
     }
 
     public void forceUnsubscribe() {
