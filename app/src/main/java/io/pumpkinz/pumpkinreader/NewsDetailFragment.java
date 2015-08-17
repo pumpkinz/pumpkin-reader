@@ -26,6 +26,7 @@ import io.pumpkinz.pumpkinreader.etc.DividerItemDecoration;
 import io.pumpkinz.pumpkinreader.model.Comment;
 import io.pumpkinz.pumpkinreader.model.News;
 import io.pumpkinz.pumpkinreader.service.DataSource;
+import io.pumpkinz.pumpkinreader.util.CommentParcel;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
@@ -87,11 +88,14 @@ public class NewsDetailFragment extends Fragment {
         }
 
         if (news != null && savedInstanceState != null) {
-            List<Comment> savedDataset = Parcels.unwrap(savedInstanceState.getParcelable(SAVED_DATASET));
-            List<Comment> savedComments = Parcels.unwrap(savedInstanceState.getParcelable(SAVED_COMMENTS));
-            newsDetailAdapter.addComment(savedDataset, savedComments);
+            List<CommentParcel> savedDatasetParcel = Parcels.unwrap(savedInstanceState.getParcelable(SAVED_DATASET));
+            List<CommentParcel> savedCommentsParcel = Parcels.unwrap(savedInstanceState.getParcelable(SAVED_COMMENTS));
 
-            if (!newsDetailAdapter.hasLoadingMore()) {
+            if (savedDatasetParcel != null && savedCommentsParcel != null) {
+                List<Comment> savedDataset = CommentParcel.fromCommentParcels(savedDatasetParcel, news);
+                List<Comment> savedComments = CommentParcel.fromCommentParcels(savedCommentsParcel, news);
+                newsDetailAdapter.addComment(savedDataset, savedComments);
+
                 RecyclerView.ItemDecoration itemDecoration =
                         new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
                 newsDetail.addItemDecoration(itemDecoration);
@@ -109,9 +113,9 @@ public class NewsDetailFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        if (newsDetailAdapter != null) {
-            outState.putParcelable(SAVED_DATASET, Parcels.wrap(newsDetailAdapter.getDataSet()));
-            outState.putParcelable(SAVED_COMMENTS, Parcels.wrap(newsDetailAdapter.getComments()));
+        if (newsDetailAdapter != null && !newsDetailAdapter.hasLoadingMore()) {
+            outState.putParcelable(SAVED_DATASET, Parcels.wrap(CommentParcel.fromComments(newsDetailAdapter.getDataSet())));
+            outState.putParcelable(SAVED_COMMENTS, Parcels.wrap(CommentParcel.fromComments(newsDetailAdapter.getComments())));
         }
     }
 

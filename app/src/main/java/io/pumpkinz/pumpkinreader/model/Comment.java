@@ -1,13 +1,12 @@
 package io.pumpkinz.pumpkinreader.model;
 
-import org.parceler.Parcel;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.pumpkinz.pumpkinreader.util.CommentParcel;
 
-@Parcel
+
 public class Comment extends Item implements Serializable {
 
     int parent;
@@ -37,6 +36,20 @@ public class Comment extends Item implements Serializable {
         this.expanded = true;
         this.hidden = false;
         this.level = 0;
+    }
+
+    public Comment(CommentParcel commentParcel) {
+        super(commentParcel.getId(), commentParcel.isDeleted(),
+                commentParcel.getType().toString(), commentParcel.getBy(),
+                commentParcel.getTime().getTime(), commentParcel.getText(),
+                commentParcel.isDead());
+        parent = commentParcel.getParentId();
+        kids = commentParcel.getCommentIds();
+        childComments = new ArrayList<>();
+        expanded = commentParcel.isExpanded();
+        hidden = commentParcel.isHidden();
+        level = commentParcel.getLevel();
+        allChildCount = commentParcel.getAllChildCount();
     }
 
     public int getParentId() {
