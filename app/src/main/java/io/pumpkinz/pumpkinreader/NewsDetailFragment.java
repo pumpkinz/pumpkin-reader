@@ -80,6 +80,11 @@ public class NewsDetailFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         Log.d("Pumpkin", "NewsDetail " + getId() + " onViewCreated newsDetail.setAdapter " + (savedInstanceState == null));
+        Log.d("Pumpkin", "NewsDetail " + getId() + " onViewCreated adapter " + (newsDetailAdapter == null));
+
+        if (newsDetailAdapter != null) {
+            Log.d("Pumpkin", "NewsDetail " + getId() + " onViewCreated adapter size = " + newsDetailAdapter.getDataSet().size());
+        }
         newsDetail = (RecyclerView) view.findViewById(R.id.news_detail);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -120,6 +125,7 @@ public class NewsDetailFragment extends Fragment {
             outState.putParcelable(SAVED_DATASET, Parcels.wrap(newsDetailAdapter.getDataSet()));
             outState.putParcelable(SAVED_COMMENTS, Parcels.wrap(newsDetailAdapter.getComments()));*/
         if (newsDetailAdapter != null && !newsDetailAdapter.hasLoadingMore()) {
+            Log.d("Pumpkin", "NewsDetail " + getId() + " onSaveInstanceState SAVING");
             outState.putParcelable(MainActivity.COMMENTS_DATASET, Parcels.wrap(CommentParcel.fromComments(newsDetailAdapter.getDataSet())));
             outState.putParcelable(Constants.COMMENT, Parcels.wrap(CommentParcel.fromComments(newsDetailAdapter.getComments())));
         }
@@ -154,6 +160,10 @@ public class NewsDetailFragment extends Fragment {
         return news;
     }
 
+    public NewsDetailAdapter getNewsDetailAdapter() {
+        return newsDetailAdapter;
+    }
+
     public RecyclerView getNewsDetail() {
         return newsDetail;
     }
@@ -174,6 +184,7 @@ public class NewsDetailFragment extends Fragment {
         if (savedDatasetParcel != null && savedCommentsParcel != null) {
             List<Comment> savedDataset = CommentParcel.fromCommentParcels(savedDatasetParcel, news);
             List<Comment> savedComments = CommentParcel.fromCommentParcels(savedCommentsParcel, news);
+            Log.d("Pumpkin", "NewsDetail initialize dataset " + savedDataset.size());
             newsDetailAdapter.addComment(savedDataset, savedComments);
 
             Parcelable scrollState = newsDetailBundle.getParcelable(MainActivity.COMMENTS_SCROLLSTATE);
@@ -192,6 +203,7 @@ public class NewsDetailFragment extends Fragment {
         public CommentsSubscriber(boolean isEmpty) {
             if (isEmpty) {
                 if (itemDecoration != null) {
+                    Log.d("Pumpkin", "item decoration NOT null");
                     newsDetail.removeItemDecoration(itemDecoration);
                 }
                 newsDetailAdapter.addComment((Comment) null);

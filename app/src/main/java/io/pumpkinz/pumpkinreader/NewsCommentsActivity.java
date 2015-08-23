@@ -1,18 +1,22 @@
 package io.pumpkinz.pumpkinreader;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
 import org.parceler.Parcels;
 
+import io.pumpkinz.pumpkinreader.data.NewsDetailAdapter;
 import io.pumpkinz.pumpkinreader.etc.Constants;
 import io.pumpkinz.pumpkinreader.model.News;
+import io.pumpkinz.pumpkinreader.util.CommentParcel;
 
 
 public class NewsCommentsActivity extends PumpkinReaderActivity {
@@ -23,15 +27,26 @@ public class NewsCommentsActivity extends PumpkinReaderActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        news = Parcels.unwrap(getIntent().getParcelableExtra(Constants.NEWS));
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            NewsDetailFragment ndf = (NewsDetailFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_detail);
+            NewsDetailAdapter nda = ndf.getNewsDetailAdapter();
+
+            //outState.putParcelable(MainActivity.COMMENTS_DATASET, Parcels.wrap(CommentParcel.fromComments(newsDetailAdapter.getDataSet())));
+
+
+            Intent resultIntent = new Intent();
+            Log.d("Pumpkin", "NewsCommentsAct news = " + (news == null));
+            resultIntent.putExtra(Constants.NEWS, Parcels.wrap(news));
+            //resultIntent.putExtra(MainActivity.COMMENTS_DATASET, Parcels.wrap(CommentParcel.fromComments(nda.getDataSet())));
+            //resultIntent.putExtra(Constants.COMMENT, Parcels.wrap(CommentParcel.fromComments(nda.getComments())));
+            setResult(Activity.RESULT_OK, resultIntent);
             finish();
             return;
         }
 
         setContentView(R.layout.activity_news_comments);
         setUpToolbar();
-
-        news = Parcels.unwrap(getIntent().getParcelableExtra(Constants.NEWS));
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.news_detail_fab);
         setUpFAB(fab);

@@ -1,5 +1,6 @@
 package io.pumpkinz.pumpkinreader;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -34,6 +35,7 @@ public class MainActivity extends PumpkinReaderActivity implements NewsListFragm
     public static final String NEWS_DETAIL_BUNDLE = "io.pumpkinz.pumpkinreader.model.news_detail_bundle";
     public static final String COMMENTS_DATASET = "io.pumpkinz.pumpkinreader.model.coments_dataset";
     public static final String COMMENTS_SCROLLSTATE = "io.pumpkinz.pumpkinreader.model.comments_scrollstate";
+    public static final int SHOW_NEWS_DETAIL = 1;
 
     private News news;
 
@@ -60,7 +62,7 @@ public class MainActivity extends PumpkinReaderActivity implements NewsListFragm
                 Intent intent = new Intent(this, NewsCommentsActivity.class);
                 intent.putExtra(Constants.NEWS, savedInstanceState.getParcelable(Constants.NEWS));
                 intent.putExtra(NEWS_DETAIL_BUNDLE, savedInstanceState);
-                startActivity(intent);
+                startActivityForResult(intent, SHOW_NEWS_DETAIL);
             } else {
                 Log.d("Pumpkin", "MainActivity land and ndf NOT null");
                 NewsDetailFragment newsDetailFragment = (NewsDetailFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_detail);
@@ -166,12 +168,20 @@ public class MainActivity extends PumpkinReaderActivity implements NewsListFragm
         } else {
             Log.d("Pumpkin", "MainActivity ndf null");
             intent.putExtra(Constants.NEWS, Parcels.wrap(news));
-            startActivity(intent);
+            startActivityForResult(intent, SHOW_NEWS_DETAIL);
         }
     }
 
-    public void asu() {
-        Log.d("Pumpkin", "MainActivity ASUUUU");
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        Log.d("Pumpkin", "Main onActivityResult");
+        if (resultCode == Activity.RESULT_OK && requestCode == SHOW_NEWS_DETAIL) {
+            Log.d("Pumpkin", "Main onActivityResult OK " + data.toString());
+            News news = Parcels.unwrap(data.getParcelableExtra(Constants.NEWS));
+            Log.d("Pumpkin", "Main onActivityResult news " + news.toString());
+        }
     }
 
     private void setUpToolbar() {
