@@ -82,6 +82,11 @@ public class MainActivity extends PumpkinReaderActivity {
 
         fragment.forceUnsubscribe();
         switch (menuItem.getItemId()) {
+            case R.id.sidenav_menu_saved:
+                getSupportActionBar().setTitle(menuItem.getTitle());
+                fragment.setNewsType(R.string.saved);
+                fragment.forceRefresh();
+                break;
             case R.id.sidenav_menu_top:
                 getSupportActionBar().setTitle(menuItem.getTitle());
                 fragment.setNewsType(R.string.top);

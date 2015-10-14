@@ -6,6 +6,11 @@
         android:checkableBehavior="single">
 
         <item
+            android:id="@+id/sidenav_menu_saved"
+            android:icon="@drawable/ic_bookmark_black_24dp"
+            android:title="@string/saved" />
+
+        <item
             android:id="@+id/sidenav_menu_top"
             android:checked="true"
             android:icon="@drawable/ic_thumb_up_black_24dp"
