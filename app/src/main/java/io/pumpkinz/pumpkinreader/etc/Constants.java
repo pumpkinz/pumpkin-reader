@@ -36,4 +36,7 @@ public class Constants {
 
     public static final int CONN_TIMEOUT_SEC = 120;
 
+    public static final int TAB_WEBVIEW = 0;
+    public static final int TAB_COMMENTVIEW = 1;
+
 }
