@@ -1,7 +1,9 @@
 package io.pumpkinz.pumpkinreader;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -40,6 +42,13 @@ public class NewsDetailActivity extends PumpkinReaderActivity {
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.news_detail_fab);
         setUpFAB(fab);
+
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean isCommentFirst = !pref.getBoolean(Constants.CONFIG_SHOW_LINK, false);
+
+        if (isCommentFirst) {
+            viewPager.setCurrentItem(Constants.TAB_COMMENTVIEW);
+        }
     }
 
     @Override

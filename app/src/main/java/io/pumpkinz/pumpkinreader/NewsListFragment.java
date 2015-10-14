@@ -138,13 +138,11 @@ public class NewsListFragment extends Fragment {
                         startActivity(new Intent(Intent.ACTION_VIEW, uri));
                     }
                 }, 300);
-            }
-        } else {
-            if (shouldOpenLink) {
-                intent = new Intent(getActivity(), NewsDetailActivity.class);
-            } else {
+            } else if (!shouldOpenLink) {
                 intent = new Intent(getActivity(), NewsCommentsActivity.class);
             }
+        } else {
+            intent = new Intent(getActivity(), NewsDetailActivity.class);
         }
 
         intent.putExtra(Constants.NEWS, Parcels.wrap(news));
