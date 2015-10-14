@@ -168,6 +168,9 @@ public class NewsListFragment extends Fragment {
         Observable<List<News>> ret;
 
         switch (this.newsType) {
+            case R.string.saved:
+                ret = dataSource.getHNSaved(from, count);
+                break;
             case R.string.top:
                 ret = dataSource.getHNTop(from, count, refresh);
                 break;
@@ -239,7 +242,6 @@ public class NewsListFragment extends Fragment {
             if (isRefresh) {
                 setRefreshingState(true);
                 newsAdapter.clearDataset();
-                newsAdapter.notifyDataSetChanged();
             }
         }
 
@@ -259,7 +261,6 @@ public class NewsListFragment extends Fragment {
         @Override
         public void onError(Throwable e) {
             Log.d("stories", e.toString());
-
             setRefreshingState(false);
             newsAdapter.removeLoadingMoreItem();
 

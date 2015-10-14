@@ -25,6 +25,8 @@
     <string name="show_hn">Show HN</string>
     <string name="job">HN Jobs</string>
 
+    <string name="saved_news">News has been saved</string>
+
     <plurals name="comments">
         <item quantity="zero">%d comment</item>
         <item quantity="one">%d comment</item>

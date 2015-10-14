@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import net.koofr.android.timeago.TimeAgo;
 
@@ -23,6 +24,7 @@ import java.util.ListIterator;
 import io.pumpkinz.pumpkinreader.R;
 import io.pumpkinz.pumpkinreader.model.Comment;
 import io.pumpkinz.pumpkinreader.model.News;
+import io.pumpkinz.pumpkinreader.util.PreferencesUtil;
 import io.pumpkinz.pumpkinreader.util.Util;
 
 
@@ -34,6 +36,7 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private List<Comment> dataset;
     private TimeAgo dateFormatter;
     private OnClickListener newsOnClickListener;
+    private OnClickListener saveOnClickListener;
     private OnClickListener onClickListener;
 
     public NewsDetailAdapter(final Fragment fragment, final News news) {
@@ -78,6 +81,16 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 } else {
                     expandComments(comment, idx);
                 }
+            }
+        };
+
+        this.saveOnClickListener = new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PreferencesUtil.saveNews(fragment.getActivity(), news);
+                Toast.makeText(fragment.getActivity(),
+                        fragment.getActivity().getString(R.string.saved_news),
+                        Toast.LENGTH_SHORT).show();
             }
         };
     }
@@ -142,6 +155,8 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 } else {
                     newsViewHolder.getLinkButton().setVisibility(View.INVISIBLE);
                 }
+
+                newsViewHolder.getSaveButton().setOnClickListener(this.saveOnClickListener);
 
                 break;
             case 1:

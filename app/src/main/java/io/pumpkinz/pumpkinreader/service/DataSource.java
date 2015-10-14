@@ -27,6 +27,11 @@ public class DataSource {
         this.ctx = ctx;
     }
 
+    public Observable<List<News>> getHNSaved(final int from, final int count) {
+        return getHNSavedIds()
+                .compose(new NewsTransformer(from, count));
+    }
+
     public Observable<List<News>> getHNNew(final int from, final int count, boolean isRefresh) {
         return getHNNewIds(isRefresh)
                 .compose(new NewsTransformer(from, count));
@@ -112,6 +117,11 @@ public class DataSource {
                 });
     }
 
+    private Observable<List<Integer>> getHNSavedIds() {
+        List<Integer> retval = getNewsIdsFromSp(Constants.SAVED_FILE_SP, Constants.SAVED_VAL_SP, ctx);
+        return Observable.just(retval);
+    }
+
     private Observable<List<Integer>> getHNNewIds(boolean isRefresh) {
         List<Integer> retval = getNewsIdsFromSp(Constants.NEW_FILE_SP, Constants.NEW_VAL_SP, ctx);
 
@@ -175,7 +185,7 @@ public class DataSource {
         String topStories = topStoriesSp.getString(newsValKey, "");
 
         if (!topStories.isEmpty()) {
-            retval = Util.split(topStories, "|");
+            retval = Util.splitNews(topStories);
         }
 
         return retval;
@@ -254,7 +264,6 @@ public class DataSource {
     }
 
     private class putToSpAction implements Action1<List<Integer>> {
-
         private Context context;
         private String SP_FILE_KEY;
         private String SP_VAL_KEY;
@@ -267,15 +276,13 @@ public class DataSource {
 
         @Override
         public void call(List<Integer> integers) {
-            String input = Util.join(integers, '|');
+            String input = Util.joinNews(integers);
             SharedPreferences topStoriesSp = context.getSharedPreferences(
                     SP_FILE_KEY, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = topStoriesSp.edit();
 
-            editor.putString(SP_VAL_KEY, input);
-            editor.commit();
+            editor.putString(SP_VAL_KEY, input).commit();
         }
-
     }
 
     private class NewsTransformer implements Observable.Transformer<List<Integer>, List<News>> {

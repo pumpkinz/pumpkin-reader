@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import io.pumpkinz.pumpkinreader.etc.Constants;
+
 
 public class Util {
 
@@ -24,7 +26,7 @@ public class Util {
         }
     }
 
-    public static String join(List<Integer> list, Character separator) {
+    public static String join(List<Integer> list, String separator) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0, n = list.size(); i < n; ++i) {
             sb.append(list.get(i).toString());
@@ -37,9 +39,12 @@ public class Util {
     }
 
     public static List<Integer> split(String value, String separator) {
-        String[] parsedValues = value.split(Pattern.quote(separator));
         List<Integer> retval = new ArrayList<>();
+        if (value.isEmpty()) {
+            return retval;
+        }
 
+        String[] parsedValues = value.split(Pattern.quote(separator));
         for (String parsedValue : parsedValues) {
             retval.add(Integer.valueOf(parsedValue));
         }
@@ -47,27 +52,33 @@ public class Util {
         return retval;
     }
 
+    public static String joinNews(List<Integer> newsList) {
+        return join(newsList, Constants.NEWS_SEPARATOR);
+    }
+
+    public static List<Integer> splitNews(String news) {
+        return split(news, Constants.NEWS_SEPARATOR);
+    }
+
     public static CharSequence trim(CharSequence source) {
 
-        if(source == null)
+        if (source == null)
             return "";
 
         int i = source.length();
 
         // loop back to the first non-whitespace character
-        while(--i >= 0 && Character.isWhitespace(source.charAt(i))) {
+        while (--i >= 0 && Character.isWhitespace(source.charAt(i))) {
         }
 
         return source.subSequence(0, i + 1);
     }
 
-    public static int dpToPx(int dp)
-    {
+    public static int dpToPx(int dp) {
         return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
     }
 
-    public static int pxToDp(int px)
-    {
+    public static int pxToDp(int px) {
         return (int) (px / Resources.getSystem().getDisplayMetrics().density);
     }
 
