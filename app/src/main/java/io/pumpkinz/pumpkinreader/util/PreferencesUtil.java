@@ -33,23 +33,46 @@ public class PreferencesUtil {
      * @param news
      */
     public static void saveNews(Context ctx, News news) {
-        SharedPreferences savedPref = ctx.getSharedPreferences(
-                Constants.SAVED_FILE_SP, Context.MODE_PRIVATE);
+        List<Integer> savedNews = getSavedNews(ctx);
 
-        String savedNews = savedPref.getString(Constants.SAVED_VAL_SP, "");
-        List<Integer> newSavedNews = Util.splitNews(savedNews);
-
-        if (newSavedNews.contains(news.getId())) {
+        if (savedNews.contains(news.getId())) {
             return;
         }
 
-        newSavedNews.add(news.getId());
-        SharedPreferences.Editor editor = savedPref.edit();
-        editor.putString(Constants.SAVED_VAL_SP, Util.joinNews(newSavedNews)).commit();
+        savedNews.add(news.getId());
+        saveNews(ctx, savedNews);
+    }
+
+    public static void removeNews(Context ctx, News news) {
+        List<Integer> savedNews = getSavedNews(ctx);
+        savedNews.remove(Integer.valueOf(news.getId()));
+
+        saveNews(ctx, savedNews);
+    }
+
+    public static boolean isNewsSaved(Context ctx, News news) {
+        List<Integer> savedNews = getSavedNews(ctx);
+        return savedNews.contains(news.getId());
     }
 
     private static String getNewsId(News news) {
         return KEY_PREFIX_READ_STATUS + news.getId();
+    }
+
+    private static List<Integer> getSavedNews(Context ctx) {
+        SharedPreferences savedPref = ctx.getSharedPreferences(
+                Constants.SAVED_FILE_SP, Context.MODE_PRIVATE);
+
+        String savedNews = savedPref.getString(Constants.SAVED_VAL_SP, "");
+        return Util.splitNews(savedNews);
+    }
+
+    private static boolean saveNews(Context ctx, List<Integer> newsList) {
+        SharedPreferences savedPref = ctx.getSharedPreferences(
+                Constants.SAVED_FILE_SP, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = savedPref.edit();
+
+        return editor.putString(Constants.SAVED_VAL_SP, Util.joinNews(newsList)).commit();
     }
 
 }

@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Handler;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -13,7 +15,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import net.koofr.android.timeago.TimeAgo;
 
@@ -87,10 +88,37 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         this.saveOnClickListener = new OnClickListener() {
             @Override
             public void onClick(View v) {
-                PreferencesUtil.saveNews(fragment.getActivity(), news);
-                Toast.makeText(fragment.getActivity(),
-                        fragment.getActivity().getString(R.string.saved_news),
-                        Toast.LENGTH_SHORT).show();
+                final boolean isNewsSaved = PreferencesUtil.isNewsSaved(fragment.getActivity(), news);
+
+                if (isNewsSaved) {
+                    PreferencesUtil.removeNews(fragment.getActivity(), news);
+                } else {
+                    PreferencesUtil.saveNews(fragment.getActivity(), news);
+                }
+
+                notifyItemChanged(0);
+
+                CoordinatorLayout layout = (CoordinatorLayout) fragment.getActivity().findViewById(R.id.news_detail_layout);
+
+                Snackbar sb = Snackbar.make(layout, isNewsSaved ? R.string.unsaved_news : R.string.saved_news, Snackbar.LENGTH_LONG)
+                        .setAction(R.string.undo, new OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                if (isNewsSaved) {
+                                    PreferencesUtil.saveNews(fragment.getActivity(), news);
+                                } else {
+                                    PreferencesUtil.removeNews(fragment.getActivity(), news);
+                                }
+
+                                notifyItemChanged(0);
+                            }
+                        })
+                        .setActionTextColor(fragment.getActivity().getResources().getColor(R.color.yellow_500));
+
+                View sbView = sb.getView();
+                sbView.setBackgroundColor(fragment.getActivity().getResources().getColor(R.color.grey_700));
+
+                sb.show();
             }
         };
     }
@@ -157,6 +185,9 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
 
                 newsViewHolder.getSaveButton().setOnClickListener(this.saveOnClickListener);
+
+                boolean isNewsSaved = PreferencesUtil.isNewsSaved(fragment.getActivity(), news);
+                newsViewHolder.getSaveButton().setText(isNewsSaved ? R.string.unsave : R.string.save);
 
                 break;
             case 1:

@@ -12,6 +12,8 @@
     <string name="link">Link</string>
     <string name="open_link">Open Link</string>
     <string name="save">Save</string>
+    <string name="unsave">Unsave</string>
+    <string name="undo">Undo</string>
 
     <string name="about">About</string>
     <string name="credits">Credits</string>
@@ -25,7 +27,8 @@
     <string name="show_hn">Show HN</string>
     <string name="job">HN Jobs</string>
 
-    <string name="saved_news">News has been saved</string>
+    <string name="saved_news">Added to saved list</string>
+    <string name="unsaved_news">Removed from saved list</string>
 
     <plurals name="comments">
         <item quantity="zero">%d comment</item>
