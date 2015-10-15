@@ -29,6 +29,7 @@ import io.pumpkinz.pumpkinreader.etc.DividerItemDecoration;
 import io.pumpkinz.pumpkinreader.exception.EndOfListException;
 import io.pumpkinz.pumpkinreader.model.News;
 import io.pumpkinz.pumpkinreader.service.DataSource;
+import io.pumpkinz.pumpkinreader.util.PreferencesUtil;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
@@ -51,6 +52,10 @@ public class NewsListFragment extends Fragment {
     private boolean isLoading = false;
     private int newsType = R.string.top;
 
+    //To check if the news is unsaved after user is back from newsDetailFragment
+    //If it's unsaved, remove it from newsAdapter
+    private News openedNews;
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -63,6 +68,19 @@ public class NewsListFragment extends Fragment {
 
         setRetainInstance(true);
         stories = AppObservable.bindFragment(this, loadNewsData(0, N_NEWS_PER_LOAD, true));
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (newsType != R.string.saved) {
+            return;
+        }
+
+        if (openedNews != null && !PreferencesUtil.isNewsSaved(getActivity(), openedNews)) {
+            newsAdapter.removeNews(openedNews);
+        }
     }
 
     @Override
@@ -147,6 +165,7 @@ public class NewsListFragment extends Fragment {
             }
         }
 
+        openedNews = news;
         intent.putExtra(Constants.NEWS, Parcels.wrap(news));
         startActivity(intent);
     }
@@ -212,8 +231,12 @@ public class NewsListFragment extends Fragment {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
-                LinearLayoutManager lm = (LinearLayoutManager) recyclerView.getLayoutManager();
+                if (newsAdapter.getItemCount() < N_NEWS_PER_LOAD) {
+                    //Impossible to load more, just return
+                    return;
+                }
 
+                LinearLayoutManager lm = (LinearLayoutManager) recyclerView.getLayoutManager();
                 int visibleItemCount = recyclerView.getChildCount();
                 int totalItemCount = lm.getItemCount();
                 int firstVisibleItem = lm.findFirstVisibleItemPosition();
@@ -261,6 +284,7 @@ public class NewsListFragment extends Fragment {
         @Override
         public void onError(Throwable e) {
             Log.d("stories", e.toString());
+            forceUnsubscribe();
             setRefreshingState(false);
             newsAdapter.removeLoadingMoreItem();
 

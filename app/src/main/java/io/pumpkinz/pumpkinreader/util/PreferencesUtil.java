@@ -25,9 +25,10 @@ public class PreferencesUtil {
     }
 
     /**
-     * Saved the News ID into SAVED_FILE_SP.
+     * Save the News ID into SAVED_FILE_SP.
      * As the news ID is saved in string form separated by |, we need to split the saved
-     * news first, append the new one, and saved it again.
+     * news first, append the new one as first element (make it the latest saved new),
+     * and saved it again.
      *
      * @param ctx
      * @param news
@@ -39,7 +40,7 @@ public class PreferencesUtil {
             return;
         }
 
-        savedNews.add(news.getId());
+        savedNews.add(0, news.getId());
         saveNews(ctx, savedNews);
     }
 

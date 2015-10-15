@@ -159,4 +159,11 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         notifyItemRemoved(position);
     }
 
+    public void removeNews(News news) {
+        if (this.dataset.contains(news)) {
+            notifyItemRemoved(this.dataset.indexOf(news));
+            this.dataset.remove(news);
+        }
+    }
+
 }

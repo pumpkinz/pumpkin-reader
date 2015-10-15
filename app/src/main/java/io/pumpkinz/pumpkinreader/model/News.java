@@ -64,4 +64,26 @@ public abstract class News extends Item {
         return sb.toString();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+
+        if (!(o instanceof News)) {
+            return false;
+        }
+
+        News news = (News) o;
+        return news.getId() == this.getId();
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 17;
+        result = 31 * result + this.getId();
+
+        return result;
+    }
+
 }
