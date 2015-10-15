@@ -25,6 +25,7 @@ public class NewsDetailActivity extends PumpkinReaderActivity {
     private TabLayout tabLayout;
     private WebView webView;
     private NewsDetailViewPagerAdapter pagerAdapter;
+    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +41,7 @@ public class NewsDetailActivity extends PumpkinReaderActivity {
         tabLayout = (TabLayout) findViewById(R.id.news_detail_tab);
         setUpTab(viewPager);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.news_detail_fab);
+        fab = (FloatingActionButton) findViewById(R.id.news_detail_fab);
         setUpFAB(fab);
 
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
@@ -81,6 +82,21 @@ public class NewsDetailActivity extends PumpkinReaderActivity {
     private void setUpViewPager(ViewPager viewPager) {
         pagerAdapter = new NewsDetailViewPagerAdapter(getSupportFragmentManager(), getResources());
         viewPager.setAdapter(pagerAdapter);
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                fab.show();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
     }
 
     private void setUpTab(ViewPager viewPager) {
