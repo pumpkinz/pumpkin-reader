@@ -47,6 +47,8 @@ public class WebViewFragment extends Fragment {
             }
         });
 
+        final int bgColor = getActivity().getResources().getColor(R.color.grey_1000w);
+
         webView.setWebViewClient(new WebViewClient());
         webView.setWebChromeClient(new WebChromeClient() {
             @Override
@@ -56,6 +58,7 @@ public class WebViewFragment extends Fragment {
 
                 if (progress >= 100) {
                     progressBar.setVisibility(View.INVISIBLE);
+                    webView.setBackgroundColor(bgColor);
                 }
 
                 if (progress >= 30 && webViewRefresh.isRefreshing()) {
