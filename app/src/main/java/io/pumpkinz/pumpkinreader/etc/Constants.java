@@ -30,6 +30,11 @@ public class Constants {
     public static final String JOB_FILE_SP = "io.pumpkinz.pumpkinreader.job_sharedpref_file";
     public static final String JOB_VAL_SP = "job_sharedpref_value";
 
+    public static final String SAVED_FILE_SP = "io.pumpkinz.pumpkinreader.saved_sharedpref_file";
+    public static final String SAVED_VAL_SP = "saved_sharedpref_key";
+
+    public static final String NEWS_SEPARATOR = "|";
+
     public static final String HN_BASE_URL = "https://news.ycombinator.com/item?id=";
 
     public static final String MIME_TEXT_PLAIN = "text/plain";

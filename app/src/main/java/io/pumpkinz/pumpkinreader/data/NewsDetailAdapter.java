@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Handler;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -23,6 +25,7 @@ import java.util.ListIterator;
 import io.pumpkinz.pumpkinreader.R;
 import io.pumpkinz.pumpkinreader.model.Comment;
 import io.pumpkinz.pumpkinreader.model.News;
+import io.pumpkinz.pumpkinreader.util.PreferencesUtil;
 import io.pumpkinz.pumpkinreader.util.Util;
 
 
@@ -34,6 +37,7 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private List<Comment> dataset;
     private TimeAgo dateFormatter;
     private OnClickListener newsOnClickListener;
+    private OnClickListener saveOnClickListener;
     private OnClickListener onClickListener;
 
     public NewsDetailAdapter(final Fragment fragment, final News news) {
@@ -78,6 +82,43 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 } else {
                     expandComments(comment, idx);
                 }
+            }
+        };
+
+        this.saveOnClickListener = new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final boolean isNewsSaved = PreferencesUtil.isNewsSaved(fragment.getActivity(), news);
+
+                if (isNewsSaved) {
+                    PreferencesUtil.removeNews(fragment.getActivity(), news);
+                } else {
+                    PreferencesUtil.saveNews(fragment.getActivity(), news);
+                }
+
+                notifyItemChanged(0);
+
+                CoordinatorLayout layout = (CoordinatorLayout) fragment.getActivity().findViewById(R.id.news_detail_layout);
+
+                Snackbar sb = Snackbar.make(layout, isNewsSaved ? R.string.unsaved_news : R.string.saved_news, Snackbar.LENGTH_LONG)
+                        .setAction(R.string.undo, new OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                if (isNewsSaved) {
+                                    PreferencesUtil.saveNews(fragment.getActivity(), news);
+                                } else {
+                                    PreferencesUtil.removeNews(fragment.getActivity(), news);
+                                }
+
+                                notifyItemChanged(0);
+                            }
+                        })
+                        .setActionTextColor(fragment.getActivity().getResources().getColor(R.color.yellow_500));
+
+                View sbView = sb.getView();
+                sbView.setBackgroundColor(fragment.getActivity().getResources().getColor(R.color.grey_800));
+
+                sb.show();
             }
         };
     }
@@ -142,6 +183,11 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 } else {
                     newsViewHolder.getLinkButton().setVisibility(View.INVISIBLE);
                 }
+
+                newsViewHolder.getSaveButton().setOnClickListener(this.saveOnClickListener);
+
+                boolean isNewsSaved = PreferencesUtil.isNewsSaved(fragment.getActivity(), news);
+                newsViewHolder.getSaveButton().setText(isNewsSaved ? R.string.unsave : R.string.save);
 
                 break;
             case 1:

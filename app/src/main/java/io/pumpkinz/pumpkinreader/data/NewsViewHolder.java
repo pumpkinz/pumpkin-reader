@@ -23,6 +23,7 @@ public class NewsViewHolder extends RecyclerView.ViewHolder implements SharedPre
     private TextView score;
     private TextView commentCount;
     private Button button;
+    private Button saveButton;
     private LinearLayout newsItemContainer;
 
     private SharedPreferences preferences;
@@ -38,6 +39,7 @@ public class NewsViewHolder extends RecyclerView.ViewHolder implements SharedPre
         this.score = (TextView) view.findViewById(R.id.news_score);
         this.commentCount = (TextView) view.findViewById(R.id.news_comment_count);
         this.button = (Button) view.findViewById(R.id.button_link);
+        this.saveButton = (Button) view.findViewById(R.id.button_save);
         this.newsItemContainer = (LinearLayout) view.findViewById(R.id.news_item_container);
 
         this.preferences = PreferenceManager.getDefaultSharedPreferences(view.getContext());
@@ -85,6 +87,10 @@ public class NewsViewHolder extends RecyclerView.ViewHolder implements SharedPre
 
     public Button getLinkButton() {
         return button;
+    }
+
+    public Button getSaveButton() {
+        return saveButton;
     }
 
     public LinearLayout getNewsItemContainer() {
