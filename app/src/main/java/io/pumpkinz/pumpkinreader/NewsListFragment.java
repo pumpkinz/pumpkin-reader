@@ -52,8 +52,10 @@ public class NewsListFragment extends Fragment {
     private boolean isLoading = false;
     private int newsType = R.string.top;
 
-    //To check if the news is unsaved after user is back from newsDetailFragment
-    //If it's unsaved, remove it from newsAdapter
+    /**
+     * To check if the news is unsaved after user is back from newsDetailFragment
+     * If it's unsaved, remove it from newsAdapter
+     */
     private News openedNews;
 
     @Override
@@ -232,7 +234,7 @@ public class NewsListFragment extends Fragment {
                 super.onScrolled(recyclerView, dx, dy);
 
                 if (newsAdapter.getItemCount() < N_NEWS_PER_LOAD) {
-                    //Impossible to load more, just return
+                    // Impossible to load more, just return
                     return;
                 }
 
