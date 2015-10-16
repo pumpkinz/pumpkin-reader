@@ -90,7 +90,9 @@ public class NewsDetailActivity extends PumpkinReaderActivity {
 
             @Override
             public void onPageSelected(int position) {
-                fab.show();
+                if (fab != null) {
+                    fab.show();
+                }
             }
 
             @Override

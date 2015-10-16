@@ -13,14 +13,14 @@
 
         <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"
+            android:scrollbarThumbVertical="@drawable/scrollbar_style">
 
             <WebView
                 android:id="@+id/news_web_view"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@android:color/transparent"
-                android:scrollbarThumbVertical="@drawable/scrollbar_style" />
+                android:layout_height="match_parent" />
 
         </android.support.v4.widget.NestedScrollView>
 
