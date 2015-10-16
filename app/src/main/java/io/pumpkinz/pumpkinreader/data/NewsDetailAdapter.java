@@ -116,7 +116,7 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         .setActionTextColor(fragment.getActivity().getResources().getColor(R.color.yellow_500));
 
                 View sbView = sb.getView();
-                sbView.setBackgroundColor(fragment.getActivity().getResources().getColor(R.color.grey_700));
+                sbView.setBackgroundColor(fragment.getActivity().getResources().getColor(R.color.grey_800));
 
                 sb.show();
             }
