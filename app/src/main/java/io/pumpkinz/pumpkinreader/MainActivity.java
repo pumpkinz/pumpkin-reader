@@ -1,6 +1,7 @@
 package io.pumpkinz.pumpkinreader;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -114,6 +115,11 @@ public class MainActivity extends PumpkinReaderActivity {
                 break;
             case R.id.sidenav_menu_setting:
                 intent = new Intent(this, SettingsActivity.class);
+                break;
+            case R.id.sidenav_menu_feedback:
+                intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", "pumpkinz.dev@gmail.com", null));
+                intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"pumpkinz.dev@gmail.com"});
+                intent.putExtra(Intent.EXTRA_SUBJECT, "Pumpkin Reader Feedback");
                 break;
             case R.id.sidenav_menu_about:
                 intent = new Intent(this, AboutActivity.class);

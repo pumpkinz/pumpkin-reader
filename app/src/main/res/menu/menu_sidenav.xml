@@ -43,6 +43,10 @@
             android:icon="@drawable/ic_settings_black_24dp"
             android:title="@string/action_settings" />
         <item
+            android:id="@+id/sidenav_menu_feedback"
+            android:icon="@drawable/ic_feedback_black_24dp"
+            android:title="@string/action_feedback" />
+        <item
             android:id="@+id/sidenav_menu_about"
             android:icon="@drawable/ic_info_black_24dp"
             android:title="@string/title_activity_about" />
