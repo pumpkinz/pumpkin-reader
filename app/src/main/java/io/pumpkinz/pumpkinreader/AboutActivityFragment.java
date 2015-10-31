@@ -48,7 +48,7 @@ public class AboutActivityFragment extends Fragment {
     private void shareApp() {
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.putExtra(Intent.EXTRA_SUBJECT, "Check this awesome HN app!");
-        intent.putExtra(Intent.EXTRA_TEXT, "Pumpkin Reader for Hacker News:\n\nhttps://play.google.com/store/apps/details?id=io.pumpkinz.pumpkinreader");
+        intent.putExtra(Intent.EXTRA_TEXT, "Pumpkin Reader for Hacker News:\nhttps://play.google.com/store/apps/details?id=io.pumpkinz.pumpkinreader");
         intent.setType(Constants.MIME_TEXT_PLAIN);
 
         getActivity().startActivity(Intent.createChooser(intent, getActivity().getResources().getString(R.string.share)));
