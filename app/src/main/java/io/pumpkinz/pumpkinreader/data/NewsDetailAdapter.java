@@ -203,7 +203,6 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 commentViewHolder.getDate().setText(this.dateFormatter.timeAgo(comment.getTime()));
                 commentViewHolder.getBody().setText(Util.trim(Html.fromHtml(comment.getText())));
                 commentViewHolder.getBody().setMovementMethod(LinkMovementMethod.getInstance());
-                commentViewHolder.getBody().setAutoLinkMask(Linkify.WEB_URLS);
 
                 if (comment.getCommentIds().size() > 0 && !comment.isExpanded()) {
                     commentViewHolder.getChildCount().setText("+" + comment.getAllChildCount() + " comments");
