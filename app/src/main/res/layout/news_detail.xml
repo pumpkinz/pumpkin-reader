@@ -26,7 +26,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -36,24 +37,6 @@
                 android:fontFamily="sans-serif-medium"
                 android:text="@string/comments"
                 android:textColor="?title_color" />
-
-            <Button
-                android:id="@+id/button_link"
-                style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toLeftOf="@+id/button_save"
-                android:layout_centerVertical="true"
-                android:text="@string/open_link" />
-
-            <Button
-                android:id="@+id/button_save"
-                style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:text="@string/save" />
 
         </RelativeLayout>
 
