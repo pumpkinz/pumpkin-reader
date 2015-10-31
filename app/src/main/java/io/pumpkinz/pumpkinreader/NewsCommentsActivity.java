@@ -11,11 +11,13 @@ import org.parceler.Parcels;
 import io.pumpkinz.pumpkinreader.etc.Constants;
 import io.pumpkinz.pumpkinreader.model.News;
 import io.pumpkinz.pumpkinreader.util.ActionUtil;
+import io.pumpkinz.pumpkinreader.util.PreferencesUtil;
 
 
 public class NewsCommentsActivity extends PumpkinReaderActivity {
 
     private News news;
+    private Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +32,9 @@ public class NewsCommentsActivity extends PumpkinReaderActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_news_detail, menu);
+        this.menu = menu;
+        ActionUtil.toggleSaveAction(this, menu, news);
+
         return true;
     }
 
@@ -45,7 +50,7 @@ public class NewsCommentsActivity extends PumpkinReaderActivity {
                 ActionUtil.open(this, news);
                 return true;
             case R.id.action_save:
-                ActionUtil.save(this, news);
+                ActionUtil.save(this, menu, news);
                 return true;
             case R.id.action_share:
                 ActionUtil.share(this, news);

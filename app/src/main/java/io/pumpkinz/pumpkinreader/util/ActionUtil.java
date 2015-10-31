@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import io.pumpkinz.pumpkinreader.R;
@@ -23,7 +25,7 @@ public class ActionUtil {
         }
     }
 
-    public static void save(final Context ctx, final News news) {
+    public static void save(final Context ctx, final Menu menu, final News news) {
         final boolean isNewsSaved = PreferencesUtil.isNewsSaved(ctx, news);
 
         if (isNewsSaved) {
@@ -43,6 +45,8 @@ public class ActionUtil {
                         } else {
                             PreferencesUtil.removeNews(ctx, news);
                         }
+
+                        toggleSaveAction(ctx, menu, news);
                     }
                 })
                 .setActionTextColor(ctx.getResources().getColor(R.color.yellow_500));
@@ -51,6 +55,8 @@ public class ActionUtil {
         sbView.setBackgroundColor(ctx.getResources().getColor(R.color.grey_800));
 
         sb.show();
+
+        toggleSaveAction(ctx, menu, news);
     }
 
     public static void share(Context ctx, News news) {
@@ -69,6 +75,18 @@ public class ActionUtil {
         shareIntent.setType(Constants.MIME_TEXT_PLAIN);
 
         ctx.startActivity(Intent.createChooser(shareIntent, ctx.getResources().getString(R.string.share)));
+    }
+
+    public static void toggleSaveAction(Context ctx, Menu menu, News news) {
+        MenuItem item = menu.findItem(R.id.action_save);
+
+        if (PreferencesUtil.isNewsSaved(ctx, news)) {
+            item.setIcon(R.drawable.ic_bookmark_white_24dp);
+            item.setTitle(R.string.unsave);
+        } else {
+            item.setIcon(R.drawable.ic_bookmark_border_white_24dp);
+            item.setTitle(R.string.save);
+        }
     }
 
 }
