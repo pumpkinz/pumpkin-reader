@@ -27,7 +27,7 @@ public class CommentParcel extends Item {
 
     public CommentParcel(Comment comment) {
         super(comment.getId(), comment.isDeleted(), comment.getType().toString(), comment.getBy(),
-                comment.getTime().getTime(), comment.getText(), comment.isDead());
+                comment.getTimeInSeconds(), comment.getText(), comment.isDead());
         parent = comment.getParentId();
         kids = comment.getCommentIds();
         expanded = comment.isExpanded();

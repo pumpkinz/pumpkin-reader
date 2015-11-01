@@ -1,5 +1,7 @@
 package io.pumpkinz.pumpkinreader.model;
 
+import android.util.Log;
+
 import java.util.Date;
 
 
@@ -22,7 +24,7 @@ public abstract class Item {
         this.deleted = deleted;
         this.type = type;
         this.by = by;
-        this.time = time * 1000;
+        this.time = time;
         this.text = text;
         this.dead = dead;
     }
@@ -45,6 +47,10 @@ public abstract class Item {
 
     public Date getTime() {
         return new Date(time * 1000);
+    }
+
+    public long getTimeInSeconds() {
+        return time;
     }
 
     public String getText() {
