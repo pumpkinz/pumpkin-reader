@@ -11,7 +11,6 @@ import org.parceler.Parcels;
 import io.pumpkinz.pumpkinreader.etc.Constants;
 import io.pumpkinz.pumpkinreader.model.News;
 import io.pumpkinz.pumpkinreader.util.ActionUtil;
-import io.pumpkinz.pumpkinreader.util.PreferencesUtil;
 
 
 public class NewsCommentsActivity extends PumpkinReaderActivity {

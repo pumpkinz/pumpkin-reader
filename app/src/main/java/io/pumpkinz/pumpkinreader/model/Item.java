@@ -1,7 +1,5 @@
 package io.pumpkinz.pumpkinreader.model;
 
-import android.util.Log;
-
 import java.util.Date;
 
 
