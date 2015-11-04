@@ -41,7 +41,7 @@ public class Comment extends Item implements Serializable {
     public Comment(CommentParcel commentParcel) {
         super(commentParcel.getId(), commentParcel.isDeleted(),
                 commentParcel.getType().toString(), commentParcel.getBy(),
-                commentParcel.getTime().getTime(), commentParcel.getText(),
+                commentParcel.getTimeInSeconds(), commentParcel.getText(),
                 commentParcel.isDead());
         parent = commentParcel.getParentId();
         kids = commentParcel.getCommentIds();
