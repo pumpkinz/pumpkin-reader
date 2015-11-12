@@ -77,6 +77,10 @@ public class NewsDetailFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         newsDetail = (RecyclerView) view.findViewById(R.id.news_detail);
+        newsDetail.getItemAnimator().setRemoveDuration(100);
+        newsDetail.getItemAnimator().setChangeDuration(0);
+        newsDetail.getItemAnimator().setMoveDuration(100);
+        newsDetail.getItemAnimator().setAddDuration(100);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
