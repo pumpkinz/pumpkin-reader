@@ -9,4 +9,5 @@
     android:elevation="@dimen/design_appbar_elevation"
     android:minHeight="@dimen/abc_action_bar_default_height_material"
     android:theme="@style/ThemeOverlay.AppCompat.Dark"
+    app:layout_scrollFlags="scroll|enterAlways"
     app:titleTextAppearance="@style/ToolbarTitle" />
