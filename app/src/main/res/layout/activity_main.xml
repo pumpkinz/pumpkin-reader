@@ -7,8 +7,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <android.support.design.widget.CoordinatorLayout
         android:id="@+id/news_detail_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -22,8 +21,7 @@
 
         </android.support.design.widget.AppBarLayout>
 
-        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
+        <fragment xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/fragment_main"
             android:name="io.pumpkinz.pumpkinreader.NewsListFragment"
             android:layout_width="match_parent"
