@@ -60,6 +60,22 @@ public class ActionUtil {
     }
 
     public static void share(Context ctx, News news) {
+        ctx.startActivity(Intent.createChooser(getPumpkinShareIntent(ctx, news), ctx.getResources().getString(R.string.share)));
+    }
+
+    public static void toggleSaveAction(Context ctx, Menu menu, News news) {
+        MenuItem item = menu.findItem(R.id.action_save);
+
+        if (PreferencesUtil.isNewsSaved(ctx, news)) {
+            item.setIcon(R.drawable.ic_bookmark_white_24dp);
+            item.setTitle(R.string.unsave);
+        } else {
+            item.setIcon(R.drawable.ic_bookmark_border_white_24dp);
+            item.setTitle(R.string.save);
+        }
+    }
+
+    public static Intent getPumpkinShareIntent(Context ctx, News news) {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.putExtra(Intent.EXTRA_SUBJECT, news.getTitle());
 
@@ -73,20 +89,9 @@ public class ActionUtil {
 
         shareIntent.putExtra(Intent.EXTRA_TEXT, text);
         shareIntent.setType(Constants.MIME_TEXT_PLAIN);
+        shareIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
-        ctx.startActivity(Intent.createChooser(shareIntent, ctx.getResources().getString(R.string.share)));
-    }
-
-    public static void toggleSaveAction(Context ctx, Menu menu, News news) {
-        MenuItem item = menu.findItem(R.id.action_save);
-
-        if (PreferencesUtil.isNewsSaved(ctx, news)) {
-            item.setIcon(R.drawable.ic_bookmark_white_24dp);
-            item.setTitle(R.string.unsave);
-        } else {
-            item.setIcon(R.drawable.ic_bookmark_border_white_24dp);
-            item.setTitle(R.string.save);
-        }
+        return shareIntent;
     }
 
 }

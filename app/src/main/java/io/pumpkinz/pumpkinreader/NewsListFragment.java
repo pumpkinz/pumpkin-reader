@@ -26,6 +26,7 @@ import java.util.concurrent.TimeoutException;
 import io.pumpkinz.pumpkinreader.data.NewsAdapter;
 import io.pumpkinz.pumpkinreader.etc.Constants;
 import io.pumpkinz.pumpkinreader.etc.DividerItemDecoration;
+import io.pumpkinz.pumpkinreader.etc.PumpkinCustomTab;
 import io.pumpkinz.pumpkinreader.exception.EndOfListException;
 import io.pumpkinz.pumpkinreader.model.News;
 import io.pumpkinz.pumpkinreader.service.DataSource;
@@ -141,7 +142,7 @@ public class NewsListFragment extends Fragment {
     }
 
     public void goToNewsDetail(final News news) {
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
         Intent intent;
 
         boolean shouldOpenLink = pref.getBoolean(Constants.CONFIG_SHOW_LINK, true);
@@ -155,7 +156,12 @@ public class NewsListFragment extends Fragment {
                     @Override
                     public void run() {
                         Uri uri = Uri.parse(news.getUrl());
-                        startActivity(new Intent(Intent.ACTION_VIEW, uri));
+                        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+
+                        PumpkinCustomTab customTab = new PumpkinCustomTab(getActivity(), news);
+                        customTab.openPage(uri);
+
+//                        startActivity(intent);
                     }
                 }, 300);
             } else if (!shouldOpenLink) {
