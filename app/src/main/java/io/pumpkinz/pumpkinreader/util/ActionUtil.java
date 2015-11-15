@@ -1,10 +1,11 @@
 package io.pumpkinz.pumpkinreader.util;
 
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.view.Menu;
@@ -13,15 +14,24 @@ import android.view.View;
 
 import io.pumpkinz.pumpkinreader.R;
 import io.pumpkinz.pumpkinreader.etc.Constants;
+import io.pumpkinz.pumpkinreader.etc.PumpkinCustomTab;
 import io.pumpkinz.pumpkinreader.model.News;
+
 
 public class ActionUtil {
 
     public static void open(Context ctx, News news) {
         if (news.getUrl() != null && !news.getUrl().isEmpty()) {
             Uri uri = Uri.parse(news.getUrl());
-            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-            ctx.startActivity(intent);
+            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(ctx);
+
+            if (pref.getBoolean(Constants.CONFIG_CUSTOM_TABS, true)) {
+                PumpkinCustomTab customTab = new PumpkinCustomTab((Activity) ctx, news);
+                customTab.openPage(uri);
+            } else {
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                ctx.startActivity(intent);
+            }
         }
     }
 
@@ -60,6 +70,22 @@ public class ActionUtil {
     }
 
     public static void share(Context ctx, News news) {
+        ctx.startActivity(Intent.createChooser(getPumpkinShareIntent(news), ctx.getResources().getString(R.string.share)));
+    }
+
+    public static void toggleSaveAction(Context ctx, Menu menu, News news) {
+        MenuItem item = menu.findItem(R.id.action_save);
+
+        if (PreferencesUtil.isNewsSaved(ctx, news)) {
+            item.setIcon(R.drawable.ic_bookmark_white_24dp);
+            item.setTitle(R.string.unsave);
+        } else {
+            item.setIcon(R.drawable.ic_bookmark_border_white_24dp);
+            item.setTitle(R.string.save);
+        }
+    }
+
+    public static Intent getPumpkinShareIntent(News news) {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.putExtra(Intent.EXTRA_SUBJECT, news.getTitle());
 
@@ -74,19 +100,7 @@ public class ActionUtil {
         shareIntent.putExtra(Intent.EXTRA_TEXT, text);
         shareIntent.setType(Constants.MIME_TEXT_PLAIN);
 
-        ctx.startActivity(Intent.createChooser(shareIntent, ctx.getResources().getString(R.string.share)));
-    }
-
-    public static void toggleSaveAction(Context ctx, Menu menu, News news) {
-        MenuItem item = menu.findItem(R.id.action_save);
-
-        if (PreferencesUtil.isNewsSaved(ctx, news)) {
-            item.setIcon(R.drawable.ic_bookmark_white_24dp);
-            item.setTitle(R.string.unsave);
-        } else {
-            item.setIcon(R.drawable.ic_bookmark_border_white_24dp);
-            item.setTitle(R.string.save);
-        }
+        return shareIntent;
     }
 
 }
