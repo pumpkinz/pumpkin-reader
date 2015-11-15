@@ -118,6 +118,7 @@ public class NewsDetailFragment extends Fragment {
         }
 
         refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.news_detail_refresh_container);
+        refreshLayout.setEnabled(false);
         refreshLayout.setColorSchemeResources(R.color.pumpkin_accent);
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -128,6 +129,7 @@ public class NewsDetailFragment extends Fragment {
                 newsDetailAdapter.notifyDataSetChanged();
 
                 refreshLayout.setRefreshing(false);
+                refreshLayout.setEnabled(false);
             }
         });
     }
@@ -178,6 +180,8 @@ public class NewsDetailFragment extends Fragment {
         @Override
         public void onCompleted() {
             Log.d("comments", "completed");
+
+            refreshLayout.setEnabled(true);
         }
 
         @Override
