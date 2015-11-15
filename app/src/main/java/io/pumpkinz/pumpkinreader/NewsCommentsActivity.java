@@ -1,6 +1,7 @@
 package io.pumpkinz.pumpkinreader;
 
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -62,6 +63,7 @@ public class NewsCommentsActivity extends PumpkinReaderActivity {
     private void setUpToolbar() {
         Toolbar appBar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(appBar);
+        setScrollFlag((AppBarLayout.LayoutParams) appBar.getLayoutParams());
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
