@@ -3,7 +3,6 @@ package io.pumpkinz.pumpkinreader;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -26,10 +25,10 @@ import java.util.concurrent.TimeoutException;
 import io.pumpkinz.pumpkinreader.data.NewsAdapter;
 import io.pumpkinz.pumpkinreader.etc.Constants;
 import io.pumpkinz.pumpkinreader.etc.DividerItemDecoration;
-import io.pumpkinz.pumpkinreader.etc.PumpkinCustomTab;
 import io.pumpkinz.pumpkinreader.exception.EndOfListException;
 import io.pumpkinz.pumpkinreader.model.News;
 import io.pumpkinz.pumpkinreader.service.DataSource;
+import io.pumpkinz.pumpkinreader.util.ActionUtil;
 import io.pumpkinz.pumpkinreader.util.PreferencesUtil;
 import rx.Observable;
 import rx.Subscriber;
@@ -155,15 +154,7 @@ public class NewsListFragment extends Fragment {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        Uri uri = Uri.parse(news.getUrl());
-
-                        if (pref.getBoolean(Constants.CONFIG_CUSTOM_TABS, true)) {
-                            PumpkinCustomTab customTab = new PumpkinCustomTab(getActivity(), news);
-                            customTab.openPage(uri);
-                        } else {
-                            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                            startActivity(intent);
-                        }
+                        ActionUtil.open(getActivity(), news);
                     }
                 }, 300);
             } else if (!shouldOpenLink) {
