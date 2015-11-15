@@ -99,7 +99,6 @@ public class ActionUtil {
 
         shareIntent.putExtra(Intent.EXTRA_TEXT, text);
         shareIntent.setType(Constants.MIME_TEXT_PLAIN);
-        shareIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
         return shareIntent;
     }
