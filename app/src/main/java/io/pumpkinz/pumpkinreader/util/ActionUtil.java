@@ -70,7 +70,7 @@ public class ActionUtil {
     }
 
     public static void share(Context ctx, News news) {
-        ctx.startActivity(Intent.createChooser(getPumpkinShareIntent(ctx, news), ctx.getResources().getString(R.string.share)));
+        ctx.startActivity(Intent.createChooser(getPumpkinShareIntent(news), ctx.getResources().getString(R.string.share)));
     }
 
     public static void toggleSaveAction(Context ctx, Menu menu, News news) {
@@ -85,7 +85,7 @@ public class ActionUtil {
         }
     }
 
-    public static Intent getPumpkinShareIntent(Context ctx, News news) {
+    public static Intent getPumpkinShareIntent(News news) {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.putExtra(Intent.EXTRA_SUBJECT, news.getTitle());
 
