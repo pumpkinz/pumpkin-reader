@@ -46,9 +46,11 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     view = (View) view.getParent().getParent();
                 }
 
-                RecyclerView recyclerView = (RecyclerView) fragment.getView();
+                RecyclerView recyclerView = (RecyclerView) fragment.getView().findViewById(R.id.news_detail);
 
-                if (recyclerView == null) return;
+                if (recyclerView == null) {
+                    return;
+                }
 
                 int position = recyclerView.getChildAdapterPosition(view);
                 int idx = posToIdx(position);
