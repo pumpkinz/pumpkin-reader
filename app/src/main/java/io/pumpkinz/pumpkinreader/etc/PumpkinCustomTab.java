@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.customtabs.CustomTabsIntent;
+import android.support.v4.content.ContextCompat;
 
 import org.parceler.Parcels;
 
@@ -40,16 +41,16 @@ public class PumpkinCustomTab {
         int color;
 
         if (pref.getBoolean(Constants.CONFIG_DARK_THEME, false)) {
-            color = activity.getResources().getColor(R.color.primary_material_dark);
+            color = ContextCompat.getColor(activity, R.color.primary_material_dark);
         } else {
-            color = activity.getResources().getColor(R.color.pumpkin_primary);
+            color = ContextCompat.getColor(activity, R.color.pumpkin_primary);
         }
 
         builder.setToolbarColor(color);
 
-        String saveLabel = activity.getResources().getString(R.string.save);
-        Bitmap saveIcon = BitmapFactory.decodeResource(activity.getResources(), R.drawable.ic_share_white_24dp);
-        builder.setActionButton(saveIcon, saveLabel, createShareIntent());
+        String label = activity.getResources().getString(R.string.share);
+        Bitmap icon = BitmapFactory.decodeResource(activity.getResources(), R.drawable.ic_share_white_24dp);
+        builder.setActionButton(icon, label, createShareIntent());
 
         return builder.build();
     }
