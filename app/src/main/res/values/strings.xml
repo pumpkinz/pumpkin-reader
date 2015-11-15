@@ -41,6 +41,8 @@
     <string name="endoflist">You have reached the end of list.</string>
     <string name="unknown">Unknown error occured. Please try again.</string>
 
+    <string name="loading">Loading...</string>
+
     <!--Begin Time Ago Strings-->
     <string name="time_ago_prefix"></string>
     <string name="time_ago_suffix"></string>

@@ -9,6 +9,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/PumpkinTheme">
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name">
@@ -17,18 +18,32 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".NewsDetailActivity"
             android:label="@string/title_activity_news_detail" />
+
         <activity
             android:name=".AboutActivity"
             android:label="@string/title_activity_about" />
+
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings" />
-        <activity
-            android:name=".NewsCommentsActivity"
-            android:label="@string/title_activity_news_comments" />
+
+        <activity android:name=".NewsCommentsActivity">
+            <intent-filter>
+                <data
+                    android:host="news.ycombinator.com"
+                    android:path="/item"
+                    android:scheme="https" />
+
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+        </activity>
 
         <receiver android:name=".etc.ShareBroadcastReceiver" />
     </application>

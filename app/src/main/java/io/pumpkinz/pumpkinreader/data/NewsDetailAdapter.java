@@ -107,15 +107,20 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             case 0:
                 NewsViewHolder newsViewHolder = (NewsViewHolder) viewHolder;
 
-                newsViewHolder.getTitle().setText(news.getTitle());
-                newsViewHolder.getSubmitter().setText(news.getBy());
-                newsViewHolder.getDate().setText(this.dateFormatter.timeAgo(news.getTime()));
-                newsViewHolder.getScore().setText(Integer.toString(news.getScore()));
+                if (news.getTitle() == null) {
+                    newsViewHolder.getTitle().setText(fragment.getString(R.string.loading));
+                } else {
+                    Resources r = this.fragment.getActivity().getResources();
 
-                Resources r = this.fragment.getActivity().getResources();
-                int nComment = news.getTotalComments();
-                String commentCountFormat = r.getQuantityString(R.plurals.comments, nComment, nComment);
-                newsViewHolder.getCommentCount().setText(commentCountFormat);
+                    newsViewHolder.getTitle().setText(news.getTitle());
+                    newsViewHolder.getSubmitter().setText(news.getBy());
+                    newsViewHolder.getDate().setText(this.dateFormatter.timeAgo(news.getTime()));
+                    newsViewHolder.getScore().setText(Integer.toString(news.getScore()));
+
+                    int nComment = news.getTotalComments();
+                    String commentCountFormat = r.getQuantityString(R.plurals.comments, nComment, nComment);
+                    newsViewHolder.getCommentCount().setText(commentCountFormat);
+                }
 
                 if (news.getText() != null && !news.getText().isEmpty()) {
                     newsViewHolder.getBody().setText(Util.trim(Html.fromHtml(news.getText())));
@@ -166,6 +171,10 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Override
     public int getItemCount() {
         return dataset.size() + 1;
+    }
+
+    public void setNews(News news) {
+        this.news = news;
     }
 
     public void removeLoadingItem() {
@@ -224,6 +233,11 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public void removeItem(int idx) {
         this.dataset.remove(idx);
         notifyItemRemoved(idxToPos(idx));
+    }
+
+    public void clearDataset() {
+        this.dataset.clear();
+        notifyDataSetChanged();
     }
 
     private void collapseComments(Comment comment, int idx) {
