@@ -1,6 +1,5 @@
-# Pumpkin Reader [![Build Status](https://travis-ci.org/pumpkinz/pumpkin-reader.svg?branch=master)](https://travis-ci.org/pumpkinz/pumpkin-reader)
+# Pumpkin Reader [![License](http://www.wtfpl.net/wp-content/uploads/2012/12/wtfpl-badge-4.png)](http://www.wtfpl.net/wp-content/uploads/2012/12/wtfpl-badge-4.png) [![Build Status](https://travis-ci.org/pumpkinz/pumpkin-reader.svg?branch=master)](https://travis-ci.org/pumpkinz/pumpkin-reader)
 ## HackerNews Reader for Android 
-### Current version: 1.4
 
 [![Get it on Google Play](https://developer.android.com/images/brand/en_generic_rgb_wo_60.png)](https://play.google.com/store/apps/details?id=io.pumpkinz.pumpkinreader)
 
