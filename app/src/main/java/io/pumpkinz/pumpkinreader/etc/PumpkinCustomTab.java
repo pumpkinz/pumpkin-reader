@@ -32,10 +32,6 @@ public class PumpkinCustomTab {
         customTabsIntent.launchUrl(activity, uri);
     }
 
-    public Intent getIntent() {
-        return customTabsIntent.intent;
-    }
-
     private CustomTabsIntent buildCustomTabsIntent() {
         CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
         builder.setShowTitle(true);

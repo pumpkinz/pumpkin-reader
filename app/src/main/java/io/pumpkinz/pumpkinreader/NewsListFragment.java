@@ -156,12 +156,14 @@ public class NewsListFragment extends Fragment {
                     @Override
                     public void run() {
                         Uri uri = Uri.parse(news.getUrl());
-                        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 
-                        PumpkinCustomTab customTab = new PumpkinCustomTab(getActivity(), news);
-                        customTab.openPage(uri);
-
-//                        startActivity(intent);
+                        if (pref.getBoolean(Constants.CONFIG_CUSTOM_TABS, true)) {
+                            PumpkinCustomTab customTab = new PumpkinCustomTab(getActivity(), news);
+                            customTab.openPage(uri);
+                        } else {
+                            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                            startActivity(intent);
+                        }
                     }
                 }, 300);
             } else if (!shouldOpenLink) {

@@ -38,6 +38,13 @@
 
         <CheckBoxPreference
             android:defaultValue="true"
+            android:enabled="false"
+            android:key="config_custom_tabs"
+            android:summary="Use Chrome Custom Tabs whenever possible when using external browser"
+            android:title="Use Chrome Custom Tabs" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
             android:key="config_auto_expand_comments"
             android:summary="Auto expand all comments in comments section"
             android:title="Auto Expand Comments" />
