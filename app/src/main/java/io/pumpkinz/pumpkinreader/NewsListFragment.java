@@ -3,7 +3,6 @@ package io.pumpkinz.pumpkinreader;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -29,6 +28,7 @@ import io.pumpkinz.pumpkinreader.etc.DividerItemDecoration;
 import io.pumpkinz.pumpkinreader.exception.EndOfListException;
 import io.pumpkinz.pumpkinreader.model.News;
 import io.pumpkinz.pumpkinreader.service.DataSource;
+import io.pumpkinz.pumpkinreader.util.ActionUtil;
 import io.pumpkinz.pumpkinreader.util.PreferencesUtil;
 import rx.Observable;
 import rx.Subscriber;
@@ -141,7 +141,7 @@ public class NewsListFragment extends Fragment {
     }
 
     public void goToNewsDetail(final News news) {
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
         Intent intent;
 
         boolean shouldOpenLink = pref.getBoolean(Constants.CONFIG_SHOW_LINK, true);
@@ -154,12 +154,9 @@ public class NewsListFragment extends Fragment {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        Uri uri = Uri.parse(news.getUrl());
-                        startActivity(new Intent(Intent.ACTION_VIEW, uri));
+                        ActionUtil.open(getActivity(), news);
                     }
                 }, 300);
-            } else if (!shouldOpenLink) {
-                intent = new Intent(getActivity(), NewsCommentsActivity.class);
             }
         } else {
             intent = new Intent(getActivity(), NewsDetailActivity.class);
