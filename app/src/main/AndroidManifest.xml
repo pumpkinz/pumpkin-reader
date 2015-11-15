@@ -29,6 +29,8 @@
         <activity
             android:name=".NewsCommentsActivity"
             android:label="@string/title_activity_news_comments" />
+
+        <receiver android:name=".etc.ShareBroadcastReceiver" />
     </application>
 
 </manifest>

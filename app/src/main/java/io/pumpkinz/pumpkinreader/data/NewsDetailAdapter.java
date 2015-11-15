@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
-import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -21,7 +20,6 @@ import java.util.ListIterator;
 import io.pumpkinz.pumpkinreader.R;
 import io.pumpkinz.pumpkinreader.model.Comment;
 import io.pumpkinz.pumpkinreader.model.News;
-import io.pumpkinz.pumpkinreader.util.PreferencesUtil;
 import io.pumpkinz.pumpkinreader.util.Util;
 
 
@@ -258,7 +256,7 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             public void run() {
                 notifyItemChanged(pos);
             }
-        }, 100);
+        }, 200);
     }
 
     private void expandComments(Comment comment, int idx) {

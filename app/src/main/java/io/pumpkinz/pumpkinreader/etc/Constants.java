@@ -10,9 +10,11 @@ public class Constants {
 
     public static final String CONFIG_SHOW_LINK = "config_show_link";
     public static final String CONFIG_EXTERNAL_BROWSER = "config_external_browser";
+    public static final String CONFIG_CUSTOM_TABS = "config_custom_tabs";
     public static final String CONFIG_SMALLER_TEXT = "config_smaller_text";
     public static final String CONFIG_AUTO_EXPAND_COMMENTS = "config_auto_expand_comments";
     public static final String CONFIG_DARK_THEME = "config_dark_theme";
+    public static final String CONFIG_HIDE_TOOLBAR = "config_hide_toolbar";
 
     // Shared Preferences Constants
     public static final String NEW_FILE_SP = "io.pumpkinz.pumpkinreader.new_sharedpref_file";
