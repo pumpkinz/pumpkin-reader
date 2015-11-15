@@ -1,6 +1,6 @@
 package io.pumpkinz.pumpkinreader;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
@@ -46,15 +46,17 @@ public class NewsDetailFragment extends Fragment {
     private Observable<List<Comment>> comments;
     private Subscription subscription = Subscriptions.empty();
     private DataSource dataSource;
+    private NewsListener newsListener;
     private NewsDetailAdapter newsDetailAdapter;
     private RecyclerView newsDetail;
     private SwipeRefreshLayout refreshLayout;
     RecyclerView.ItemDecoration itemDecoration;
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context ctx) {
+        super.onAttach(ctx);
         dataSource = new DataSource(getActivity());
+        newsListener = (NewsListener) ctx;
     }
 
     @Override
@@ -176,6 +178,8 @@ public class NewsDetailFragment extends Fragment {
                     public Observable<List<Comment>> call(News loadedNews) {
                         news = loadedNews;
                         newsDetailAdapter.setNews(loadedNews);
+                        newsListener.onNewsLoaded(loadedNews);
+
                         return dataSource.getComments(loadedNews);
                     }
                 });
@@ -248,6 +252,10 @@ public class NewsDetailFragment extends Fragment {
             newsDetail.addItemDecoration(itemDecoration);
         }
 
+    }
+
+    public interface NewsListener {
+        void onNewsLoaded(News news);
     }
 
 }

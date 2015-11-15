@@ -16,7 +16,8 @@ import io.pumpkinz.pumpkinreader.util.ActionUtil;
 import io.pumpkinz.pumpkinreader.util.PreferencesUtil;
 
 
-public class NewsCommentsActivity extends PumpkinReaderActivity {
+public class NewsCommentsActivity extends PumpkinReaderActivity
+        implements NewsDetailFragment.NewsListener {
 
     private News news;
     private Menu menu;
@@ -78,6 +79,11 @@ public class NewsCommentsActivity extends PumpkinReaderActivity {
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public void onNewsLoaded(News news) {
+        this.news = news;
     }
 
 }
