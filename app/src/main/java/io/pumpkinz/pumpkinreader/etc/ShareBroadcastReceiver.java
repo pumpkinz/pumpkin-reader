@@ -17,7 +17,7 @@ public class ShareBroadcastReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         News news = Parcels.unwrap(intent.getParcelableExtra(Constants.NEWS));
         String label = context.getResources().getString(R.string.share);
-        Intent shareIntent = ActionUtil.getPumpkinShareIntent(context, news);
+        Intent shareIntent = ActionUtil.getPumpkinShareIntent(news);
 
         Intent chooser = Intent.createChooser(shareIntent, label);
         chooser.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
