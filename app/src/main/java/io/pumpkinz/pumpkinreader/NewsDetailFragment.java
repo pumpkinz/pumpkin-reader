@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -45,6 +46,8 @@ public class NewsDetailFragment extends Fragment {
     private DataSource dataSource;
     private NewsDetailAdapter newsDetailAdapter;
     private RecyclerView newsDetail;
+    private SwipeRefreshLayout refreshLayout;
+    RecyclerView.ItemDecoration itemDecoration;
 
     @Override
     public void onAttach(Activity activity) {
@@ -91,6 +94,8 @@ public class NewsDetailFragment extends Fragment {
             newsDetail.setAdapter(newsDetailAdapter);
         }
 
+        itemDecoration = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
+
         if (news != null && savedInstanceState != null) {
             List<CommentParcel> savedDatasetParcel = Parcels.unwrap(savedInstanceState.getParcelable(SAVED_DATASET));
             List<CommentParcel> savedCommentsParcel = Parcels.unwrap(savedInstanceState.getParcelable(SAVED_COMMENTS));
@@ -111,6 +116,20 @@ public class NewsDetailFragment extends Fragment {
         } else if (news != null && newsDetailAdapter.hasLoadingMore()) {
             subscription = comments.subscribe(new CommentsSubscriber(false));
         }
+
+        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.news_detail_refresh_container);
+        refreshLayout.setColorSchemeResources(R.color.pumpkin_accent);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                newsDetail.removeItemDecoration(itemDecoration);
+
+                loadComments(news);
+                newsDetailAdapter.notifyDataSetChanged();
+
+                refreshLayout.setRefreshing(false);
+            }
+        });
     }
 
     @Override
@@ -126,6 +145,7 @@ public class NewsDetailFragment extends Fragment {
     public void loadComments(News news) {
         if (news == null) {
             this.news = Parcels.unwrap(getActivity().getIntent().getParcelableExtra(Constants.NEWS));
+
             if (this.news != null) {
                 comments = AppObservable.bindFragment(this, dataSource.getComments(this.news).cache());
             }
@@ -198,8 +218,6 @@ public class NewsDetailFragment extends Fragment {
                 newsDetailAdapter.addComment(dataset, comments);
             }
 
-            RecyclerView.ItemDecoration itemDecoration =
-                    new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
             newsDetail.addItemDecoration(itemDecoration);
         }
 
