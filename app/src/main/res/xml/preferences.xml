@@ -43,6 +43,12 @@
             android:title="Use Chrome Custom Tabs" />
 
         <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="config_hide_toolbar"
+            android:summary="Auto hide the toolbar when scrolling down"
+            android:title="Auto Hide Toolbar" />
+
+        <CheckBoxPreference
             android:defaultValue="true"
             android:key="config_auto_expand_comments"
             android:summary="Auto expand all comments in comments section"

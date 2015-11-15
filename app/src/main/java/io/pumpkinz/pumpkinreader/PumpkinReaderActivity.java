@@ -3,7 +3,10 @@ package io.pumpkinz.pumpkinreader;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 
 import io.pumpkinz.pumpkinreader.etc.Constants;
 
@@ -37,4 +40,17 @@ public class PumpkinReaderActivity extends AppCompatActivity implements SharedPr
             setTheme(R.style.PumpkinTheme);
         }
     }
+
+    protected void setScrollFlag(AppBarLayout.LayoutParams layoutParams) {
+        final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean shouldHideToolbar = pref.getBoolean(Constants.CONFIG_HIDE_TOOLBAR, false);
+
+        if (shouldHideToolbar) {
+            layoutParams.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
+                    | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
+        } else {
+            layoutParams.setScrollFlags(0);
+        }
+    }
+
 }

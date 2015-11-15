@@ -3,6 +3,7 @@ package io.pumpkinz.pumpkinreader;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
@@ -111,6 +112,7 @@ public class NewsDetailActivity extends PumpkinReaderActivity {
 
     private void setUpTab(ViewPager viewPager) {
         tabLayout.setupWithViewPager(viewPager);
+        setScrollFlag((AppBarLayout.LayoutParams) tabLayout.getLayoutParams());
 
         if (news.getUrl() == null || news.getUrl().isEmpty()) {
             tabLayout.getTabAt(NewsDetailViewPagerAdapter.TAB_COMMENTS_IDX).select();

@@ -5,7 +5,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -20,9 +22,13 @@ public class MainActivity extends PumpkinReaderActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        setUpToolbar();
         setUpSideNav();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setUpToolbar();
     }
 
     @Override
@@ -42,6 +48,7 @@ public class MainActivity extends PumpkinReaderActivity {
     private void setUpToolbar() {
         Toolbar appBar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(appBar);
+        setScrollFlag((AppBarLayout.LayoutParams) appBar.getLayoutParams());
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(getResources().getString(R.string.top));
@@ -50,7 +57,7 @@ public class MainActivity extends PumpkinReaderActivity {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            getWindow().setStatusBarColor(getResources().getColor(android.R.color.transparent));
+            getWindow().setStatusBarColor(ContextCompat.getColor(this, android.R.color.transparent));
         }
     }
 
