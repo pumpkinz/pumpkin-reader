@@ -157,8 +157,6 @@ public class NewsListFragment extends Fragment {
                         ActionUtil.open(getActivity(), news);
                     }
                 }, 300);
-            } else if (!shouldOpenLink) {
-                intent = new Intent(getActivity(), NewsCommentsActivity.class);
             }
         } else {
             intent = new Intent(getActivity(), NewsDetailActivity.class);
