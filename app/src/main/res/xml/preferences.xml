@@ -38,9 +38,8 @@
 
         <CheckBoxPreference
             android:defaultValue="true"
-            android:enabled="false"
             android:key="config_custom_tabs"
-            android:summary="Use Chrome Custom Tabs whenever possible when using external browser"
+            android:summary="Use Chrome Custom Tabs whenever possible"
             android:title="Use Chrome Custom Tabs" />
 
         <CheckBoxPreference
