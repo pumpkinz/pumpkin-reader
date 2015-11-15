@@ -56,7 +56,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:textColor="?title_color" />
+            android:textColor="?title_color"
+            android:textIsSelectable="true" />
 
     </LinearLayout>
 
