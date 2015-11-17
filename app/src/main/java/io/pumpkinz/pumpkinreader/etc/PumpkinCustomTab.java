@@ -58,7 +58,7 @@ public class PumpkinCustomTab {
     private PendingIntent createShareIntent() {
         Intent actionIntent = new Intent(activity.getApplicationContext(), ShareBroadcastReceiver.class);
         actionIntent.putExtra(Constants.NEWS, Parcels.wrap(news));
-        return PendingIntent.getBroadcast(activity.getApplicationContext(), 0, actionIntent, 0);
+        return PendingIntent.getBroadcast(activity.getApplicationContext(), 0, actionIntent, PendingIntent.FLAG_CANCEL_CURRENT);
     }
 
 }
