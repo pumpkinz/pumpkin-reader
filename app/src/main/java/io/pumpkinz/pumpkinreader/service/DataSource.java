@@ -57,6 +57,11 @@ public class DataSource {
                 .compose(new NewsTransformer(from, count));
     }
 
+    public Observable<News> getNews(int id) {
+        return RestClient.service().getNews(id)
+                .timeout(Constants.CONN_TIMEOUT_SEC, TimeUnit.SECONDS);
+    }
+
     public Observable<List<Comment>> getComments(final News news) {
         return Observable.from(news.getCommentIds())
                 .flatMap(new Func1<Integer, Observable<Comment>>() {

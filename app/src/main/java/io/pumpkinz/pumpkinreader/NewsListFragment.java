@@ -1,6 +1,7 @@
 package io.pumpkinz.pumpkinreader;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -59,9 +60,9 @@ public class NewsListFragment extends Fragment {
     private News openedNews;
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        dataSource = new DataSource(activity);
+    public void onAttach(Context ctx) {
+        super.onAttach(ctx);
+        dataSource = new DataSource(ctx);
     }
 
     @Override

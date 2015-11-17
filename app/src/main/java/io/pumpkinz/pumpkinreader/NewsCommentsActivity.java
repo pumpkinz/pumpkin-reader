@@ -1,5 +1,6 @@
 package io.pumpkinz.pumpkinreader;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.ActionBar;
@@ -12,9 +13,11 @@ import org.parceler.Parcels;
 import io.pumpkinz.pumpkinreader.etc.Constants;
 import io.pumpkinz.pumpkinreader.model.News;
 import io.pumpkinz.pumpkinreader.util.ActionUtil;
+import io.pumpkinz.pumpkinreader.util.PreferencesUtil;
 
 
-public class NewsCommentsActivity extends PumpkinReaderActivity {
+public class NewsCommentsActivity extends PumpkinReaderActivity
+        implements NewsDetailFragment.NewsListener {
 
     private News news;
     private Menu menu;
@@ -26,7 +29,14 @@ public class NewsCommentsActivity extends PumpkinReaderActivity {
         setContentView(R.layout.activity_news_comments);
         setUpToolbar();
 
-        news = Parcels.unwrap(getIntent().getParcelableExtra(Constants.NEWS));
+        Uri data = getIntent().getData();
+        if (data != null) {
+            String id = data.getQueryParameter("id");
+            news = new News(Integer.valueOf(id));
+            PreferencesUtil.markNewsAsRead(this, news);
+        } else {
+            news = Parcels.unwrap(getIntent().getParcelableExtra(Constants.NEWS));
+        }
     }
 
     @Override
@@ -62,11 +72,18 @@ public class NewsCommentsActivity extends PumpkinReaderActivity {
 
     private void setUpToolbar() {
         Toolbar appBar = (Toolbar) findViewById(R.id.app_bar);
+        appBar.setTitle(R.string.title_activity_news_detail);
+
         setSupportActionBar(appBar);
         setScrollFlag((AppBarLayout.LayoutParams) appBar.getLayoutParams());
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public void onNewsLoaded(News news) {
+        this.news = news;
     }
 
 }

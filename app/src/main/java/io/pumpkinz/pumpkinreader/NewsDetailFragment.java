@@ -1,7 +1,8 @@
 package io.pumpkinz.pumpkinreader;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -32,6 +33,7 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.app.AppObservable;
+import rx.functions.Func1;
 import rx.subscriptions.Subscriptions;
 
 
@@ -44,15 +46,17 @@ public class NewsDetailFragment extends Fragment {
     private Observable<List<Comment>> comments;
     private Subscription subscription = Subscriptions.empty();
     private DataSource dataSource;
+    private NewsListener newsListener;
     private NewsDetailAdapter newsDetailAdapter;
     private RecyclerView newsDetail;
     private SwipeRefreshLayout refreshLayout;
     RecyclerView.ItemDecoration itemDecoration;
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context ctx) {
+        super.onAttach(ctx);
         dataSource = new DataSource(getActivity());
+        newsListener = (NewsListener) ctx;
     }
 
     @Override
@@ -66,7 +70,14 @@ public class NewsDetailFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         setRetainInstance(true);
-        loadComments(null);
+
+        Uri data = getActivity().getIntent().getData();
+        if (data != null) {
+            String id = data.getQueryParameter("id");
+            loadNews(Integer.valueOf(id));
+        } else {
+            loadComments(null);
+        }
     }
 
     @Override
@@ -89,10 +100,8 @@ public class NewsDetailFragment extends Fragment {
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         newsDetail.setLayoutManager(layoutManager);
 
-        if (news != null) {
-            newsDetailAdapter = new NewsDetailAdapter(this, news);
-            newsDetail.setAdapter(newsDetailAdapter);
-        }
+        newsDetailAdapter = new NewsDetailAdapter(this, news);
+        newsDetail.setAdapter(newsDetailAdapter);
 
         itemDecoration = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
 
@@ -112,9 +121,9 @@ public class NewsDetailFragment extends Fragment {
         }
 
         if (news != null && newsDetailAdapter.getDataSet().isEmpty()) {
-            subscription = comments.subscribe(new CommentsSubscriber(true));
+            subscription = comments.subscribe(new CommentsSubscriber(false, true));
         } else if (news != null && newsDetailAdapter.hasLoadingMore()) {
-            subscription = comments.subscribe(new CommentsSubscriber(false));
+            subscription = comments.subscribe(new CommentsSubscriber(false, false));
         }
 
         refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.news_detail_refresh_container);
@@ -126,12 +135,22 @@ public class NewsDetailFragment extends Fragment {
                 newsDetail.removeItemDecoration(itemDecoration);
 
                 loadComments(news);
-                newsDetailAdapter.notifyDataSetChanged();
+                subscription = comments.subscribe(new CommentsSubscriber(true, true));
 
                 refreshLayout.setRefreshing(false);
                 refreshLayout.setEnabled(false);
             }
         });
+
+        if (news.getTitle() == null) {
+            refreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    refreshLayout.setRefreshing(true);
+                    refreshLayout.setEnabled(false);
+                }
+            });
+        }
     }
 
     @Override
@@ -152,15 +171,30 @@ public class NewsDetailFragment extends Fragment {
                 comments = AppObservable.bindFragment(this, dataSource.getComments(this.news).cache());
             }
         } else {
-            this.news = news;
-
             //Use the new news, so replace the newsDetailAdapter
+            this.news = news;
             newsDetailAdapter = new NewsDetailAdapter(this, this.news);
             newsDetail.setAdapter(newsDetailAdapter);
 
             comments = AppObservable.bindFragment(this, dataSource.getComments(this.news).cache());
-            subscription = comments.subscribe(new CommentsSubscriber(true));
         }
+    }
+
+    private void loadNews(int id) {
+        news = new News(id);
+        Observable<List<Comment>> commentsObservable = dataSource.getNews(id)
+                .flatMap(new Func1<News, Observable<List<Comment>>>() {
+                    @Override
+                    public Observable<List<Comment>> call(News loadedNews) {
+                        news = loadedNews;
+                        newsDetailAdapter.setNews(loadedNews);
+                        newsListener.onNewsLoaded(loadedNews);
+
+                        return dataSource.getComments(loadedNews);
+                    }
+                });
+
+        comments = AppObservable.bindFragment(this, commentsObservable.cache());
     }
 
     private void forceUnsubscribe() {
@@ -171,8 +205,12 @@ public class NewsDetailFragment extends Fragment {
 
     private class CommentsSubscriber extends Subscriber<List<Comment>> {
 
-        public CommentsSubscriber(boolean isEmpty) {
-            if (isEmpty) {
+        public CommentsSubscriber(boolean isRefresh, boolean addLoading) {
+            if (isRefresh) {
+                newsDetailAdapter.clearDataset();
+            }
+
+            if (addLoading) {
                 newsDetailAdapter.addComment((Comment) null);
             }
         }
@@ -180,8 +218,8 @@ public class NewsDetailFragment extends Fragment {
         @Override
         public void onCompleted() {
             Log.d("comments", "completed");
-
             refreshLayout.setEnabled(true);
+            refreshLayout.setRefreshing(false);
         }
 
         @Override
@@ -225,6 +263,10 @@ public class NewsDetailFragment extends Fragment {
             newsDetail.addItemDecoration(itemDecoration);
         }
 
+    }
+
+    public interface NewsListener {
+        void onNewsLoaded(News news);
     }
 
 }

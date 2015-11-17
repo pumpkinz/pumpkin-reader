@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public abstract class News extends Item {
+public class News extends Item {
 
     List<Integer> kids;
     String url;
@@ -13,6 +13,12 @@ public abstract class News extends Item {
     int descendants;
 
     public News() {
+        this.kids = new ArrayList<>();
+        this.descendants = 0;
+    }
+
+    public News(int id) {
+        this.id = id;
         this.kids = new ArrayList<>();
         this.descendants = 0;
     }
