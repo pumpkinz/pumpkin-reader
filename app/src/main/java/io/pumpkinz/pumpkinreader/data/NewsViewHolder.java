@@ -5,7 +5,6 @@ import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -23,6 +22,7 @@ public class NewsViewHolder extends RecyclerView.ViewHolder implements SharedPre
     private TextView score;
     private TextView commentCount;
     private LinearLayout newsItemContainer;
+    private TextView commentsText;
 
     private SharedPreferences preferences;
 
@@ -37,6 +37,7 @@ public class NewsViewHolder extends RecyclerView.ViewHolder implements SharedPre
         this.score = (TextView) view.findViewById(R.id.news_score);
         this.commentCount = (TextView) view.findViewById(R.id.news_comment_count);
         this.newsItemContainer = (LinearLayout) view.findViewById(R.id.news_item_container);
+        this.commentsText = (TextView) view.findViewById(R.id.comments_text);
 
         this.preferences = PreferenceManager.getDefaultSharedPreferences(view.getContext());
         this.preferences.registerOnSharedPreferenceChangeListener(this);
@@ -83,6 +84,10 @@ public class NewsViewHolder extends RecyclerView.ViewHolder implements SharedPre
 
     public LinearLayout getNewsItemContainer() {
         return newsItemContainer;
+    }
+
+    public TextView getCommentsText() {
+        return commentsText;
     }
 
     private void setTitleTextSize() {

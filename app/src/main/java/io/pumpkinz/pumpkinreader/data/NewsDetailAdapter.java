@@ -95,7 +95,7 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 return new CommentViewHolder(v);
             case 2:
                 v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.loading_item, viewGroup, false);
-                return new CommentViewHolder(v);
+                return new LoadingViewHolder(v);
             default:
                 return null;
         }
@@ -108,7 +108,7 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 NewsViewHolder newsViewHolder = (NewsViewHolder) viewHolder;
 
                 if (news.getTitle() == null) {
-                    newsViewHolder.getTitle().setText(fragment.getString(R.string.loading));
+                    newsViewHolder.getCommentsText().setVisibility(View.GONE);
                 } else {
                     Resources r = this.fragment.getActivity().getResources();
 
@@ -116,16 +116,17 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     newsViewHolder.getSubmitter().setText(news.getBy());
                     newsViewHolder.getDate().setText(this.dateFormatter.timeAgo(news.getTime()));
                     newsViewHolder.getScore().setText(Integer.toString(news.getScore()));
+                    newsViewHolder.getCommentsText().setVisibility(View.VISIBLE);
 
                     int nComment = news.getTotalComments();
                     String commentCountFormat = r.getQuantityString(R.plurals.comments, nComment, nComment);
                     newsViewHolder.getCommentCount().setText(commentCountFormat);
-                }
 
-                if (news.getText() != null && !news.getText().isEmpty()) {
-                    newsViewHolder.getBody().setText(Util.trim(Html.fromHtml(news.getText())));
-                } else {
-                    newsViewHolder.getBody().setVisibility(View.GONE);
+                    if (news.getText() != null && !news.getText().isEmpty()) {
+                        newsViewHolder.getBody().setText(Util.trim(Html.fromHtml(news.getText())));
+                    } else {
+                        newsViewHolder.getBody().setVisibility(View.GONE);
+                    }
                 }
 
                 break;
@@ -164,6 +165,12 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 break;
             case 2:
+                LoadingViewHolder loadingViewHolder = (LoadingViewHolder) viewHolder;
+
+                if (news.getTitle() == null) {
+                    loadingViewHolder.getProgressBar().setVisibility(View.GONE);
+                }
+
                 break;
         }
     }

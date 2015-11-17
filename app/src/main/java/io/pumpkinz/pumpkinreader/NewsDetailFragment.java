@@ -141,6 +141,16 @@ public class NewsDetailFragment extends Fragment {
                 refreshLayout.setEnabled(false);
             }
         });
+
+        if (news.getTitle() == null) {
+            refreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    refreshLayout.setRefreshing(true);
+                    refreshLayout.setEnabled(false);
+                }
+            });
+        }
     }
 
     @Override
@@ -209,6 +219,7 @@ public class NewsDetailFragment extends Fragment {
         public void onCompleted() {
             Log.d("comments", "completed");
             refreshLayout.setEnabled(true);
+            refreshLayout.setRefreshing(false);
         }
 
         @Override
