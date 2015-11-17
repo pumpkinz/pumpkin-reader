@@ -56,7 +56,10 @@ public class NewsDetailFragment extends Fragment {
     public void onAttach(Context ctx) {
         super.onAttach(ctx);
         dataSource = new DataSource(getActivity());
-        newsListener = (NewsListener) ctx;
+
+        if (ctx instanceof NewsListener) {
+            newsListener = (NewsListener) ctx;
+        }
     }
 
     @Override
@@ -188,7 +191,10 @@ public class NewsDetailFragment extends Fragment {
                     public Observable<List<Comment>> call(News loadedNews) {
                         news = loadedNews;
                         newsDetailAdapter.setNews(loadedNews);
-                        newsListener.onNewsLoaded(loadedNews);
+
+                        if (newsListener != null) {
+                            newsListener.onNewsLoaded(loadedNews);
+                        }
 
                         return dataSource.getComments(loadedNews);
                     }
