@@ -69,7 +69,15 @@ public class MainActivity extends PumpkinReaderActivity {
         sidenav.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(final MenuItem menuItem) {
-                menuItem.setChecked(true);
+                switch (menuItem.getItemId()) {
+                    case R.id.sidenav_menu_setting:
+                    case R.id.sidenav_menu_feedback:
+                    case R.id.sidenav_menu_about:
+                        break;
+                    default:
+                        menuItem.setChecked(true);
+                }
+
                 drawerLayout.closeDrawer(GravityCompat.START);
 
                 handler.postDelayed(new Runnable() {
