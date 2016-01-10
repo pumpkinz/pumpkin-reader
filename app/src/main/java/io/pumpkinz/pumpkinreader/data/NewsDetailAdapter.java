@@ -1,11 +1,13 @@
 package io.pumpkinz.pumpkinreader.data;
 
 import android.content.res.Resources;
+import android.graphics.Typeface;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -113,6 +115,8 @@ public class NewsDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     Resources r = this.fragment.getActivity().getResources();
 
                     newsViewHolder.getTitle().setText(news.getTitle());
+                    newsViewHolder.getTitle().setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                    newsViewHolder.getTitle().setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
                     newsViewHolder.getSubmitter().setText(news.getBy());
                     newsViewHolder.getDate().setText(this.dateFormatter.timeAgo(news.getTime()));
                     newsViewHolder.getScore().setText(Integer.toString(news.getScore()));
