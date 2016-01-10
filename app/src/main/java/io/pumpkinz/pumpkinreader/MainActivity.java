@@ -18,6 +18,8 @@ import android.view.WindowManager;
 
 public class MainActivity extends PumpkinReaderActivity {
 
+    private String checkedMenuItemTitle = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +53,7 @@ public class MainActivity extends PumpkinReaderActivity {
         setScrollFlag((AppBarLayout.LayoutParams) appBar.getLayoutParams());
 
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle(getResources().getString(R.string.top));
+        actionBar.setTitle(checkedMenuItemTitle);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
         actionBar.setDisplayHomeAsUpEnabled(true);
 
@@ -65,6 +67,10 @@ public class MainActivity extends PumpkinReaderActivity {
         NavigationView sidenav = (NavigationView) findViewById(R.id.sidenav);
         final DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.sidenav_layout);
         final Handler handler = new Handler();
+
+        if (checkedMenuItemTitle.isEmpty()) { //default to Top News
+            checkedMenuItemTitle = getResources().getString(R.string.top);
+        }
 
         sidenav.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -97,6 +103,7 @@ public class MainActivity extends PumpkinReaderActivity {
         NewsListFragment fragment = (NewsListFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_main);
 
         fragment.forceUnsubscribe();
+        checkedMenuItemTitle = menuItem.getTitle().toString();
         switch (menuItem.getItemId()) {
             case R.id.sidenav_menu_saved:
                 getSupportActionBar().setTitle(menuItem.getTitle());
