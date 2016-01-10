@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -94,10 +95,11 @@ public class NewsDetailFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         newsDetail = (RecyclerView) view.findViewById(R.id.news_detail);
-        newsDetail.getItemAnimator().setRemoveDuration(100);
+        newsDetail.setItemAnimator(new DefaultItemAnimator());
+        newsDetail.getItemAnimator().setRemoveDuration(200);
         newsDetail.getItemAnimator().setChangeDuration(0);
-        newsDetail.getItemAnimator().setMoveDuration(100);
-        newsDetail.getItemAnimator().setAddDuration(100);
+        newsDetail.getItemAnimator().setMoveDuration(200);
+        newsDetail.getItemAnimator().setAddDuration(200);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
