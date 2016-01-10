@@ -43,7 +43,6 @@ public class NewsListFragment extends Fragment {
     private static final int LOADING_THRESHOLD = 15;
     private static final String SAVED_NEWS = "io.pumpkinz.pumpkinreader.model.saved_news";
 
-    private RecyclerView newsList;
     private SwipeRefreshLayout swipeRefreshLayout;
     private NewsAdapter newsAdapter;
     private DataSource dataSource;
@@ -210,7 +209,7 @@ public class NewsListFragment extends Fragment {
     }
 
     private void setUpNewsList(View view) {
-        newsList = (RecyclerView) view.findViewById(R.id.news_list);
+        RecyclerView newsList = (RecyclerView) view.findViewById(R.id.news_list);
 
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
