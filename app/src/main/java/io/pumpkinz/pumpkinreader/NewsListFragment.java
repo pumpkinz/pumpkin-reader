@@ -1,6 +1,5 @@
 package io.pumpkinz.pumpkinreader;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -40,7 +39,7 @@ import rx.subscriptions.Subscriptions;
 
 public class NewsListFragment extends Fragment {
 
-    private static final int N_NEWS_PER_LOAD = 50;
+    private static final int N_NEWS_PER_LOAD = 30;
     private static final int LOADING_THRESHOLD = 15;
     private static final String SAVED_NEWS = "io.pumpkinz.pumpkinreader.model.saved_news";
 
