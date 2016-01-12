@@ -82,6 +82,7 @@ public class MainActivity extends PumpkinReaderActivity {
                         break;
                     default:
                         menuItem.setChecked(true);
+                        checkedMenuItemTitle = menuItem.getTitle().toString();
                 }
 
                 drawerLayout.closeDrawer(GravityCompat.START);
@@ -103,7 +104,7 @@ public class MainActivity extends PumpkinReaderActivity {
         NewsListFragment fragment = (NewsListFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_main);
 
         fragment.forceUnsubscribe();
-        checkedMenuItemTitle = menuItem.getTitle().toString();
+
         switch (menuItem.getItemId()) {
             case R.id.sidenav_menu_saved:
                 getSupportActionBar().setTitle(menuItem.getTitle());
