@@ -72,7 +72,7 @@ public class NewsCommentsActivity extends PumpkinReaderActivity
 
     private void setUpToolbar() {
         Toolbar appBar = (Toolbar) findViewById(R.id.app_bar);
-        appBar.setTitle(R.string.title_activity_news_detail);
+        appBar.setTitle(R.string.comments);
 
         setSupportActionBar(appBar);
         setScrollFlag((AppBarLayout.LayoutParams) appBar.getLayoutParams());

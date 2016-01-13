@@ -23,15 +23,9 @@ public class ActionUtil {
     public static void open(Context ctx, News news) {
         if (news.getUrl() != null && !news.getUrl().isEmpty()) {
             Uri uri = Uri.parse(news.getUrl());
-            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(ctx);
 
-            if (pref.getBoolean(Constants.CONFIG_CUSTOM_TABS, true)) {
-                PumpkinCustomTab customTab = new PumpkinCustomTab((Activity) ctx, news);
-                customTab.openPage(uri);
-            } else {
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                ctx.startActivity(intent);
-            }
+            PumpkinCustomTab customTab = new PumpkinCustomTab((Activity) ctx, news);
+            customTab.openPage(uri);
         }
     }
 
