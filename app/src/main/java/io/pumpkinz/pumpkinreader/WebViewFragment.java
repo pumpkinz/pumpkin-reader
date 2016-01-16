@@ -2,7 +2,6 @@ package io.pumpkinz.pumpkinreader;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,15 +36,6 @@ public class WebViewFragment extends Fragment {
         final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.web_view_progress);
         progressBar.setVisibility(View.VISIBLE);
 
-        final SwipeRefreshLayout webViewRefresh = (SwipeRefreshLayout) view.findViewById(R.id.web_view_refresh);
-        webViewRefresh.setColorSchemeResources(R.color.pumpkin_accent);
-        webViewRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                webView.reload();
-            }
-        });
-
         final int bgColor = getActivity().getResources().getColor(R.color.grey_1000w);
 
         webView.setWebViewClient(new WebViewClient());
@@ -58,10 +48,6 @@ public class WebViewFragment extends Fragment {
                 if (progress >= 100) {
                     progressBar.setVisibility(View.INVISIBLE);
                     webView.setBackgroundColor(bgColor);
-                }
-
-                if (progress >= 30 && webViewRefresh.isRefreshing()) {
-                    webViewRefresh.setRefreshing(false);
                 }
             }
         });
