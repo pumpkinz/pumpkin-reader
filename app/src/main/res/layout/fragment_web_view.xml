@@ -9,7 +9,8 @@
     <WebView
         android:id="@+id/news_web_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:scrollbarThumbVertical="@drawable/scrollbar_style" />
 
     <ProgressBar
         android:id="@+id/web_view_progress"
