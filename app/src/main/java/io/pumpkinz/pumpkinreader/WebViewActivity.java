@@ -52,8 +52,6 @@ public class WebViewActivity extends PumpkinReaderActivity {
 
         switch (id) {
             case android.R.id.home:
-                this.finish();
-                return true;
             case R.id.action_comment:
                 this.finish();
                 return true;

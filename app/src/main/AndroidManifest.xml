@@ -19,14 +19,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".NewsDetailActivity"
-            android:label="@string/title_activity_news_detail" />
-        <activity
             android:name=".AboutActivity"
             android:label="@string/title_activity_about" />
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings" />
+        <activity
+            android:name=".WebViewActivity"
+            android:label="@string/link" />
         <activity android:name=".NewsCommentsActivity">
             <intent-filter>
                 <data
@@ -42,10 +42,6 @@
         </activity>
 
         <receiver android:name=".etc.ShareBroadcastReceiver" />
-
-        <activity
-            android:name=".WebViewActivity"
-            android:label="@string/title_activity_web_view" />
     </application>
 
 </manifest>
