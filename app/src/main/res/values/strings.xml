@@ -15,6 +15,7 @@
     <string name="save">Save</string>
     <string name="unsave">Unsave</string>
     <string name="undo">Undo</string>
+    <string name="goto_comments">Go to Comments</string>
 
     <string name="about">About</string>
     <string name="credits">Credits</string>

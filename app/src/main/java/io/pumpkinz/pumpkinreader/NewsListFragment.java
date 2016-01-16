@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -140,30 +139,19 @@ public class NewsListFragment extends Fragment {
     }
 
     public void goToNewsDetail(final News news) {
-        final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        Intent intent;
-
-        boolean shouldOpenLink = pref.getBoolean(Constants.CONFIG_SHOW_LINK, true);
-
-        if (pref.getBoolean(Constants.CONFIG_EXTERNAL_BROWSER, false)) {
-            intent = new Intent(getActivity(), NewsCommentsActivity.class);
-            boolean isURLValid = news.getUrl() != null && !news.getUrl().isEmpty();
-
-            if (shouldOpenLink && isURLValid) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        ActionUtil.open(getActivity(), news);
-                    }
-                }, 300);
-            }
-        } else {
-            intent = new Intent(getActivity(), NewsDetailActivity.class);
-        }
-
         openedNews = news;
+
+        Intent intent = new Intent(getActivity(), NewsCommentsActivity.class);
         intent.putExtra(Constants.NEWS, Parcels.wrap(news));
         startActivity(intent);
+
+        final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        boolean shouldOpenLink = pref.getBoolean(Constants.CONFIG_SHOW_LINK, true);
+        boolean isURLValid = news.getUrl() != null && !news.getUrl().isEmpty();
+
+        if (shouldOpenLink && isURLValid) {
+            ActionUtil.open(getActivity(), news);
+        }
     }
 
     public void setNewsType(int newsTypeId) {

@@ -15,9 +15,7 @@ import io.pumpkinz.pumpkinreader.model.News;
 import io.pumpkinz.pumpkinreader.util.ActionUtil;
 import io.pumpkinz.pumpkinreader.util.PreferencesUtil;
 
-
-public class NewsCommentsActivity extends PumpkinReaderActivity
-        implements NewsDetailFragment.NewsListener {
+public class WebViewActivity extends PumpkinReaderActivity {
 
     private News news;
     private Menu menu;
@@ -25,8 +23,8 @@ public class NewsCommentsActivity extends PumpkinReaderActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_web_view);
 
-        setContentView(R.layout.activity_news_comments);
         setUpToolbar();
 
         Uri data = getIntent().getData();
@@ -41,7 +39,7 @@ public class NewsCommentsActivity extends PumpkinReaderActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_news_detail, menu);
+        getMenuInflater().inflate(R.menu.menu_web_view, menu);
         this.menu = menu;
         ActionUtil.toggleSaveAction(this, menu, news);
 
@@ -54,10 +52,8 @@ public class NewsCommentsActivity extends PumpkinReaderActivity
 
         switch (id) {
             case android.R.id.home:
+            case R.id.action_comment:
                 this.finish();
-                return true;
-            case R.id.action_open:
-                ActionUtil.open(this, news);
                 return true;
             case R.id.action_save:
                 ActionUtil.save(this, menu, news);
@@ -72,18 +68,13 @@ public class NewsCommentsActivity extends PumpkinReaderActivity
 
     private void setUpToolbar() {
         Toolbar appBar = (Toolbar) findViewById(R.id.app_bar);
-        appBar.setTitle(R.string.comments);
+        appBar.setTitle(R.string.link);
 
         setSupportActionBar(appBar);
         setScrollFlag((AppBarLayout.LayoutParams) appBar.getLayoutParams());
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-    }
-
-    @Override
-    public void onNewsLoaded(News news) {
-        this.news = news;
     }
 
 }

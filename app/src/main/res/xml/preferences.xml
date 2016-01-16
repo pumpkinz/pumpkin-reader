@@ -32,18 +32,6 @@
 
         <CheckBoxPreference
             android:defaultValue="false"
-            android:key="config_external_browser"
-            android:summary="Use system's default web browser to show link"
-            android:title="Use External Browser" />
-
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="config_custom_tabs"
-            android:summary="Use Chrome Custom Tabs whenever possible"
-            android:title="Use Chrome Custom Tabs" />
-
-        <CheckBoxPreference
-            android:defaultValue="false"
             android:key="config_hide_toolbar"
             android:summary="Auto hide the toolbar when scrolling down"
             android:title="Auto Hide Toolbar" />
