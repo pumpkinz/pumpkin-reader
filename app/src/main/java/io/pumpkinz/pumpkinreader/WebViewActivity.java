@@ -1,5 +1,6 @@
 package io.pumpkinz.pumpkinreader;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -52,8 +53,10 @@ public class WebViewActivity extends PumpkinReaderActivity {
 
         switch (id) {
             case android.R.id.home:
-            case R.id.action_comment:
-                this.finish();
+            case R.id.action_browser:
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(news.getUrl()));
+                startActivity(intent);
                 return true;
             case R.id.action_save:
                 ActionUtil.save(this, menu, news);
