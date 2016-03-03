@@ -2,7 +2,9 @@ package io.pumpkinz.pumpkinreader;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,12 +27,14 @@ import io.pumpkinz.pumpkinreader.etc.DividerItemDecoration;
 import io.pumpkinz.pumpkinreader.exception.EndOfListException;
 import io.pumpkinz.pumpkinreader.model.News;
 import io.pumpkinz.pumpkinreader.service.DataSource;
+import io.pumpkinz.pumpkinreader.util.ActionUtil;
 import io.pumpkinz.pumpkinreader.util.PreferencesUtil;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.app.AppObservable;
 import rx.subscriptions.Subscriptions;
+
 
 public class NewsListFragment extends Fragment {
 
@@ -52,19 +56,22 @@ public class NewsListFragment extends Fragment {
      */
     private News openedNews;
 
-    @Override public void onAttach(Context ctx) {
+    @Override
+    public void onAttach(Context ctx) {
         super.onAttach(ctx);
         dataSource = new DataSource(ctx);
     }
 
-    @Override public void onCreate(Bundle savedInstanceState) {
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setRetainInstance(true);
         stories = AppObservable.bindFragment(this, loadNewsData(0, N_NEWS_PER_LOAD, true));
     }
 
-    @Override public void onResume() {
+    @Override
+    public void onResume() {
         super.onResume();
 
         if (newsType != R.string.saved) {
@@ -76,15 +83,15 @@ public class NewsListFragment extends Fragment {
         }
     }
 
-    @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
-        Bundle savedInstanceState) {
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_news_list, container, false);
 
-        swipeRefreshLayout =
-            (SwipeRefreshLayout) view.findViewById(R.id.news_list_refresh_container);
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.news_list_refresh_container);
         swipeRefreshLayout.setColorSchemeResources(R.color.pumpkin_accent);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override public void onRefresh() {
+            @Override
+            public void onRefresh() {
                 if (!swipeRefreshLayout.canChildScrollUp()) {
                     forceRefresh();
                 }
@@ -94,12 +101,14 @@ public class NewsListFragment extends Fragment {
         return view;
     }
 
-    @Override public void onDestroyView() {
+    @Override
+    public void onDestroyView() {
         forceUnsubscribe();
         super.onDestroyView();
     }
 
-    @Override public void onViewCreated(View view, Bundle savedInstanceState) {
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setUpNewsList(view);
 
@@ -117,7 +126,8 @@ public class NewsListFragment extends Fragment {
         }
     }
 
-    @Override public void onSaveInstanceState(Bundle outState) {
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable(SAVED_NEWS, Parcels.wrap(newsAdapter.getDataSet()));
     }
@@ -134,6 +144,14 @@ public class NewsListFragment extends Fragment {
         Intent intent = new Intent(getActivity(), NewsCommentsActivity.class);
         intent.putExtra(Constants.NEWS, Parcels.wrap(news));
         startActivity(intent);
+
+        final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        boolean shouldOpenLink = pref.getBoolean(Constants.CONFIG_SHOW_LINK, true);
+        boolean isURLValid = news.getUrl() != null && !news.getUrl().isEmpty();
+
+        if (shouldOpenLink && isURLValid) {
+            ActionUtil.open(getActivity(), news);
+        }
     }
 
     public void setNewsType(int newsTypeId) {
@@ -189,11 +207,12 @@ public class NewsListFragment extends Fragment {
         newsList.setAdapter(newsAdapter);
 
         RecyclerView.ItemDecoration itemDecoration =
-            new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
+                new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
         newsList.addItemDecoration(itemDecoration);
 
         newsList.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
                 if (newsAdapter.getItemCount() < N_NEWS_PER_LOAD) {
@@ -206,8 +225,7 @@ public class NewsListFragment extends Fragment {
                 int totalItemCount = lm.getItemCount();
                 int firstVisibleItem = lm.findFirstVisibleItemPosition();
 
-                if (!isLoading && (totalItemCount - visibleItemCount) <= (firstVisibleItem
-                    + LOADING_THRESHOLD)) {
+                if (!isLoading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + LOADING_THRESHOLD)) {
                     ((NewsAdapter) recyclerView.getAdapter()).addItem(null);
                     loadNews(recyclerView.getAdapter().getItemCount(), N_NEWS_PER_LOAD, false);
                     Log.v("stories", "Load next " + N_NEWS_PER_LOAD + " news");
@@ -218,7 +236,8 @@ public class NewsListFragment extends Fragment {
 
     private void setRefreshingState(final boolean isRefreshing) {
         swipeRefreshLayout.post(new Runnable() { // Use post to make sure it takes effect
-            @Override public void run() {
+            @Override
+            public void run() {
                 swipeRefreshLayout.setRefreshing(isRefreshing);
             }
         });
@@ -233,18 +252,21 @@ public class NewsListFragment extends Fragment {
             }
         }
 
-        @Override public void onStart() {
+        @Override
+        public void onStart() {
             super.onStart();
             isLoading = true;
         }
 
-        @Override public void onCompleted() {
+        @Override
+        public void onCompleted() {
             Log.d("stories", "completed");
             isLoading = false;
             setRefreshingState(false);
         }
 
-        @Override public void onError(Throwable e) {
+        @Override
+        public void onError(Throwable e) {
             Log.d("stories", e.toString());
             forceUnsubscribe();
             setRefreshingState(false);
@@ -261,10 +283,13 @@ public class NewsListFragment extends Fragment {
             toast.show();
         }
 
-        @Override public void onNext(List<News> items) {
+        @Override
+        public void onNext(List<News> items) {
             Log.d("stories", String.valueOf(items.size()));
             newsAdapter.removeLoadingMoreItem();
             newsAdapter.addDataset(items);
         }
+
     }
+
 }
