@@ -54,10 +54,6 @@ public class News extends Item {
         return descendants;
     }
 
-    public boolean isUrlValid() {
-        return (url != null && !url.isEmpty());
-    }
-
     @Override
     public String toString() {
         String parent = super.toString();
