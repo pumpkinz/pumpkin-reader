@@ -15,6 +15,9 @@ import android.view.View;
 
 import org.parceler.Parcels;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.pumpkinz.pumpkinreader.R;
 import io.pumpkinz.pumpkinreader.WebViewActivity;
 import io.pumpkinz.pumpkinreader.etc.Constants;
@@ -28,7 +31,9 @@ public class ActionUtil {
         if (news.getUrl() != null && !news.getUrl().isEmpty()) {
             Uri uri = Uri.parse(news.getUrl());
 
-            if (isCustomTabsAvailable(ctx)) {
+            List<String> pkgs = getChromePackages(ctx);
+
+            if (!pkgs.isEmpty()) {
                 PumpkinCustomTab customTab = new PumpkinCustomTab((Activity) ctx, news);
                 customTab.openPage(uri);
             } else {
@@ -107,18 +112,27 @@ public class ActionUtil {
         return shareIntent;
     }
 
-    private static boolean isCustomTabsAvailable(Context ctx) {
-        return CustomTabsClient.bindCustomTabsService(ctx, "com.android.chrome", new CustomTabsServiceConnection() {
+    private static List<String> getChromePackages(Context ctx) {
+        CustomTabsServiceConnection conn = new CustomTabsServiceConnection() {
             @Override
             public void onCustomTabsServiceConnected(ComponentName componentName, CustomTabsClient customTabsClient) {
-
             }
 
             @Override
             public void onServiceDisconnected(ComponentName name) {
-
             }
-        });
+        };
+
+        String[] packages = {"com.android.chrome", "com.chrome.beta", "com.chrome.dev"};
+        List<String> availablePkgs = new ArrayList<>();
+
+        for (String pkg : packages) {
+            if (CustomTabsClient.bindCustomTabsService(ctx, pkg, conn)) {
+                availablePkgs.add(pkg);
+            }
+        }
+
+        return availablePkgs;
     }
 
 }
