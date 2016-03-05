@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_comment"
+        android:id="@+id/action_browser"
         android:orderInCategory="100"
-        android:title="@string/goto_comments"
-        android:icon="@drawable/ic_comment_white_24dp"
+        android:title="@string/open_link"
+        android:icon="@drawable/ic_public_white_24dp"
         app:showAsAction="ifRoom" />
 
     <item
