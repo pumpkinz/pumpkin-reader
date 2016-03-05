@@ -26,8 +26,8 @@ android {
         applicationId "io.pumpkinz.pumpkinreader"
         minSdkVersion 19
         targetSdkVersion 23
-        versionCode 16
-        versionName "2.2.1"
+        versionCode 17
+        versionName "2.2.2"
     }
     buildTypes {
         release {
