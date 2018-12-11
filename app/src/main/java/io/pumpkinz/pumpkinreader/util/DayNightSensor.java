@@ -29,7 +29,7 @@ public class DayNightSensor implements SensorEventListener {
   private static final String TAG = DayNightSensor.class.getName();
 
   // Threshold before lighting is considered "dark"
-  public static final float LUX_THRESHOLD = 4.0f;
+  public static final float LUX_THRESHOLD = 30.0f;
   // Interval between light samples taken in milliseconds
   public static final int DEFAULT_INTERVAL = 1000;
 
@@ -146,7 +146,7 @@ public class DayNightSensor implements SensorEventListener {
   /**
    * Check light levels every X milliseconds.
    */
-  protected void beginMonitoringLightLevels() {
+  private void beginMonitoringLightLevels() {
     // Sensor sampling period is in MICROseconds.
     // Most people are used to MILLIseconds so x1000
     sensorManager.registerListener(this, lightSensor, this.settings.samplingDelay * 1000);
@@ -159,7 +159,6 @@ public class DayNightSensor implements SensorEventListener {
         .subscribe(new Action1<Float>() {
           @Override
           public void call(Float lux) {
-            Log.e("throttled", String.valueOf(lux));
             doSensorChange(lux);
           }
         })
@@ -169,9 +168,8 @@ public class DayNightSensor implements SensorEventListener {
   /**
    * Stop checking light levels (Activity ended, suspended, etc)
    */
-  protected void stopMonitoringLightLevels() {
+  private void stopMonitoringLightLevels() {
     sensorManager.unregisterListener(this, lightSensor);
-//        throttler.onCompleted();
   }
 
 
@@ -184,8 +182,6 @@ public class DayNightSensor implements SensorEventListener {
   @Override
   public void onSensorChanged(SensorEvent event) {
     float lux = event.values[0];
-        Log.e("onSensorChanged", String.valueOf(lux));
-
     throttler.onNext(lux);
   }
 
@@ -200,14 +196,10 @@ public class DayNightSensor implements SensorEventListener {
       changeToMode = AppCompatDelegate.MODE_NIGHT_NO;
     }
 
-    // Only update and recreate the Activity if needed!
+    // Only update if needed!
     if (currentNightMode != changeToMode) {
       currentNightMode = changeToMode;
-
-//      if (currentActivity != null ) {
-      Log.e("callign settings.onsensor changed", String.valueOf(lux));
       this.settings.onSensorChanged(changeToMode == AppCompatDelegate.MODE_NIGHT_YES);
-//      }
     }
   }
 
