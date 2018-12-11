@@ -27,6 +27,7 @@ public class PumpkinCustomTab {
         this.activity = activity;
         this.news = news;
         this.customTabsIntent = buildCustomTabsIntent();
+        this.customTabsIntent.intent.putExtra(CustomTabsIntent.EXTRA_DEFAULT_SHARE_MENU_ITEM, true);
     }
 
     public void openPage(Uri uri) {
@@ -47,18 +48,7 @@ public class PumpkinCustomTab {
         }
 
         builder.setToolbarColor(color);
-
-        String label = activity.getResources().getString(R.string.share);
-        Bitmap icon = BitmapFactory.decodeResource(activity.getResources(), R.drawable.ic_share_white_24dp);
-        builder.setActionButton(icon, label, createShareIntent());
-
         return builder.build();
-    }
-
-    private PendingIntent createShareIntent() {
-        Intent actionIntent = new Intent(activity.getApplicationContext(), ShareBroadcastReceiver.class);
-        actionIntent.putExtra(Constants.NEWS, Parcels.wrap(news));
-        return PendingIntent.getBroadcast(activity.getApplicationContext(), 0, actionIntent, PendingIntent.FLAG_CANCEL_CURRENT);
     }
 
 }

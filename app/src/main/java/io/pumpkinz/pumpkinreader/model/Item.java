@@ -1,5 +1,7 @@
 package io.pumpkinz.pumpkinreader.model;
 
+import org.parceler.Parcel;
+
 import java.util.Date;
 
 

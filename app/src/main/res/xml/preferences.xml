@@ -18,6 +18,12 @@
             android:summary="Use white on dark theme"
             android:title="Dark Theme" />
 
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="config_auto_dark_theme"
+            android:summary="Automatically enable light/dark theme"
+            android:title="Auto dark mode" />
+
     </PreferenceCategory>
 
     <PreferenceCategory

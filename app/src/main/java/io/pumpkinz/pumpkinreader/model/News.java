@@ -1,9 +1,11 @@
 package io.pumpkinz.pumpkinreader.model;
 
+import org.parceler.Parcel;
+
 import java.util.ArrayList;
 import java.util.List;
 
-
+@Parcel
 public class News extends Item {
 
     List<Integer> kids;
